@@ -16,11 +16,15 @@ enum DestinationSearchOptions{
 
 @available(iOS 17.0, *)
 struct DestinationSearchView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     
     @EnvironmentObject var viewModel: AuthViewModel
     @State private var recipient: String = ""
 
     @Binding var show: Bool
+    @Binding var cityName : String
+    
     @State private var destination = ""
     @State private var startDate = Date()
     @State private var endDate = Date()
@@ -43,6 +47,7 @@ struct DestinationSearchView: View {
             HStack{
                 Button {
                     withAnimation(){
+                        cityName = ""
                         show.toggle()
                     }
                 } label: {
@@ -56,15 +61,15 @@ struct DestinationSearchView: View {
                     Button("Удалить"){
                         search = ""
                     }
-                        .font(.subheadline)
-                        .foregroundStyle(.red)
-                        .fontWeight(.semibold)
+                    .font(.subheadline)
+                    .foregroundStyle(.red)
+                    .fontWeight(.semibold)
                 }
-
+                
             }
             .padding()
             
-
+            
             VStack(alignment: .leading){
                 if selectedOption == .location{
                     VStack{
@@ -92,13 +97,14 @@ struct DestinationSearchView: View {
                                 
                             }
                             else{
+                                //                                print("CITY's: \(filtereduser)")
                                 VStack(alignment: .leading){
-                                        ForEach(filtereduser.prefix(1)) { item in
-                                            CityView(city: item)
-                                                .onTapGesture {
-                                                    search = item.name
-                                                }
-                                        }
+                                    ForEach(filtereduser.prefix(1)) { item in
+                                        CityView(city: item)
+                                            .onTapGesture {
+                                                search = item.name
+                                            }
+                                    }
                                 }
                                 .frame( maxWidth: .infinity, maxHeight: 60 )
                                 .padding(.horizontal)
@@ -109,16 +115,16 @@ struct DestinationSearchView: View {
                             }
                         }
                     }
-                    } else{
-                        CollapsedPickerView(title: "Куда", description: "Выбрать")
-                    }
-                    
-                    
-                } .modifier(CollapsidDestModifier())
-                    .frame(height: selectedOption == .location ? 120  : 64)
-                    .onTapGesture {
-                        withAnimation(){selectedOption = .location}
-                    }
+                } else {
+                    CollapsedPickerView(title: "Куда", description: "Выбрать")
+                }
+                
+                
+            } .modifier(CollapsidDestModifier())
+                .frame(height: selectedOption == .location ? 120  : 64)
+                .onTapGesture {
+                    withAnimation(){selectedOption = .location}
+                }
             
             
             VStack(alignment: .leading){
@@ -131,51 +137,75 @@ struct DestinationSearchView: View {
                         .fontWeight(.semibold)
                     VStack{
                         DatePicker("Начиная", selection:$startDate , displayedComponents: .date)
-                    
+                        
                         Divider()
                         
                         DatePicker("До", selection:$endDate , displayedComponents: .date)
-
+                        
                     }
                     .foregroundStyle(.gray)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-
-                }else {
-                        CollapsedPickerView(title: "Когда", description: "Даты")
-                    }
+                    
+                } else {
+                    CollapsedPickerView(title: "Когда", description: "Даты")
+                }
             }   .modifier(CollapsidDestModifier())
                 .frame(height: selectedOption == .dates ? 180  : 64)
             
-            .onTapGesture {
-                withAnimation(){selectedOption = .dates}
+                .onTapGesture {
+                    withAnimation(){selectedOption = .dates}
                 }
-            
-          
-            Button { Task{
+            SearchButton()
+        }
+    }
+    
+    
+    //MARK: - Views
+    func SearchButton()->some View {
+        Button {
+            //MARK: - handle action
+            Task {
+                print("All city's \(viewModel.city.compactMap({$0.name}))")
+                print("CITY's: \(filtereduser.compactMap({$0.name}))" )
                 
+                if filtereduser.compactMap({$0.name}).filter({$0 == search}).isEmpty {
+                    print("NOTHING FOUND")
+                } else {
+                    print("Search: \(search)")
+                    print("GO TO MAINSEARCH")
+                    
+                    //MARK: - переход обратно на экран MainSearch
+                    
+                    
+                    withAnimation {
+                        cityName = search
+                        show.toggle()
+                    }
+                }
+            }
+        } label: {
+            HStack{
+                Text ("Search")
+                    .fontWeight (.semibold)
+                Image (systemName: "arrow.right")
                 
             }
-            } label: {
-                    HStack{
-                        Text ("Search")
-                            .fontWeight (.semibold)
-                        Image (systemName: "arrow.right")
-                        
-                    }
-                    . foregroundColor (.white)
-                    .frame(width:UIScreen.main.bounds.width-32, height: 48)
-                   
-                }   .background (Color (.black))
-                    .cornerRadius (10)
-                    .padding(.top,25)
-        }    }
+            . foregroundColor (.white)
+            .frame(width:UIScreen.main.bounds.width-32, height: 48)
+            
+        }
+        .background (Color (.black))
+        .cornerRadius (10)
+        .padding(.top,25)
+        //        }
+    }
 }
 
 struct CollapsidDestModifier: ViewModifier {
     func body (content: Content) -> some View {
         content
-        .padding()
+            .padding()
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding()
@@ -202,3 +232,18 @@ struct CollapsedPickerView: View {
     
 }
 
+@available(iOS 17.0, *)
+struct Previews_Container: PreviewProvider {
+    //    @available(iOS 17.0, *)
+    struct Container: View {
+        @State var show = true
+        @State var cityName = "Мончегорск"
+        var body: some View {
+            DestinationSearchView(show: $show, cityName: $cityName)
+        }
+    }
+    
+    static var previews: some View {
+        Container()
+    }
+}

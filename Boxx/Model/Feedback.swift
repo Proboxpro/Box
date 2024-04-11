@@ -15,5 +15,4 @@ struct Feedback: Identifiable, Codable, Hashable {
     var rating: String
     var imageUrl: String
     var imageUrls: String
-    
 }

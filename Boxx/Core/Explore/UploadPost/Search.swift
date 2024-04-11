@@ -172,15 +172,9 @@ struct Detail : View {
     @State var cityTo = ""
     @State private var startdate = Date()
 
-    
-
-
-    
      
     @State private var selectedOption: SearchOptions = .location
     
-    
-
     
     var body : some View{
         var filtereduser: [City] {

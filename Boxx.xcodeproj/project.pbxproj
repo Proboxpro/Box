@@ -84,6 +84,7 @@
 		F7FB2A452BAAE3EE00A0B30D /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB2A442BAAE3EE00A0B30D /* SwiftUIView.swift */; };
 		F7FB2A4C2BAAF5CB00A0B30D /* FilterviewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB2A4B2BAAF5CB00A0B30D /* FilterviewState.swift */; };
 		F7FB2A4E2BAAF87300A0B30D /* SearchC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FB2A4D2BAAF87300A0B30D /* SearchC.swift */; };
+		FA62333E2BC86309008CBD84 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA62333D2BC86309008CBD84 /* Bindings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +173,7 @@
 		F7FB2A442BAAE3EE00A0B30D /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		F7FB2A4B2BAAF5CB00A0B30D /* FilterviewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterviewState.swift; sourceTree = "<group>"; };
 		F7FB2A4D2BAAF87300A0B30D /* SearchC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchC.swift; sourceTree = "<group>"; };
+		FA62333D2BC86309008CBD84 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,7 @@
 				881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */,
 				8842B6122BA7241D003AF2B8 /* UIImage+Downloaded.swift */,
 				8842B6142BA7EDFA003AF2B8 /* Message+Make.swift */,
+				FA62333D2BC86309008CBD84 /* Bindings.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -702,6 +705,7 @@
 				F7E9B8A32B44015E001169BE /* Test1.swift in Sources */,
 				F7F7EE3D2B066B8400817353 /* ListingDetail.swift in Sources */,
 				F7E9B8302B30E9AB001169BE /* TabBarView.swift in Sources */,
+				FA62333E2BC86309008CBD84 /* Bindings.swift in Sources */,
 				F7F7EE142B061A2600817353 /* ProfileOption.swift in Sources */,
 				F7F7EE542B07206400817353 /* ConversationRowView.swift in Sources */,
 				F7F7EE052B06095900817353 /* Login.swift in Sources */,

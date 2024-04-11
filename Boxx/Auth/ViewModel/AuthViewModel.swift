@@ -16,7 +16,7 @@ import FirebaseStorage
 
 
 protocol AuthenticationFormProtocol{
-    var formIsVolid: Bool {get}
+    var formIsValid: Bool {get}
 }
 
 
@@ -34,6 +34,8 @@ class AuthViewModel: ObservableObject {
     @Published var user: [User] = []
     @Published var users: [User] = []
     @Published var city: [City] = []
+    
+//    @Publisher var currentCity: City?
 
     
     @Published var profile: ListingItem?
@@ -170,7 +172,7 @@ class AuthViewModel: ObservableObject {
     }
     
     
-    ///ЗАКАЗЫ
+    // MARK: ЗАКАЗЫ
     func fetchOrder(){
         orders.removeAll()
         let db = Firestore.firestore()
@@ -242,18 +244,24 @@ class AuthViewModel: ObservableObject {
                     let startdate = data[ "startdate"]as? String ?? ""
                     let conversation = data["conversation"] as? FirestoreConversation
                     var myorder = ListingItem(id: id, ownerUid: ownerUid, ownerName: ownerName, imageUrl: imageUrl, pricePerKillo: pricePerKillo,cityFrom: cityFrom, cityTo: cityTo, imageUrls: imageUrls, startdate: startdate, conversation: conversation)
+                    print(cityFrom)
                     
                     if ownerUid == uid {
                         myorder.isAuthorized = true
                     }
                     
-                    
-
                     self.myorder.append(myorder)
                 }
             }
         }
         
+    }
+    
+    func filteredOnCity(_ cityName: String) ->[ListingItem] {
+        var filteredItems = [ListingItem]()
+        filteredItems = myorder.filter({$0.cityTo == cityName}) + myorder.filter({$0.cityFrom == cityName})
+        
+        return filteredItems.isEmpty ? myorder : filteredItems
     }
     
     
@@ -328,6 +336,7 @@ class AuthViewModel: ObservableObject {
         
         return try await saveImage (data:data, UserId: UserId)
     }
+    
     func getData (UserId: String, path: String) async throws -> Data {
         try await userReference (UserId: UserId).child(path).data (maxSize: 3 * 1024 * 1024)
         
@@ -337,6 +346,7 @@ class AuthViewModel: ObservableObject {
     func uploadFeedback() async{
         
     }
+    
     func getFeedback() {
         guard (Auth.auth().currentUser?.uid) != nil else {return}
         feedback.removeAll()
@@ -363,8 +373,8 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    //MARK: Create order
     
+    //MARK: Create order
     private func orderReference(UserId:String) -> StorageReference{
         storage.child("order").child(UserId)
     }
@@ -382,6 +392,7 @@ class AuthViewModel: ObservableObject {
         return (returnedName, returnedPath)
         
     }
+    
     func saveOrderImage(data: Data) async throws -> URL? {
         try await Task { () -> URL? in
             guard let UserId = Auth.auth().currentUser?.uid else { return nil }
@@ -417,11 +428,13 @@ class AuthViewModel: ObservableObject {
             print("БАГ, ошибка \(error.localizedDescription)")
         }
     }
+    
     func fetchP2Porder () async{
         guard let uid = Auth.auth().currentUser?.uid else {return}
         guard let snapshot = try? await Firestore.firestore().collection("order").document(uid).getDocument() else {return}
         self.order = try? snapshot.data(as: Order.self)
     }
+    
     //    func getMessages() {
     //        db.collection("messages").addSnapshotListener { querySnapshot, error in
     //            // If we don't have documents, exit the function
