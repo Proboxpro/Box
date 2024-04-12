@@ -73,13 +73,13 @@ struct DestinationSearchView: View {
             VStack(alignment: .leading){
                 if selectedOption == .location{
                     VStack{
-                        Text("Куда отправляем?")
+                        Text("Откуда отправляем?")
                             .font(.title2)
                             .fontWeight(.semibold)
                         
                         HStack(alignment: .center){
                             Image(systemName: "magnifyingglass")
-                            TextField("Город отправления", text: self.$search)
+                            TextField("Город получения", text: self.$search)
                                 .font(.subheadline)
                                 .fontWeight(.semibold )
                         } .frame(height: 44 )
