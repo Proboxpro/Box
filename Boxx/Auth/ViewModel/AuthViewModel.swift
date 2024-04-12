@@ -36,22 +36,20 @@ class AuthViewModel: ObservableObject {
     @Published var city: [City] = []
     
 //    @Publisher var currentCity: City?
+//    @Published var destinationSearchViewModel = DestinationSearchViewModel(
 
     
     @Published var profile: ListingItem?
-    
     
     
     //    @Published private(set) var messages: [Message] = []
     @Published private(set) var lastMessageId: String = ""
     
     
-    
     static let shared = AuthViewModel()
     private let storage = Storage.storage().reference()
     let db = Firestore.firestore()
     let messagesCollection = Firestore.firestore().collection("order")
-    
     
     
     init() {
@@ -257,13 +255,27 @@ class AuthViewModel: ObservableObject {
         
     }
     
-    func filteredOnCity(_ cityName: String) ->[ListingItem] {
-        var filteredItems  =    myorder.filter({$0.cityTo == cityName})
-//        + myorder.filter({$0.cityFrom == cityName})
-        
-        return filteredItems.isEmpty ? myorder : filteredItems
-    }
+//    func filteredOnCity(_ cityName: String) ->[ListingItem] {
+//        var filteredItems  =    myorder.filter({$0.cityTo == cityName})
+////        + myorder.filter({$0.cityFrom == cityName})
+//        
+//        return filteredItems.isEmpty ? myorder : filteredItems
+//    }
+//    
+//    
+//    func filteredOnDate(startDate: Date, endDate: Date) -> [ListingItem] {
+//        
+//         myorder.filter({$0.startdate.toDate()! > startDate && $0.startdate.toDate()! < endDate})
+//    }
     
+    func filteredOnParam(_ searchParameters: SearchParameters) -> [ListingItem] {
+        
+        let filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
+        
+        //MARK: - if not empty all order
+        return filteredItems.isEmpty ? myorder : filteredItems
+//        return filteredItems.isEmpty ? [ListingItem]() : filteredItems
+    }
     
     private func userReference(UserId:String) -> StorageReference{
         storage.child("user").child(UserId)

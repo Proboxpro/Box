@@ -7,19 +7,29 @@
 
 import SwiftUI
 
+struct SearchParameters  {
+    var cityName: String = ""
+    var startDate = Date()
+    var endDate = Date()
+}
+
 @available(iOS 17.0, *)
 struct MainSearch: View {
     @State private  var showDestinationSearchView = false
     @EnvironmentObject var viewModel: AuthViewModel
+    @State var searchParameters = SearchParameters()
+//    @StateObject var searchViewModel :  DestinationSearchViewModel
     
-    @State private var currentCityName: String = ""
+//    @State private var currentCityName: String = ""
     
     let user: User
     
     var body: some View {
         NavigationStack{
+//            searchViewModel = DestinationSearchViewModel(authViewModel: viewModel)
+            
             if showDestinationSearchView{
-                DestinationSearchView(show: $showDestinationSearchView, cityName: $currentCityName)
+                DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
             } else{
                 ScrollView{
                     LazyVStack(spacing: 5){
@@ -29,7 +39,7 @@ struct MainSearch: View {
                                     showDestinationSearchView.toggle()
                                 }
                             }
-                        ForEach(viewModel.filteredOnCity(currentCityName)) {item in NavigationLink(value: item){ ListingitemView(item: item)
+                        ForEach(viewModel.filteredOnParam( searchParameters)) {item in NavigationLink(value: item){ ListingitemView(item: item)
                                 .scrollTransition{
                                     content, phase in content
                                         .scaleEffect(phase.isIdentity ? 1 : 0.85)
@@ -46,13 +56,13 @@ struct MainSearch: View {
                     
                 }.onAppear{
                     viewModel.fetchOrder()
+//                    searchViewModel = DestinationSearchViewModel(authViewModel: viewModel)
+//                    searchViewModel.signAuth(authViewModel: viewModel)
                 }
             }
             
         }
     }
-    
-    //MARK: - need function to filter only current city
 }
 
 

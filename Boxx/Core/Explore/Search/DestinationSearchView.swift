@@ -11,23 +11,25 @@ enum DestinationSearchOptions{
     case location
     case dates
     case killo
-    
 }
+
 
 @available(iOS 17.0, *)
 struct DestinationSearchView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    
     @EnvironmentObject var viewModel: AuthViewModel
+//    @EnvironmentObject var searchViewModel: DestinationSearchViewModel
+    
     @State private var recipient: String = ""
 
     @Binding var show: Bool
-    @Binding var cityName : String
+    @Binding var parameters: SearchParameters
+//    @Binding var cityName : String
     
     @State private var destination = ""
-    @State private var startDate = Date()
-    @State private var endDate = Date()
+//    @State private var startDate = Date()
+//    @State private var endDate = Date()
     @State private var numbkilo = 0
 
     @State var search = ""
@@ -37,17 +39,14 @@ struct DestinationSearchView: View {
         return viewModel.city.filter{ $0.name.localizedCaseInsensitiveContains (search) }
     }
 
-
-
     @State private var selectedOption: DestinationSearchOptions = .location
-
         
     var body: some View {
         VStack{
             HStack{
                 Button {
                     withAnimation(){
-                        cityName = ""
+                        parameters.cityName = ""
                         show.toggle()
                     }
                 } label: {
@@ -127,41 +126,45 @@ struct DestinationSearchView: View {
                 }
             
             
-            VStack(alignment: .leading){
-                if selectedOption == .dates {
-                    Text ("Когда хотите отправить?")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Text ("Укажите примерные даты")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    VStack{
-                        DatePicker("Начиная", selection:$startDate , displayedComponents: .date)
-                        
-                        Divider()
-                        
-                        DatePicker("До", selection:$endDate , displayedComponents: .date)
-                        
-                    }
-                    .foregroundStyle(.gray)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    
-                } else {
-                    CollapsedPickerView(title: "Когда", description: "Даты")
-                }
-            }   .modifier(CollapsidDestModifier())
-                .frame(height: selectedOption == .dates ? 180  : 64)
-            
-                .onTapGesture {
-                    withAnimation(){selectedOption = .dates}
-                }
+            DateSection()
             SearchButton()
         }
     }
     
     
     //MARK: - Views
+    func DateSection()->some View {
+        VStack(alignment: .leading){
+            if selectedOption == .dates {
+                Text ("Когда хотите отправить?")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text ("Укажите примерные даты")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.gray)
+                VStack{
+                    DatePicker("Начиная", selection: $parameters.startDate, displayedComponents: .date)
+                    Divider()
+                    DatePicker("До", selection:$parameters.endDate , displayedComponents: .date)
+                }
+                .foregroundStyle(.gray)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                
+            } else {
+                CollapsedPickerView(title: "Когда", description: "Даты")
+            }
+        }   
+        .modifier(CollapsidDestModifier())
+        .frame(height: selectedOption == .dates ? 180  : 64)
+        
+        .onTapGesture {
+            withAnimation(){selectedOption = .dates}
+        }
+    }
+    
+    
     func SearchButton()->some View {
         Button {
             //MARK: - handle action
@@ -175,11 +178,15 @@ struct DestinationSearchView: View {
                     print("Search: \(search)")
                     print("GO TO MAINSEARCH")
                     
+                    print("DAte: \($parameters.startDate)")
+                    
+//                    print("VM-New-DAte: \(viewModel.orders[0].startdate.toDate())")
+                    
+//                    convertDate()
                     //MARK: - переход обратно на экран MainSearch
                     
-                    
                     withAnimation {
-                        cityName = search
+                        parameters.cityName = search
                         show.toggle()
                     }
                 }
@@ -200,6 +207,19 @@ struct DestinationSearchView: View {
         .padding(.top,25)
         //        }
     }
+    
+    
+//    func convertDate() {
+//        if let date = viewModel.orders[0].startdate.toDate() {
+//            let outputDateFormatter = DateFormatter()
+//            outputDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+//            let outputDateString = outputDateFormatter.string(from: date)
+//            print("Конвертированная дата: \(outputDateString)")
+//        } else {
+//            print("Ошибка: неверный формат входной строки")
+//        }
+//    }
+    
 }
 
 struct CollapsidDestModifier: ViewModifier {
@@ -232,18 +252,19 @@ struct CollapsedPickerView: View {
     
 }
 
-@available(iOS 17.0, *)
-struct Previews_Container: PreviewProvider {
-    //    @available(iOS 17.0, *)
-    struct Container: View {
-        @State var show = true
-        @State var cityName = "Мончегорск"
-        var body: some View {
-            DestinationSearchView(show: $show, cityName: $cityName)
-        }
-    }
-    
-    static var previews: some View {
-        Container()
-    }
-}
+//MARK: Preview
+
+//@available(iOS 17.0, *)
+//struct Previews_Container: PreviewProvider {
+//    struct Container: View {
+//        @State var show = true
+//        @State var cityName = "Мончегорск"
+//        var body: some View {
+//            DestinationSearchView(show: $show, cityName: $cityName)
+//        }
+//    }
+//    
+//    static var previews: some View {
+//        Container()
+//    }
+//}
