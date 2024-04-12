@@ -73,7 +73,7 @@ struct DestinationSearchView: View {
             VStack(alignment: .leading){
                 if selectedOption == .location{
                     VStack{
-                        Text("Откуда отправляем?")
+                        Text("Куда отправляем?")
                             .font(.title2)
                             .fontWeight(.semibold)
                         

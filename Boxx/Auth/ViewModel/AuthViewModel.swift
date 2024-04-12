@@ -258,8 +258,8 @@ class AuthViewModel: ObservableObject {
     }
     
     func filteredOnCity(_ cityName: String) ->[ListingItem] {
-        var filteredItems = [ListingItem]()
-        filteredItems = myorder.filter({$0.cityTo == cityName}) + myorder.filter({$0.cityFrom == cityName})
+        var filteredItems = myorder.filter({$0.cityFrom == cityName})
+//        + myorder.filter({$0.cityTo == cityName})
         
         return filteredItems.isEmpty ? myorder : filteredItems
     }
