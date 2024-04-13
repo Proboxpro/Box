@@ -45,11 +45,10 @@ struct DestinationSearchView: View {
         
     var body: some View {
         VStack{
-            
-//            DeleteSearchInputView()
-//            DestinationView()
+            DeleteSearchInputView()
+            DestinationView()
             DateSection()
-//            SearchButton()
+            SearchButton()
         }
     }
     
@@ -132,7 +131,6 @@ struct DestinationSearchView: View {
                 CollapsedPickerView(title: "Куда", description: "Выбрать")
             }
             
-            
         } .modifier(CollapsidDestModifier())
             .frame(height: selectedOption == .location ? 120  : 64)
             .onTapGesture {
@@ -142,16 +140,16 @@ struct DestinationSearchView: View {
     
     
     func DateSection()->some View {
-//        VStack(alignment: .leading){
-//            if selectedOption == .dates {
+        VStack(alignment: .leading){
+            if selectedOption == .dates {
         
-//                Text ("Когда хотите отправить?")
-//                    .font(.title2)
-//                    .fontWeight(.semibold)
-//                Text ("Укажите примерные даты")
-//                    .font(.subheadline)
-//                    .fontWeight(.semibold)
-//                    .foregroundColor(.gray)
+                Text ("Когда хотите отправить?")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text ("Укажите примерные даты")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.gray)
                 VStack{
                     DatePicker("Начиная", selection: $parameters.startDate, displayedComponents: .date)
                     Divider()
@@ -162,15 +160,25 @@ struct DestinationSearchView: View {
                 .fontWeight(.semibold)
                 
                 
-//            } else {
-//                CollapsedPickerView(title: "Когда", description: "Даты")
-//            }
-//        }   
-//        .modifier(CollapsidDestModifier())
-//        .frame(height: selectedOption == .dates ? 180  : 64)
-//        
+            } else {
+                let title = "Когда                                                               "
+                
+                CollapsedPickerView(title: title, description: "Даты")
+                    .onTapGesture {
+                        withAnimation(){
+                            selectedOption = .dates
+                        }
+                    }
+                
+            }
+            
+        } .modifier(CollapsidDestModifier())
+        .frame(height: selectedOption == .dates ? 180  : 64)
+        
 //        .onTapGesture {
-//            withAnimation(){selectedOption = .dates}
+//            withAnimation(){
+//                selectedOption = .dates
+//            }
 //        }
     }
     
