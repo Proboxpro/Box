@@ -47,11 +47,6 @@ struct SearchAndFilterWithCity: View {
     var cityName : String
     @Binding var showDestinationSearchView : Bool
     
-//    init(cityName: String = "", showDestinationSearchView: Bool) {
-//        self.cityName = cityName
-//        self.showDestinationSearchView = $showDestinationSearchView
-//    }
-    
     var body: some View {
         HStack{
             Image(systemName: "magnifyingglass")

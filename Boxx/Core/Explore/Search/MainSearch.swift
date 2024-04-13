@@ -13,6 +13,12 @@ struct SearchParameters  {
     var endDate = Date()
 }
 
+//enum MainScrollViewStatus {
+//    case location
+//    case dates
+//    case killo
+//}
+
 @available(iOS 17.0, *)
 struct MainSearch: View {
     @State private  var showDestinationSearchView = false
@@ -27,8 +33,6 @@ struct MainSearch: View {
     
     var body: some View {
         NavigationStack{
-            //            searchViewModel = DestinationSearchViewModel(authViewModel: viewModel)
-            
             if showDestinationSearchView{
                 DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
             } else{
@@ -42,15 +46,16 @@ struct MainSearch: View {
     func MainScrollView()->some View {
         ScrollView{
             LazyVStack(spacing: 5){
-                if(!viewModel.filteredOnParam(searchParameters).isEmpty) {
+                let filteredOnParamOrder = viewModel.filteredOnParam(searchParameters)
+                let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
+              
+                if isOrderFound {
                     SearchAndFilterWithCity(cityName: searchParameters.cityName, showDestinationSearchView: $showDestinationSearchView)
                         
-                }
-                else {
+                } else {
                     SearchAndFilter(showDestinationSearchView: $showDestinationSearchView)
-                        
                 }
-                ForEach(viewModel.filteredOnParam( searchParameters)) {item in NavigationLink(value: item){ ListingitemView(item: item)
+                ForEach(filteredOnParamOrder) {item in NavigationLink(value: item){ ListingitemView(item: item)
                         .scrollTransition{
                             content, phase in content
                                 .scaleEffect(phase.isIdentity ? 1 : 0.85)
