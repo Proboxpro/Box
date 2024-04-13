@@ -46,7 +46,7 @@ struct MainSearch: View {
     func MainScrollView()->some View {
         ScrollView{
             LazyVStack(spacing: 5){
-                let filteredOnParamOrder = viewModel.filteredOnParam(searchParameters)
+                let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters)
                 let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
               
                 if isOrderFound {
