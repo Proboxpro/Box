@@ -16,6 +16,8 @@ enum DestinationSearchOptions{
 
 @available(iOS 17.0, *)
 struct DestinationSearchView: View {
+//    @Binding var startDate: Date
+    
     @Environment(\.presentationMode) var presentationMode
     
     @EnvironmentObject var viewModel: AuthViewModel
@@ -43,106 +45,113 @@ struct DestinationSearchView: View {
         
     var body: some View {
         VStack{
-            HStack{
-                Button {
-                    withAnimation(){
-                        parameters.cityName = ""
-                        show.toggle()
-                    }
-                } label: {
-                    Image(systemName: "xmark.circle")
-                        .imageScale(.large)
-                        .foregroundStyle(.black)
-                }
-                
-                Spacer()
-                if !search.isEmpty{
-                    Button("Удалить"){
-                        search = ""
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.red)
-                    .fontWeight(.semibold)
-                }
-                
-            }
-            .padding()
             
-            
-            VStack(alignment: .leading){
-                if selectedOption == .location{
-                    VStack{
-                        Text("Куда отправляем?")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        
-                        HStack(alignment: .center){
-                            Image(systemName: "magnifyingglass")
-                            TextField("Город получения", text: self.$search)
-                                .font(.subheadline)
-                                .fontWeight(.semibold )
-                        } .frame(height: 44 )
-                            .padding(.horizontal)
-                            .overlay{RoundedRectangle(cornerRadius: 8)
-                                    .stroke(lineWidth: 1.0)
-                                    .foregroundStyle(Color(.systemGray4))
-                            }
-                        if self.search != ""{
-                            if  self.viewModel.city.filter({$0.name.lowercased().contains(self.search.lowercased())}).count == 0{
-                                VStack(alignment: .leading){
-                                    Text("Не найден")
-                                }
-                                
-                                
-                            }
-                            else{
-                                //                                print("CITY's: \(filtereduser)")
-                                VStack(alignment: .leading){
-                                    ForEach(filtereduser.prefix(1)) { item in
-                                        CityView(city: item)
-                                            .onTapGesture {
-                                                search = item.name
-                                            }
-                                    }
-                                }
-                                .frame( maxWidth: .infinity, maxHeight: 60 )
-                                .padding(.horizontal)
-                                .overlay{RoundedRectangle(cornerRadius: 8)
-                                        .stroke(lineWidth: 1.0)
-                                        .foregroundStyle(Color(.systemGray4))
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    CollapsedPickerView(title: "Куда", description: "Выбрать")
-                }
-                
-                
-            } .modifier(CollapsidDestModifier())
-                .frame(height: selectedOption == .location ? 120  : 64)
-                .onTapGesture {
-                    withAnimation(){selectedOption = .location}
-                }
-            
-            
+//            DeleteSearchInputView()
+//            DestinationView()
             DateSection()
-            SearchButton()
+//            SearchButton()
         }
     }
     
     
     //MARK: - Views
-    func DateSection()->some View {
+    func DeleteSearchInputView()->some View {
+        HStack{
+            Button {
+                withAnimation(){
+                    parameters.cityName = ""
+                    show.toggle()
+                }
+            } label: {
+                Image(systemName: "xmark.circle")
+                    .imageScale(.large)
+                    .foregroundStyle(.black)
+            }
+            
+            Spacer()
+            if search != "" {
+                Button("Удалить"){
+                    search = ""
+                }
+                .font(.subheadline)
+                .foregroundStyle(.red)
+                .fontWeight(.semibold)
+            }
+            
+        }
+        .padding()
+    }
+    
+    func DestinationView()->some View {
         VStack(alignment: .leading){
-            if selectedOption == .dates {
-                Text ("Когда хотите отправить?")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Text ("Укажите примерные даты")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.gray)
+            if selectedOption == .location{
+                VStack{
+                    Text("Куда отправляем?")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    HStack(alignment: .center){
+                        Image(systemName: "magnifyingglass")
+                        TextField("Город получения", text: self.$search)
+                            .font(.subheadline)
+                            .fontWeight(.semibold )
+                    } .frame(height: 44 )
+                        .padding(.horizontal)
+                        .overlay{RoundedRectangle(cornerRadius: 8)
+                                .stroke(lineWidth: 1.0)
+                                .foregroundStyle(Color(.systemGray4))
+                        }
+                    if self.search != ""{
+                        if  self.viewModel.city.filter({$0.name.lowercased().contains(self.search.lowercased())}).count == 0{
+                            VStack(alignment: .leading){
+                                Text("Не найден")
+                            }
+                            
+                            
+                        }
+                        else{
+                            //                                print("CITY's: \(filtereduser)")
+                            VStack(alignment: .leading){
+                                ForEach(filtereduser.prefix(1)) { item in
+                                    CityView(city: item)
+                                        .onTapGesture {
+                                            search = item.name
+                                        }
+                                }
+                            }
+                            .frame( maxWidth: .infinity, maxHeight: 60 )
+                            .padding(.horizontal)
+                            .overlay{RoundedRectangle(cornerRadius: 8)
+                                    .stroke(lineWidth: 1.0)
+                                    .foregroundStyle(Color(.systemGray4))
+                            }
+                        }
+                    }
+                }
+            } else {
+                CollapsedPickerView(title: "Куда", description: "Выбрать")
+            }
+            
+            
+        } .modifier(CollapsidDestModifier())
+            .frame(height: selectedOption == .location ? 120  : 64)
+            .onTapGesture {
+                withAnimation(){selectedOption = .location}
+            }
+    }
+    
+    
+    func DateSection()->some View {
+//        VStack(alignment: .leading){
+//            if selectedOption == .dates {
+        
+//                Text ("Когда хотите отправить?")
+//                    .font(.title2)
+//                    .fontWeight(.semibold)
+//                Text ("Укажите примерные даты")
+//                    .font(.subheadline)
+//                    .fontWeight(.semibold)
+//                    .foregroundColor(.gray)
                 VStack{
                     DatePicker("Начиная", selection: $parameters.startDate, displayedComponents: .date)
                     Divider()
@@ -152,16 +161,17 @@ struct DestinationSearchView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 
-            } else {
-                CollapsedPickerView(title: "Когда", description: "Даты")
-            }
-        }   
-        .modifier(CollapsidDestModifier())
-        .frame(height: selectedOption == .dates ? 180  : 64)
-        
-        .onTapGesture {
-            withAnimation(){selectedOption = .dates}
-        }
+                
+//            } else {
+//                CollapsedPickerView(title: "Когда", description: "Даты")
+//            }
+//        }   
+//        .modifier(CollapsidDestModifier())
+//        .frame(height: selectedOption == .dates ? 180  : 64)
+//        
+//        .onTapGesture {
+//            withAnimation(){selectedOption = .dates}
+//        }
     }
     
     

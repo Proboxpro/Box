@@ -18,6 +18,7 @@ struct MainSearch: View {
     @State private  var showDestinationSearchView = false
     @EnvironmentObject var viewModel: AuthViewModel
     @State var searchParameters = SearchParameters()
+    
 //    @StateObject var searchViewModel :  DestinationSearchViewModel
     
 //    @State private var currentCityName: String = ""
