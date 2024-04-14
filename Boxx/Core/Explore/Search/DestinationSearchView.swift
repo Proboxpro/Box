@@ -188,18 +188,16 @@ struct DestinationSearchView: View {
             Task {
                 print("All city's \(viewModel.city.compactMap({$0.name}))")
                 print("CITY's: \(filtereduser.compactMap({$0.name}))" )
+//                print("CITY's: \(filtereduser.compactMap({$0.name}))" )
                 
                 if filtereduser.compactMap({$0.name}).filter({$0 == search}).isEmpty {
                     print("NOTHING FOUND")
                 } else {
-                    print("Search: \(search)")
-                    print("GO TO MAINSEARCH")
+//                    print("Search: \(search)")
+//                    print("GO TO MAINSEARCH")
+//                    
+//                    print("DAte: \($parameters.startDate)")
                     
-                    print("DAte: \($parameters.startDate)")
-                    
-//                    print("VM-New-DAte: \(viewModel.orders[0].startdate.toDate())")
-                    
-//                    convertDate()
                     //MARK: - переход обратно на экран MainSearch
                     
                     withAnimation {
