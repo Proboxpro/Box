@@ -15,8 +15,6 @@ struct ListingDetail: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
-    //    @StateObject var listingViewModel = ListingViewModel(authViewModel: self.viewModel)
-    @EnvironmentObject var listingViewModel: ListingViewModel
     var item: ListingItem
     
     @State private var photosPickerItem: PhotosPickerItem?
@@ -222,9 +220,6 @@ struct ListingDetail: View {
             Divider()
             
         }
-        .onAppear {
-            listingViewModel.fetchData()
-        }
         .toolbar(.hidden, for:  .tabBar)
         .edgesIgnoringSafeArea(.all)
         .padding(.bottom, 70)
@@ -246,27 +241,7 @@ struct ListingDetail: View {
                     }
                     Spacer()
                     Button {
-                        if isSendAviable {
-                            Task{
-                                //                            viewModel.createNewOrder(senderName: viewModel.currentUser?.login ?? "", senderUid: viewModel.currentUser?.id ?? "", ownerUid: item.ownerUid, ownerName: item.ownerName, description: description, value: value, cityFrom: item.cityFrom, cityTo: item.cityTo, imageUrls: item.imageUrls, recipient: recipient, ownerImageUrl: item.imageUrl, text: text)
-                                do {
-                                    if let receipentUser = receipentUser {
-                                        await listingViewModel.selectUsers([item.ownerUid, viewModel.currentUser?.id ?? ""] + [receipentUser.id])
-                                    } else {
-                                        await listingViewModel.selectUsers([item.ownerUid, viewModel.currentUser?.id ?? ""])
-                                    }
-                                    
-                                    if let conversation = await listingViewModel.conversationForUsers() {
-                                        self.conversationToOpen = conversation
-                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation, initialMessageText: description == "" ? nil : description, initialImageURL: productImageUrl)
-                                        showingOrder.toggle()
-                                        self.listingViewModel.selectedUsers = []
-                                    }
-                                }
-                            }
-                        } else {
-                            
-                        }
+                        showingOrder.toggle()
                     } label: {
                         Text ("Отправить")
                             .foregroundStyle(.white)
@@ -275,29 +250,11 @@ struct ListingDetail: View {
                             .frame(width: 140, height: 40 )
                             .background(.pink)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .sheet(isPresented: $showingOrder, content: {
-                                if let conversationToOpen = conversationToOpen, let chatViewModel = chatViewModel  {
-                                    NavigationView {
-                                        ChatViewContainer()
-                                            .environmentObject(chatViewModel)
-                                            .navigationBarItems(leading: Button("Back", action: {
-                                                showingOrder.toggle()
-                                            }))
-                                            .navigationBarItems(trailing: AsyncImage(url: conversationToOpen.pictureURL, content: { image in
-                                                image
-                                                    .resizable()
-                                                    .frame(width: 32, height: 32)
-                                                    .clipShape(Circle())
-                                            }, placeholder: {
-                                                Image(systemName: "person.circle.fill")
-                                                    .resizable()
-                                                    .frame(width: 32, height: 32)
-                                                    .foregroundColor(Color(.systemGray))
-                                            }))
-            //                                .navigationBarBackButtonHidden(false)
-                                            .navigationTitle(conversationToOpen.title)
-                                            .navigationBarTitleDisplayMode(.inline)
-                                    }
+                            .fullScreenCover(isPresented: $showingOrder, content: {
+                                NavigationView{
+                                    OrderDetail()
+                                        .environmentObject(OrderViewModel(authViewModel: self.viewModel))
+                                        .navigationBarBackButtonHidden()
                                 }
                             })
                     }

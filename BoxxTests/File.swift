@@ -15,7 +15,7 @@ struct ListingDetail: View {
 
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
-    var item: ListingViewModel
+    var item: OrderViewModel
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var product: UIImage? = nil
     @State private var value: String = ""
