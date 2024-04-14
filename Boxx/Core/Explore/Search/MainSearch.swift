@@ -29,7 +29,8 @@ struct SearchParameters  {
 
 @available(iOS 17.0, *)
 struct MainSearch: View {
-    @State private  var showDestinationSearchView = false
+    @State private var showDestinationSearchView = false
+    @State private var searchBarIsEmpty = true
     @EnvironmentObject var viewModel: AuthViewModel
     @State var searchParameters = SearchParameters()
     
@@ -54,14 +55,14 @@ struct MainSearch: View {
     func MainScrollView()->some View {
         ScrollView{
             LazyVStack(spacing: 5){
-                let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters)
+                let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
                 let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
               
-                if isOrderFound {
-                    SearchAndFilterWithCity(cityName: searchParameters.cityName, showDestinationSearchView: $showDestinationSearchView)
+                if isOrderFound && !searchBarIsEmpty {
+                    SearchAndFilterWithCity(cityName: searchParameters.cityName, SearchBarIsEmpty: $searchBarIsEmpty)
                         
                 } else {
-                    SearchAndFilter(showDestinationSearchView: $showDestinationSearchView)
+                    SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView)
                 }
                 ForEach(filteredOnParamOrder) {item in NavigationLink(value: item){ ListingitemView(item: item)
                         .scrollTransition{
@@ -73,12 +74,14 @@ struct MainSearch: View {
                 }
                 .frame(height: 160)
             }
-        }  .navigationDestination(for: ListingItem.self){ item in
+        }  
+        .navigationDestination(for: ListingItem.self){ item in
             ListingDetail(item: item)
                 .environmentObject(ListingViewModel(authViewModel: self.viewModel))
                 .navigationBarBackButtonHidden()
             
-        }.onAppear{
+        }
+        .onAppear{
             viewModel.fetchOrder()
         }
     }

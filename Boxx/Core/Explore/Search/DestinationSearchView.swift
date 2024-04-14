@@ -168,24 +168,17 @@ struct DestinationSearchView: View {
                 
             } else {
                 let title = "Когда                                                               "
-                
                 CollapsedPickerView(title: title, description: "Даты")
                     .onTapGesture {
                         withAnimation(){
                             selectedOption = .dates
                         }
                     }
-                
             }
             
-        } .modifier(CollapsidDestModifier())
+        } 
+        .modifier(CollapsidDestModifier())
         .frame(height: selectedOption == .dates ? 180  : 64)
-        
-//        .onTapGesture {
-//            withAnimation(){
-//                selectedOption = .dates
-//            }
-//        }
     }
     
     

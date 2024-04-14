@@ -256,9 +256,13 @@ class AuthViewModel: ObservableObject {
     }
     
     
-    func filteredOnParam(_ searchParameters: SearchParameters) -> [ListingItem] {
+    func filteredOnParam(_ searchParameters: SearchParameters, searchBarIsEmpty: Bool) -> [ListingItem] {
         
         var filteredItems = [ListingItem]()
+        
+        if searchBarIsEmpty {
+            return myorder
+        }
         
         if searchParameters.datesIsSelected {
         //MARK: - показываем результа по датам и городу
@@ -266,8 +270,11 @@ class AuthViewModel: ObservableObject {
         } else if (searchParameters.cityName != "") {
             //MARK: - результат если даты не выбраны город есть
             filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName})
+        } else if(searchParameters.cityName == "" && searchParameters.datesIsSelected) {
+            //MARK: - когда выбраны даты но не выбран город
+            filteredItems = myorder.filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
         } else {
-            //MARK: - результат если даты не выбраны
+            //MARK: - результат если даты не выбраны и город не выбран
             filteredItems = myorder
         }
         

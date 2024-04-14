@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchAndFilter: View {
+    @Binding var SearchBarIsEmpty: Bool
     @Binding var showDestinationSearchView : Bool
     
     var body: some View {
@@ -38,6 +39,7 @@ struct SearchAndFilter: View {
         .onTapGesture {
             withAnimation{
                 showDestinationSearchView.toggle()
+                SearchBarIsEmpty.toggle()
             }
         }
     }
@@ -45,7 +47,8 @@ struct SearchAndFilter: View {
 
 struct SearchAndFilterWithCity: View {
     var cityName : String
-    @Binding var showDestinationSearchView : Bool
+//    @Binding var eraseSearchBar : Bool
+    @Binding var SearchBarIsEmpty: Bool
     
     var body: some View {
         HStack{
@@ -82,7 +85,10 @@ struct SearchAndFilterWithCity: View {
     }
     
     func eraseResult() {
-        showDestinationSearchView.toggle()
+        withAnimation {
+            SearchBarIsEmpty = true
+        }
+        print("SEARCHBAR IS EMPTY:\(SearchBarIsEmpty)")
     }
 }
 
