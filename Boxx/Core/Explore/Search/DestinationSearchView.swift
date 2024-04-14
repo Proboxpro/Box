@@ -179,6 +179,10 @@ struct DestinationSearchView: View {
         } 
         .modifier(CollapsidDestModifier())
         .frame(height: selectedOption == .dates ? 180  : 64)
+        .onAppear() {
+            parameters.endDate = Date()
+            parameters.startDate = Date()
+        }
     }
     
     
