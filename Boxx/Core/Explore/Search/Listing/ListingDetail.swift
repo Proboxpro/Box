@@ -252,7 +252,7 @@ struct ListingDetail: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .fullScreenCover(isPresented: $showingOrder, content: {
                                 NavigationView{
-                                    OrderDetail()
+                                    OrderDetail(item: item, description: description, productImageUrl: productImageUrl)
                                         .environmentObject(OrderViewModel(authViewModel: self.viewModel))
                                         .navigationBarBackButtonHidden()
                                 }
