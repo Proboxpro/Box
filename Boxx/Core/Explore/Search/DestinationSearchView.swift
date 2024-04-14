@@ -152,8 +152,14 @@ struct DestinationSearchView: View {
                     .foregroundColor(.gray)
                 VStack{
                     DatePicker("Начиная", selection: $parameters.startDate, displayedComponents: .date)
+                        .onChange(of: parameters.startDate) { oldValue, newValue in
+                            parameters.datesIsSelected = true
+                        }
                     Divider()
                     DatePicker("До", selection:$parameters.endDate , displayedComponents: .date)
+                        .onChange(of: parameters.endDate) { oldValue, newValue in
+                            parameters.datesIsSelected = true
+                        }
                 }
                 .foregroundStyle(.gray)
                 .font(.subheadline)

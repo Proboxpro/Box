@@ -59,8 +59,10 @@ struct SearchAndFilterWithCity: View {
                     .foregroundColor(.red)
             }
             Spacer()
-            Button(action: {}, label: {
-                Image(systemName:"line.3.horizontal.decrease.circle")
+            Button(action: {
+                eraseResult()
+            }, label: {
+                Image(systemName:"x.circle")
                     .foregroundStyle(.black)
             })
         }
@@ -74,9 +76,13 @@ struct SearchAndFilterWithCity: View {
         .padding()
         .onTapGesture {
             withAnimation{
-                showDestinationSearchView.toggle()
+                eraseResult()
             }
         }
+    }
+    
+    func eraseResult() {
+        showDestinationSearchView.toggle()
     }
 }
 

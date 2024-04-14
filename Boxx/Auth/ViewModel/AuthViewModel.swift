@@ -258,11 +258,20 @@ class AuthViewModel: ObservableObject {
     
     func filteredOnParam(_ searchParameters: SearchParameters) -> [ListingItem] {
         
-        let filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
+        var filteredItems = [ListingItem]()
         
-        //MARK: - if not empty all order
-        return filteredItems.isEmpty ? myorder : filteredItems
-//        return filteredItems.isEmpty ? [ListingItem]() : filteredItems
+        if searchParameters.datesIsSelected {
+        //MARK: - показываем результа по датам и городу
+            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
+        } else if (searchParameters.cityName != "") {
+            //MARK: - результат если даты не выбраны город есть
+            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName})
+        } else {
+            //MARK: - результат если даты не выбраны
+            filteredItems = myorder
+        }
+        
+        return filteredItems
     }
     
     private func userReference(UserId:String) -> StorageReference{
