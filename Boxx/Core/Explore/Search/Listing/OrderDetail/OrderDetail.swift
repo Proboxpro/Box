@@ -170,66 +170,63 @@ struct OrderDetail: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(32)
-                .background(Rectangle()
-                    .foregroundColor(.black))
                 
-                VStack(alignment: .leading, spacing: 24) {
-                    VStack{
-                        HStack(spacing: 0){
+                VStack(alignment: .leading, spacing: 32) {
+                    ZStack{
+                        HStack{
                             Spacer()
-                            
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.white)
-                                .background(
-                                    Circle()
-                                        .fill(.green)
-                                        .frame(width: 32, height: 32)
-                                )
-                            
                             Rectangle()
                                 .foregroundColor(.green)
-                                .frame(height: 2)
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.white)
-                                .background(
-                                    Circle()
-                                        .fill(.green)
-                                        .frame(width: 32, height: 32)
-                                )
-                            
+                                .frame(width: 128, height: 2)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Rectangle()
                                 .foregroundColor(.gray)
-                                .frame(height: 2)
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.white)
-                                .background(
-                                    Circle()
-                                        .fill(.gray)
-                                        .frame(width: 32, height: 32)
-                                )
-                            
+                                .frame(width: 128, height: 2)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Spacer()
                         }
-                        
                         HStack{
-                            Text("Отправлен")
-                                .fontWeight(.medium)
-                                .foregroundStyle(.black)
-                                .multilineTextAlignment(.center)
-                            
+                            VStack(spacing: 16){
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.white)
+                                    .background(
+                                        Circle()
+                                            .fill(.green)
+                                            .frame(width: 32, height: 32)
+                                    )
+                                Text("Отправлен")
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.black)
+                                    .multilineTextAlignment(.center)
+                            }
                             Spacer()
-                            
-                            Text("В доставке")
-                                .fontWeight(.medium)
-                                .foregroundStyle(.black)
-                                .multilineTextAlignment(.center)
-                            
+                            VStack(spacing: 16){
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.white)
+                                    .background(
+                                        Circle()
+                                            .fill(.green)
+                                            .frame(width: 32, height: 32)
+                                    )
+                                Text("В доставке")
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.black)
+                                    .multilineTextAlignment(.center)
+                            }
                             Spacer()
-                            
-                            Text("Доставлен")
-                                .fontWeight(.medium)
-                                .foregroundStyle(.black)
-                                .multilineTextAlignment(.center)
+                            VStack(spacing: 16){
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.white)
+                                    .background(
+                                        Circle()
+                                            .fill(.gray)
+                                            .frame(width: 32, height: 32)
+                                    )
+                                Text("Доставлен")
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.black)
+                                    .multilineTextAlignment(.center)
+                            }
                         }
                     }
                     
