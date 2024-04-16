@@ -35,6 +35,8 @@ class AuthViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var city: [City] = []
     
+    @Published var orderImg: URL?
+    
 //    @Publisher var currentCity: City?
 //    @Published var destinationSearchViewModel = DestinationSearchViewModel(
 
@@ -396,6 +398,7 @@ class AuthViewModel: ObservableObject {
     private func orderReference(UserId:String) -> StorageReference{
         storage.child("order").child(UserId)
     }
+    
     func saveOrderImage (data: Data, UserId: String) async throws -> (name:String, path: String){
         
         let meta = StorageMetadata()
@@ -422,6 +425,7 @@ class AuthViewModel: ObservableObject {
                 let storageRef = Storage.storage().reference(withPath: (name))
                 let url = try await storageRef.downloadURL()
                 print (url)
+                orderImg = url
                 try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
                     "orderimageUrl": url.absoluteString,
                     "UserId": UserId

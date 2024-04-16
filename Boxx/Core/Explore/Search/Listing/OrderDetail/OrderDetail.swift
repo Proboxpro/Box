@@ -231,7 +231,7 @@ struct OrderDetail: View {
                     }
                     
                     HStack(spacing: 16){
-                        if let url = productImageUrl {
+                        if let url = viewModel.orderImg {
                             WebImage(url: url)
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
