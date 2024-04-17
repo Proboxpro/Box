@@ -13,4 +13,8 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let id: String
     let description: String?
     let image: URL?
+    
+    let isSent: Bool
+    let isInDelivery: Bool
+    let isDelivered: Bool
 }

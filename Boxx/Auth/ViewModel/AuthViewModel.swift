@@ -274,8 +274,11 @@ class AuthViewModel: ObservableObject {
                     let id = data["id"]as? String ?? ""
                     let description = data["description"]as? String
                     let image = data["image"]as? String ?? ""
+                    let isSent = data["isSent"]as? Bool ?? false
+                    let isInDelivery = data["isInDelivery"]as? Bool ?? false
+                    let isDelivered = data["isDelivered"]as? Bool ?? false
                     let url = URL(string: image)
-                    var order = OrderDescriptionItem(id: id, description: description, image: url)
+                    var order = OrderDescriptionItem(id: id, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered)
                     print(order)
                     
                     if id == uid {

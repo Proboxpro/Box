@@ -22,6 +22,10 @@ struct OrderDetail: View {
     @State private var value: String = ""
     @State private var recipient: String = ""
     
+    private var orderItem: OrderDescriptionItem? {
+        return viewModel.orderDescription.first
+    }
+    
     @State private var conversationToOpen: Conversation? = nil
     @State var chatViewModel: ChatViewModel? = nil
     
@@ -175,11 +179,11 @@ struct OrderDetail: View {
                         HStack{
                             Spacer()
                             Rectangle()
-                                .foregroundColor(.green)
+                                .foregroundColor((orderItem?.isInDelivery ?? false) ? .green : .gray)
                                 .frame(width: 128, height: 2)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Rectangle()
-                                .foregroundColor(.gray)
+                                .foregroundColor((orderItem?.isDelivered ?? false) ? .green : .gray)
                                 .frame(width: 128, height: 2)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Spacer()
@@ -190,7 +194,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill(.green)
+                                            .fill((orderItem?.isSent ?? false) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("Отправлен")
@@ -204,7 +208,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill(.green)
+                                            .fill((orderItem?.isInDelivery ?? false) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("В доставке")
@@ -218,7 +222,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill(.gray)
+                                            .fill((orderItem?.isDelivered ?? false) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("Доставлен")
@@ -230,13 +234,13 @@ struct OrderDetail: View {
                     }
                     
                     HStack(spacing: 16){
-                        if let url = viewModel.orderDescription.first?.image {
+                        if let url = orderItem?.image {
                             WebImage(url: url)
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
                         
-                        if let description = viewModel.orderDescription.first?.description {
+                        if let description = orderItem?.description {
                             Text("Описание: \(description)")
                                 .fontWeight(.regular)
                                 .foregroundStyle(.gray)
