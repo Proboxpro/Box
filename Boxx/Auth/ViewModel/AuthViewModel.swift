@@ -35,6 +35,7 @@ class AuthViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var city: [City] = []
     
+    @Published var orderDescription: [OrderDescriptionItem] = []
     @Published var orderImg: URL?
     
 //    @Publisher var currentCity: City?
@@ -257,6 +258,35 @@ class AuthViewModel: ObservableObject {
         
     }
     
+    func fetchOrderDescription(){
+        orderDescription.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let db = Firestore.firestore()
+        let ref = db.collection( "orderDescription")
+        ref.getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let id = data["id"]as? String ?? ""
+                    let description = data["description"]as? String
+                    let image = data["image"]as? String ?? ""
+                    let url = URL(string: image)
+                    var order = OrderDescriptionItem(id: id, description: description, image: url)
+                    print(order)
+                    
+                    if id == uid {
+                        self.orderDescription.append(order)
+                    }
+                }
+            }
+        }
+        
+    }
+    
     
     func filteredOnParam(_ searchParameters: SearchParameters, searchBarIsEmpty: Bool) -> [ListingItem] {
         
@@ -436,6 +466,27 @@ class AuthViewModel: ObservableObject {
                 return nil
             }
         }.value
+    }
+    
+    func saveOrder(imageData: Data, description: String) async throws {
+        guard let UserId = Auth.auth().currentUser?.uid else { return }
+        let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: imageData, UserId: UserId)
+        print ("SUCCESS!")
+        print (path)
+        print (name)
+        do {
+            let storageRef = Storage.storage().reference(withPath: (name))
+            let url = try await storageRef.downloadURL()
+            print (url)
+            try await  Firestore.firestore().collection("orderDescription").document(UserId).setData([
+                "description": description,
+                "id": UserId,
+                "image": url.absoluteString
+            ])
+        } catch {
+            print("bags \(error.localizedDescription)")
+            return
+        }
     }
     
     func createOrder(senderName: String, senderUid: String,ownerUid: String,  ownerName: String, description: String, value: String, cityFrom: String, cityTo: String, imageUrls: String, recipient: String, ownerImageUrl: String,text: String) async {

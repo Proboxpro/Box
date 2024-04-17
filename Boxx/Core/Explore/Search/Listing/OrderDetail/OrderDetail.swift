@@ -16,8 +16,6 @@ struct OrderDetail: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var orderViewModel: OrderViewModel
     var item: ListingItem
-    var description: String
-    var productImageUrl: URL?
     
     @State private var showingMessage = false
     @State private var showingProfile = false
@@ -28,7 +26,7 @@ struct OrderDetail: View {
     @State var chatViewModel: ChatViewModel? = nil
     
     var isSendAviable: Bool {
-        return description != ""
+        return viewModel.orderDescription.first?.description != ""
     }
     
     var filtereduser: [User] {
@@ -112,7 +110,8 @@ struct OrderDetail: View {
                                     
                                     if let conversation = await orderViewModel.conversationForUsers() {
                                         self.conversationToOpen = conversation
-                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation, initialMessageText: description == "" ? nil : description, initialImageURL: productImageUrl)
+                                        let description = viewModel.orderDescription.first?.description
+                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation, initialMessageText: description == "" ? nil : description, initialImageURL: viewModel.orderImg)
                                         showingMessage.toggle()
                                         self.orderViewModel.selectedUsers = []
                                     }
@@ -231,15 +230,17 @@ struct OrderDetail: View {
                     }
                     
                     HStack(spacing: 16){
-                        if let url = viewModel.orderImg {
+                        if let url = viewModel.orderDescription.first?.image {
                             WebImage(url: url)
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
                         
-                        Text("Описание: \(description)")
-                            .fontWeight(.regular)
-                            .foregroundStyle(.gray)
+                        if let description = viewModel.orderDescription.first?.description {
+                            Text("Описание: \(description)")
+                                .fontWeight(.regular)
+                                .foregroundStyle(.gray)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -254,6 +255,7 @@ struct OrderDetail: View {
                 .cornerRadius(12))
         }
         .onAppear {
+            viewModel.fetchOrderDescription()
             orderViewModel.fetchData()
         }
         .navigationBarHidden(true)

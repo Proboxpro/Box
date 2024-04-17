@@ -19,7 +19,7 @@ struct ListingDetail: View {
     
     @State private var photosPickerItem: PhotosPickerItem?
     
-    @State private var productImage: UIImage? = nil
+    @State private var productImageData: Data? = nil
     @State private var productImageUrl: URL? = nil
     @State private var showingOrder = false
     @State private var showingProfile = false
@@ -193,7 +193,7 @@ struct ListingDetail: View {
                     }
                     Spacer()
                     PhotosPicker(selection: $photosPickerItem){
-                        Image (uiImage: productImage ?? UIImage (resource: .plus ))
+                        Image (uiImage: UIImage(data: productImageData ?? Data()) ?? UIImage (resource: .plus ))
                             .resizable()
                             .frame(width: 100, height: 100)
                             .aspectRatio(contentMode:.fill)
@@ -203,12 +203,9 @@ struct ListingDetail: View {
                         Task{
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
-                                if let image = UIImage(data: data) {
-                                    productImage = image
-
-                                    let url = try? await viewModel.saveOrderImage(data: data)
-                                    productImageUrl = url
-                                }
+                                productImageData = data
+                                let url = try? await viewModel.saveOrderImage(data: data)
+                                productImageUrl = url
                             }
                         }
                     }
@@ -241,7 +238,10 @@ struct ListingDetail: View {
                     }
                     Spacer()
                     Button {
-                        showingOrder.toggle()
+                        Task {
+                            try await viewModel.saveOrder(imageData: productImageData ?? Data(), description: description)
+                            showingOrder.toggle()
+                        }
                     } label: {
                         Text ("Отправить")
                             .foregroundStyle(.white)
@@ -252,7 +252,7 @@ struct ListingDetail: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .fullScreenCover(isPresented: $showingOrder, content: {
                                 NavigationView{
-                                    OrderDetail(item: item, description: description, productImageUrl: productImageUrl)
+                                    OrderDetail(item: item)
                                         .environmentObject(OrderViewModel(authViewModel: self.viewModel))
                                         .navigationBarBackButtonHidden()
                                 }
