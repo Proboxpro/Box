@@ -1,8 +1,9 @@
 //
-//  ListingViewModel.swift
+//  OrderViewModel.swift
 //  Boxx
 //
 //  Created by Максим Алексеев  on 04.03.2024.
+//  Changed by Руслан Парастаев on 14.04.2024.
 //
 
 import Foundation
@@ -11,7 +12,7 @@ import FirebaseFirestore
 import Firebase
 import UIKit
 
-class ListingViewModel: ObservableObject {
+class OrderViewModel: ObservableObject {
     var selectedUsers: [User] = []
     var authViewModel: AuthViewModel
     

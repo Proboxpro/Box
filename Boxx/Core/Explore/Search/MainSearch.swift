@@ -77,7 +77,7 @@ struct MainSearch: View {
         }  
         .navigationDestination(for: ListingItem.self){ item in
             ListingDetail(item: item)
-                .environmentObject(ListingViewModel(authViewModel: self.viewModel))
+                .environmentObject(self.viewModel)
                 .navigationBarBackButtonHidden()
             
         }
