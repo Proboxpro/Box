@@ -263,6 +263,15 @@ class AuthViewModel: ObservableObject {
         guard let uid = Auth.auth().currentUser?.uid else {return}
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
+        let infoRef = ref.document(uid).collection("information")
+        fetchInnerCollection(ref: infoRef) { description, url, isSent, isInDelivery, isDelivered in
+            let order = OrderDescriptionItem(id: uid, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered)
+            print(order)
+            self.orderDescription.append(order)
+        }
+    }
+    
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, URL?, Bool, Bool, Bool) -> Void)) {
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -271,23 +280,16 @@ class AuthViewModel: ObservableObject {
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let data = document.data()
-                    let id = data["id"]as? String ?? ""
-                    let description = data["description"]as? String
+                    let description = data["description"]as? String ?? ""
                     let image = data["image"]as? String ?? ""
                     let isSent = data["isSent"]as? Bool ?? false
                     let isInDelivery = data["isInDelivery"]as? Bool ?? false
                     let isDelivered = data["isDelivered"]as? Bool ?? false
                     let url = URL(string: image)
-                    var order = OrderDescriptionItem(id: id, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered)
-                    print(order)
-                    
-                    if id == uid {
-                        self.orderDescription.append(order)
-                    }
+                    completion(description, url, isSent, isInDelivery, isDelivered)
                 }
             }
         }
-        
     }
     
     
@@ -473,22 +475,49 @@ class AuthViewModel: ObservableObject {
     
     func saveOrder(imageData: Data, description: String) async throws {
         guard let UserId = Auth.auth().currentUser?.uid else { return }
-        let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: imageData, UserId: UserId)
-        print ("SUCCESS!")
-        print (path)
-        print (name)
         do {
-            let storageRef = Storage.storage().reference(withPath: (name))
-            let url = try await storageRef.downloadURL()
+            let url = try await getImageUrl(imageData: imageData)
             print (url)
-            try await  Firestore.firestore().collection("orderDescription").document(UserId).setData([
-                "description": description,
-                "id": UserId,
-                "image": url.absoluteString
-            ])
+            let doc = Firestore.firestore()
+                .collection("orderDescription")
+                .document(UserId)
+            let document = try await doc.getDocument()
+            let infoDoc = Firestore.firestore()
+                .collection("orderDescription")
+                .document(UserId)
+                .collection("information")
+                .document()
+            if document.exists {
+                try await infoDoc.setData([
+                    "description": description,
+                    "image": url?.absoluteString ?? ""
+                ])
+                } else {
+                    try await doc.setData([
+                        "id": UserId
+                    ])
+                    try await infoDoc.setData([
+                        "description": description,
+                        "image": url?.absoluteString ?? ""
+                    ])
+                }
         } catch {
             print("bags \(error.localizedDescription)")
             return
+        }
+    }
+    
+    private func getImageUrl(imageData: Data) async throws -> URL? {
+        guard let UserId = Auth.auth().currentUser?.uid else { return nil }
+        guard imageData != Data() else { return nil }
+        let (path, name) = try await AuthViewModel.shared.saveOrderImage (data: imageData, UserId: UserId)
+        do {
+            let storageRef = Storage.storage().reference(withPath: (name))
+            let url = try await storageRef.downloadURL()
+            return url
+        } catch {
+            print("bags \(error.localizedDescription)")
+            return nil
         }
     }
     
