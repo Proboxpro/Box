@@ -71,7 +71,7 @@ class OrderViewModel: ObservableObject {
     
     private func createConversation(_ users: [User], _ pictureURL: URL?) async -> Conversation? {
         let allUserIds = users.map { $0.id }
-        let title = users.map { $0.fullname }.joined(separator: " ")
+        let title = users.map { $0.login }.joined(separator: " ")
         let dict: [String : Any] = [
             "users": allUserIds,
             //            "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),

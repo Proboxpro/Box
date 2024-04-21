@@ -23,7 +23,7 @@ struct OrderDetail: View {
     @State private var recipient: String = ""
     
     private var orderItem: OrderDescriptionItem? {
-        return viewModel.orderDescription.first
+        return viewModel.orderDescription.last
     }
     
     @State private var conversationToOpen: Conversation? = nil
@@ -104,7 +104,6 @@ struct OrderDetail: View {
                     Button {
                         if isSendAviable {
                             Task{
-                                //                            viewModel.createNewOrder(senderName: viewModel.currentUser?.login ?? "", senderUid: viewModel.currentUser?.id ?? "", ownerUid: item.ownerUid, ownerName: item.ownerName, description: description, value: value, cityFrom: item.cityFrom, cityTo: item.cityTo, imageUrls: item.imageUrls, recipient: recipient, ownerImageUrl: item.imageUrl, text: text)
                                 do {
                                     if let receipentUser = receipentUser {
                                         await orderViewModel.selectUsers([item.ownerUid, viewModel.currentUser?.id ?? ""] + [receipentUser.id])
@@ -113,9 +112,7 @@ struct OrderDetail: View {
                                     }
                                     
                                     if let conversation = await orderViewModel.conversationForUsers() {
-                                        self.conversationToOpen = conversation
-                                        let description = viewModel.orderDescription.first?.description
-                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation, initialMessageText: description == "" ? nil : description, initialImageURL: viewModel.orderImg)
+                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
                                         showingMessage.toggle()
                                         self.orderViewModel.selectedUsers = []
                                     }
@@ -133,14 +130,14 @@ struct OrderDetail: View {
                                     .frame(width: 32, height: 32)
                             }
                             .sheet(isPresented: $showingMessage, content: {
-                                if let conversationToOpen = conversationToOpen, let chatViewModel = chatViewModel  {
+                                if let chatViewModel = chatViewModel  {
                                     NavigationView {
                                         ChatViewContainer()
                                             .environmentObject(chatViewModel)
                                             .navigationBarItems(leading: Button("Back", action: {
                                                 showingMessage.toggle()
                                             }))
-                                            .navigationBarItems(trailing: AsyncImage(url: conversationToOpen.pictureURL, content: { image in
+                                            .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
                                                 image
                                                     .resizable()
                                                     .frame(width: 32, height: 32)
@@ -151,7 +148,7 @@ struct OrderDetail: View {
                                                     .frame(width: 32, height: 32)
                                                     .foregroundColor(Color(.systemGray))
                                             }))
-                                            .navigationTitle(conversationToOpen.title)
+                                            .navigationTitle(item.ownerName)
                                             .navigationBarTitleDisplayMode(.inline)
                                     }
                                 }
