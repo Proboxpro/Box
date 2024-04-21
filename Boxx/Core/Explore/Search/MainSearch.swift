@@ -34,6 +34,8 @@ struct MainSearch: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State var searchParameters = SearchParameters()
     
+    @State var showingListingDetailView = false
+    @State var currentItem : ListingItem?
     //    @StateObject var searchViewModel :  DestinationSearchViewModel
     
     //    @State private var currentCityName: String = ""
@@ -41,11 +43,15 @@ struct MainSearch: View {
     let user: User
     
     var body: some View {
-        NavigationStack{
-            if showDestinationSearchView{
-                DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
-            } else{
-                MainScrollView()
+        VStack {
+            if showingListingDetailView {
+                ListingDetail(item: currentItem!, showingListingDetailView: $showingListingDetailView)
+            } else {
+                if showDestinationSearchView{
+                    DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
+                } else {
+                    MainScrollView()
+                }
             }
         }
     }
@@ -69,32 +75,50 @@ struct MainSearch: View {
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()
                 } else {
-                    ForEach(ordersToShow) {item in NavigationLink(value: item){ ListingitemView(item: item)
-                            .scrollTransition{
-                                content, phase in content
-                                    .scaleEffect(phase.isIdentity ? 1 : 0.85)
-                                    .opacity(phase.isIdentity ? 1 : 0.85)
+                    ForEach(ordersToShow) {item in 
+//                        NavigationLink(value: item) {
+//                            ListingitemView(item: item)
+//                            .scrollTransition{
+//                                content, phase in content
+//                                    .scaleEffect(phase.isIdentity ? 1 : 0.85)
+//                                    .opacity(phase.isIdentity ? 1 : 0.85)
+//                            }
+//                        }
+//                        .onTapGesture {
+//                            print(item.cityTo)
+//                        }
+                        Button {
+                            withAnimation {
+                                self.currentItem = item
+                                self.showingListingDetailView = true
                             }
+                        } label: {
+                            ListingitemView(item: item)
                         }
+                        .scrollTransition{
+                            content, phase in content
+                                .scaleEffect(phase.isIdentity ? 1 : 0.85)
+                                .opacity(phase.isIdentity ? 1 : 0.85)
+                        }
+                        .frame(height: 160)
                     }
-                    .frame(height: 160)
                 }
             }
         }
-        .navigationDestination(for: ListingItem.self){ item in
-            ListingDetail(item: item)
-                .environmentObject(self.viewModel)
-                .navigationBarBackButtonHidden()
+//        .navigationDestination(for: ListingItem.self){ item in
+//            ListingDetail(item: item)
+//                .environmentObject(self.viewModel)
+//                .navigationBarBackButtonHidden()
             
-        }
+//        }
         .onAppear{
             viewModel.fetchOrder()
         }
-        .onChange(of: viewModel.myorder, initial: false) {
-            print("ONCHANGE")
-            withAnimation {
-            }
-        }
+//        .onChange(of: viewModel.myorder, initial: false) {
+//            print("ONCHANGE")
+//            withAnimation {
+//            }
+//        }
     }
     
     //MARK: - Views

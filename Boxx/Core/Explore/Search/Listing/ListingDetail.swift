@@ -35,6 +35,8 @@ struct ListingDetail: View {
     @State private var conversationToOpen: Conversation? = nil
     @State var chatViewModel: ChatViewModel? = nil
     
+    @Binding var showingListingDetailView : Bool
+    
     var isSendAviable: Bool {
         return description != "" && value != ""
     }
@@ -55,7 +57,10 @@ struct ListingDetail: View {
                     .resizable()
                     .frame(maxHeight: 350)
                 Button{
-                    dismiss()
+//                    dismiss()
+                    withAnimation {
+                        showingListingDetailView = false
+                    }
                 }  label: { Image(systemName:"chevron.left")
                         .foregroundStyle(.black)
                         .background{
