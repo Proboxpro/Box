@@ -124,6 +124,43 @@ class AuthViewModel: ObservableObject {
     }
     
     
+    
+    //MARK: fetch user to show
+    func fetchUserToShow(id: String, completion: @escaping (Result<User, Error>) -> Void) {
+        let userRef = db.collection("users").document(id)
+        
+        userRef.getDocument { document, error in
+            if let error = error {
+                completion(.failure(error)) // Если произошла ошибка, вызываем замыкание с ошибкой
+                return
+            }
+            
+            guard let document = document, document.exists else {
+                let error = NSError(domain: "DocumentNotFound", code: 404, userInfo: nil)
+                completion(.failure(error)) // Если документ не найден, вызываем замыкание с ошибкой
+                return
+            }
+            
+            guard let data = document.data() else {
+                let error = NSError(domain: "DocumentDataError", code: 500, userInfo: nil)
+                completion(.failure(error)) // Если данные не найдены, вызываем замыкание с ошибкой
+                return
+            }
+            
+            let fullname = data["fullname"] as? String ?? ""
+            let id = data["id"] as? String ?? ""
+            let login = data["login"] as? String ?? ""
+            let email = data["email"] as? String ?? ""
+            let profileImageUrlString = data["imageUrl"] as? String
+            let uid = data["id"] as? String
+            
+            let user = User(id: uid ?? "", fullname: fullname, login: login, email: email, imageUrl: profileImageUrlString)
+            
+            completion(.success(user)) // Вызываем замыкание с объектом User в качестве успешного результата
+        }
+    }
+    
+    
     func usersearch(){
         users.removeAll()
         let db = Firestore.firestore()
