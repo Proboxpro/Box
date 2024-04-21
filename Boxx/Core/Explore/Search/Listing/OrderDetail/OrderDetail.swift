@@ -26,11 +26,10 @@ struct OrderDetail: View {
         return viewModel.orderDescription.last
     }
     
-    @State private var conversationToOpen: Conversation? = nil
-    @State var chatViewModel: ChatViewModel? = nil
+    @State private var chatViewModel: ChatViewModel? = nil
     
     var isSendAviable: Bool {
-        return viewModel.orderDescription.first?.description != ""
+        return orderItem?.description != ""
     }
     
     var filtereduser: [User] {
@@ -112,14 +111,14 @@ struct OrderDetail: View {
                                     }
                                     
                                     if let conversation = await orderViewModel.conversationForUsers() {
-                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
-                                        showingMessage.toggle()
+                                        DispatchQueue.main.async {
+                                            self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
+                                            self.showingMessage.toggle()
+                                        }
                                         self.orderViewModel.selectedUsers = []
                                     }
                                 }
                             }
-                        } else {
-                            
                         }
                     } label: {
                         Image(systemName:"message.fill")
@@ -129,33 +128,34 @@ struct OrderDetail: View {
                                     .fill(.white)
                                     .frame(width: 32, height: 32)
                             }
-                            .sheet(isPresented: $showingMessage, content: {
-                                if let chatViewModel = chatViewModel  {
-                                    NavigationView {
-                                        ChatViewContainer()
-                                            .environmentObject(chatViewModel)
-                                            .navigationBarItems(leading: Button("Back", action: {
-                                                showingMessage.toggle()
-                                            }))
-                                            .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
-                                                image
-                                                    .resizable()
-                                                    .frame(width: 32, height: 32)
-                                                    .clipShape(Circle())
-                                            }, placeholder: {
-                                                Image(systemName: "person.circle.fill")
-                                                    .resizable()
-                                                    .frame(width: 32, height: 32)
-                                                    .foregroundColor(Color(.systemGray))
-                                            }))
-                                            .navigationTitle(item.ownerName)
-                                            .navigationBarTitleDisplayMode(.inline)
-                                    }
-                                }
-                            })
                     }
+                    .sheet(isPresented: $showingMessage, content: {
+                        if let chatViewModel = self.chatViewModel {
+                            NavigationView {
+                                ChatViewContainer()
+                                    .environmentObject(chatViewModel)
+                                    .navigationBarItems(leading: Button("Back", action: {
+                                        showingMessage.toggle()
+                                    }))
+                                    .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 32, height: 32)
+                                            .clipShape(Circle())
+                                    }, placeholder: {
+                                        Image(systemName: "person.circle.fill")
+                                            .resizable()
+                                            .frame(width: 32, height: 32)
+                                            .foregroundColor(Color(.systemGray))
+                                    }))
+                                    .navigationTitle(item.ownerName)
+                                    .navigationBarTitleDisplayMode(.inline)
+                            }
+                        }
+                    })
                     .disabled(!isSendAviable)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16))
+                    
                     Button{
                         guard let url = URL(string: "tel://89205707541") else { return }
                         UIApplication.shared.open(url)

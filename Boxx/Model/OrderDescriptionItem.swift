@@ -17,4 +17,6 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let isSent: Bool
     let isInDelivery: Bool
     let isDelivered: Bool
+    
+    let isCompleted: Bool
 }
