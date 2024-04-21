@@ -60,11 +60,10 @@ struct MainSearch: View {
               
                 if isOrderFound && !searchBarIsEmpty {
                     SearchAndFilterWithCity(cityName: searchParameters.cityName, SearchBarIsEmpty: $searchBarIsEmpty)
-                        
                 } else {
                     SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView)
                 }
-                ForEach(filteredOnParamOrder) {item in NavigationLink(value: item){ ListingitemView(item: item)
+                ForEach(filteredOnParamOrder.filter({$0.startdate.toDate()! >= Date()})) {item in NavigationLink(value: item){ ListingitemView(item: item)
                         .scrollTransition{
                             content, phase in content
                                 .scaleEffect(phase.isIdentity ? 1 : 0.85)

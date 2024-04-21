@@ -124,7 +124,6 @@ class AuthViewModel: ObservableObject {
     }
     
     
-    
     //MARK: fetch user to show
     func fetchUserToShow(id: String, completion: @escaping (Result<User, Error>) -> Void) {
         let userRef = db.collection("users").document(id)
@@ -340,7 +339,7 @@ class AuthViewModel: ObservableObject {
         
         if searchParameters.datesIsSelected {
         //MARK: - показываем результа по датам и городу
-            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
+            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! >= searchParameters.startDate && $0.startdate.toDate()! <= searchParameters.endDate})
         } else if (searchParameters.cityName != "") {
             //MARK: - результат если даты не выбраны город есть
             filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName})
