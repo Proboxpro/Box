@@ -141,7 +141,6 @@ struct Detail : View {
     @State var successViewIsShowing = false
     
     
-    
     var data : dataType
     @State var id = ""
     @State var ownerUid = ""
@@ -295,9 +294,9 @@ struct Detail : View {
     func BlueArrowButton()->some View {
         VStack{
             Button(action : {
-                //                self.UploadPostservice(freeForm: self.id)
+                                self.UploadPostservice(freeForm: self.id)
                 successViewIsShowing = true
-                
+//                viewModel.fetchOrder()
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()

@@ -75,7 +75,7 @@ struct MainSearch: View {
                                     .scaleEffect(phase.isIdentity ? 1 : 0.85)
                                     .opacity(phase.isIdentity ? 1 : 0.85)
                             }
-                    }
+                        }
                     }
                     .frame(height: 160)
                 }
@@ -89,6 +89,11 @@ struct MainSearch: View {
         }
         .onAppear{
             viewModel.fetchOrder()
+        }
+        .onChange(of: viewModel.myorder, initial: false) {
+            print("ONCHANGE")
+            withAnimation {
+            }
         }
     }
     

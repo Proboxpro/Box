@@ -17,7 +17,6 @@ struct UploadpostView: View {
                     SearchButton()
                 } 
                 .navigationTitle("Вы уезжате?")
-                
             }
         }
     }
