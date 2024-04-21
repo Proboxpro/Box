@@ -140,22 +140,7 @@ struct Detail : View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State var successViewIsShowing = false
     
-    func UploadPostservice(freeForm: String )
-    {
-        guard let uid = viewModel.currentUser?.id else {return}
-        let ownerUid = uid
-        let ownerName = viewModel.currentUser?.login
-        let imageUrl = viewModel.currentUser?.imageUrl
-        
-        
-        let db = Firestore.firestore()
-        db.collection("Customers").document().setData([ "id": NSUUID().uuidString,  "ownerUid": ownerUid, "ownerName": ownerName, "pricePerKillo": pricePerKillo, "cityFrom": data.name, "cityTo": cityTo, "startdate":startdate.convertToMonthYearFormat(), "imageUrls": data.reg, "imageUrl": imageUrl]) {error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-            
-        }
-    }
+    
     
     
     var data : dataType
@@ -176,133 +161,137 @@ struct Detail : View {
             return viewModel.city.filter{ $0.name.localizedCaseInsensitiveContains (cityTo) }
         }
         
-        VStack{
-            Text("Укажите дату и время отправления из города")
-            Text(data.name)
-                .font(.title3)
-            
-            VStack(alignment: .leading){
-                if selectedOption == .location{
-                    Text("Куда уезжаете?")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    HStack(){
-                        Image(systemName: "pencil.circle")
-                            .imageScale(.small)
-                        TextField("Укажите город", text: $cityTo)
-                            .font(.subheadline)
-                    }
-                    .frame(height: 60 )
-                    .padding(.horizontal)
-                    .overlay{RoundedRectangle(cornerRadius: 8)
-                            .stroke(lineWidth: 1.0)
-                            .foregroundStyle(Color(.systemGray4))
-                    }
-                    if self.cityTo != ""{
-                        if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
-                            VStack(alignment: .leading){
-                                Text("Не найден")
-                            }
-                            
-                            
+        if successViewIsShowing == false {
+            VStack{
+                Text("Укажите дату и время отправления из города")
+                Text(data.name)
+                    .font(.title3)
+                
+                VStack(alignment: .leading){
+                    if selectedOption == .location{
+                        Text("Куда уезжаете?")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        HStack(){
+                            Image(systemName: "pencil.circle")
+                                .imageScale(.small)
+                            TextField("Укажите город", text: $cityTo)
+                                .font(.subheadline)
                         }
-                        else{
-                            VStack(alignment: .leading){
-                                ForEach(filtereduser.prefix(1)) { item in
-                                    CityView(city: item)
-                                        .onTapGesture {
-                                            cityTo = item.name
-                                        }
+                        .frame(height: 60 )
+                        .padding(.horizontal)
+                        .overlay{RoundedRectangle(cornerRadius: 8)
+                                .stroke(lineWidth: 1.0)
+                                .foregroundStyle(Color(.systemGray4))
+                        }
+                        if self.cityTo != ""{
+                            if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
+                                VStack(alignment: .leading){
+                                    Text("Не найден")
+                                }
+                                
+                                
+                            }
+                            else{
+                                VStack(alignment: .leading){
+                                    ForEach(filtereduser.prefix(1)) { item in
+                                        CityView(city: item)
+                                            .onTapGesture {
+                                                cityTo = item.name
+                                            }
+                                    }
+                                }
+                                .frame( maxWidth: .infinity, maxHeight: 60 )
+                                .padding(.horizontal)
+                                .overlay{RoundedRectangle(cornerRadius: 8)
+                                        .stroke(lineWidth: 1.0)
+                                        .foregroundStyle(Color(.systemGray4))
                                 }
                             }
-                            .frame( maxWidth: .infinity, maxHeight: 60 )
-                            .padding(.horizontal)
-                            .overlay{RoundedRectangle(cornerRadius: 8)
-                                    .stroke(lineWidth: 1.0)
-                                    .foregroundStyle(Color(.systemGray4))
-                            }
                         }
+                        Spacer()
+                        
+                    } else{
+                        CollapsedPickerView(title: "Описание", description: "Написать")
                     }
-                    Spacer()
-                    
-                } else{
-                    CollapsedPickerView(title: "Описание", description: "Написать")
-                }
-            } .modifier(CollapsidDestModifier())
-                .frame(height: selectedOption == .location ? 120  : 64)
-                .onTapGesture {
-                    withAnimation(){selectedOption = .location}
-                }
-            
-            VStack(alignment: .leading){
-                if selectedOption == .price{
-                    Text("Стоимость")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    HStack(){
-                        Image(systemName: "pencil.circle")
-                            .imageScale(.small)
-                        TextField("Укажите стоимость за кг", text: $pricePerKillo)
+                } .modifier(CollapsidDestModifier())
+                    .frame(height: selectedOption == .location ? 120  : 64)
+                    .onTapGesture {
+                        withAnimation(){selectedOption = .location}
+                    }
+                
+                VStack(alignment: .leading){
+                    if selectedOption == .price{
+                        Text("Стоимость")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        HStack(){
+                            Image(systemName: "pencil.circle")
+                                .imageScale(.small)
+                            TextField("Укажите стоимость за кг", text: $pricePerKillo)
+                                .font(.subheadline)
+                        }
+                        .frame(height: 60 )
+                        .padding(.horizontal)
+                        .overlay{RoundedRectangle(cornerRadius: 8)
+                                .stroke(lineWidth: 1.0)
+                                .foregroundStyle(Color(.systemGray4))
+                        }
+                        
+                    } else{
+                        CollapsedPickerView(title: "Стоимость", description: "Руб")
+                    }
+                } .modifier(CollapsidDestModifier())
+                    .frame(height: selectedOption == .price ? 120  : 64)
+                    .onTapGesture {
+                        withAnimation(){selectedOption = .price}
+                    }
+                
+                VStack(alignment: .leading){
+                    if selectedOption == .dates {
+                        Text ("Когда уезжаете?")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        Text ("Укажите дату")
                             .font(.subheadline)
-                    }
-                    .frame(height: 60 )
-                    .padding(.horizontal)
-                    .overlay{RoundedRectangle(cornerRadius: 8)
-                            .stroke(lineWidth: 1.0)
-                            .foregroundStyle(Color(.systemGray4))
-                    }
-                    
-                } else{
-                    CollapsedPickerView(title: "Стоимость", description: "Руб")
-                }
-            } .modifier(CollapsidDestModifier())
-                .frame(height: selectedOption == .price ? 120  : 64)
-                .onTapGesture {
-                    withAnimation(){selectedOption = .price}
-                }
-            
-            VStack(alignment: .leading){
-                if selectedOption == .dates {
-                    Text ("Когда уезжаете?")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Text ("Укажите дату")
+                            .fontWeight(.semibold)
+                        VStack{
+                            DatePicker("Дата", selection:$startdate)
+                                .datePickerStyle(.wheel)
+                                .frame(maxHeight:200)
+                            Divider()
+                            
+                        }
+                        .foregroundStyle(.gray)
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                    VStack{
-                        DatePicker("Дата", selection:$startdate)
-                            .datePickerStyle(.wheel)
-                            .frame(maxHeight:200)
-                        Divider()
                         
+                    }else {
+                        CollapsedPickerView(title: "Когда", description: "Даты")
                     }
-                    .foregroundStyle(.gray)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    
-                }else {
-                    CollapsedPickerView(title: "Когда", description: "Даты")
-                }
-            }   .modifier(CollapsidDestModifier())
-                .frame(height: selectedOption == .dates ?60  : 40)
-                .onTapGesture {
-                    withAnimation(){selectedOption = .dates}
-                }
-            Spacer()
-            BlueArrowButton()
+                }   .modifier(CollapsidDestModifier())
+                    .frame(height: selectedOption == .dates ?60  : 40)
+                    .onTapGesture {
+                        withAnimation(){selectedOption = .dates}
+                    }
+                Spacer()
+                BlueArrowButton()
+            }
+            
         }
-        
+        else {
+            SuccessView(successViewIsShowing: $successViewIsShowing)
+        }
     }
     
+    //MARK: - Views
     func BlueArrowButton()->some View {
         VStack{
             Button(action : {
                 //                self.UploadPostservice(freeForm: self.id)
-                //                if successViewIsShowing == false {
-                //                    SuccessView(successViewIsShowing: $successViewIsShowing)
-                //                }
+                successViewIsShowing = true
                 
             }) {
                 Image(systemName: "arrow.right.circle")
@@ -311,6 +300,24 @@ struct Detail : View {
                     .scaledToFit()
                     .padding(.vertical, 40)
             }
+        }
+    }
+    
+    //MARK: - helpers:
+    func UploadPostservice(freeForm: String )
+    {
+        guard let uid = viewModel.currentUser?.id else {return}
+        let ownerUid = uid
+        let ownerName = viewModel.currentUser?.login
+        let imageUrl = viewModel.currentUser?.imageUrl
+        
+        
+        let db = Firestore.firestore()
+        db.collection("Customers").document().setData([ "id": NSUUID().uuidString,  "ownerUid": ownerUid, "ownerName": ownerName, "pricePerKillo": pricePerKillo, "cityFrom": data.name, "cityTo": cityTo, "startdate":startdate.convertToMonthYearFormat(), "imageUrls": data.reg, "imageUrl": imageUrl]) {error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
         }
     }
     
