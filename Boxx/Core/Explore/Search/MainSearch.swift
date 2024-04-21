@@ -76,19 +76,8 @@ struct MainSearch: View {
                     OrdersNotFoundView()
                 } else {
                     ForEach(ordersToShow) {item in 
-//                        NavigationLink(value: item) {
-//                            ListingitemView(item: item)
-//                            .scrollTransition{
-//                                content, phase in content
-//                                    .scaleEffect(phase.isIdentity ? 1 : 0.85)
-//                                    .opacity(phase.isIdentity ? 1 : 0.85)
-//                            }
-//                        }
-//                        .onTapGesture {
-//                            print(item.cityTo)
-//                        }
                         Button {
-                            withAnimation {
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.25)) {
                                 self.currentItem = item
                                 self.showingListingDetailView = true
                             }
@@ -105,20 +94,9 @@ struct MainSearch: View {
                 }
             }
         }
-//        .navigationDestination(for: ListingItem.self){ item in
-//            ListingDetail(item: item)
-//                .environmentObject(self.viewModel)
-//                .navigationBarBackButtonHidden()
-            
-//        }
         .onAppear{
             viewModel.fetchOrder()
         }
-//        .onChange(of: viewModel.myorder, initial: false) {
-//            print("ONCHANGE")
-//            withAnimation {
-//            }
-//        }
     }
     
     //MARK: - Views

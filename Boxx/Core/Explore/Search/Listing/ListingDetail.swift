@@ -58,7 +58,7 @@ struct ListingDetail: View {
                     .frame(maxHeight: 350)
                 Button{
 //                    dismiss()
-                    withAnimation {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.25)) {
                         showingListingDetailView = false
                     }
                 }  label: { Image(systemName:"chevron.left")
