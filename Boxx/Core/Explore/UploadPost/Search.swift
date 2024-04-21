@@ -52,24 +52,24 @@ class getData : ObservableObject{
 
 struct Search: View {
     
-    
     @ObservedObject var data = getData()
     var body: some View {
         NavigationView{
             
             ZStack(alignment: .top){
-                
                 GeometryReader{_ in
                     
                     // Home View....
                     
-                    
-                }.background(Color(.systemGray6).edgesIgnoringSafeArea(.all))
+                }
+                .background(Color(.systemGray6)
+                .edgesIgnoringSafeArea(.all))
                 
                 CustomSearchBar(data: self.$data.datas).padding(.top, 20)
                 
-            }.navigationTitle("Вы уезжате?")
-                .navigationBarHidden(false)
+            }
+            .navigationTitle("Вы уезжате?")
+            .navigationBarHidden(false)
         }
     }
 }
@@ -142,7 +142,6 @@ struct Detail : View {
     
     
     
-    
     var data : dataType
     @State var id = ""
     @State var ownerUid = ""
@@ -154,12 +153,12 @@ struct Detail : View {
     
     @State private var selectedOption: SearchOptions = .location
     
+    var filtereduser: [City] {
+        guard !cityTo.isEmpty else { return viewModel.city}
+        return viewModel.city.filter{ $0.name.localizedCaseInsensitiveContains (cityTo) }
+    }
     
     var body : some View{
-        var filtereduser: [City] {
-            guard !cityTo.isEmpty else { return viewModel.city}
-            return viewModel.city.filter{ $0.name.localizedCaseInsensitiveContains (cityTo) }
-        }
         
         if successViewIsShowing == false {
             VStack{
@@ -167,59 +166,7 @@ struct Detail : View {
                 Text(data.name)
                     .font(.title3)
                 
-                VStack(alignment: .leading){
-                    if selectedOption == .location{
-                        Text("Куда уезжаете?")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        
-                        HStack(){
-                            Image(systemName: "pencil.circle")
-                                .imageScale(.small)
-                            TextField("Укажите город", text: $cityTo)
-                                .font(.subheadline)
-                        }
-                        .frame(height: 60 )
-                        .padding(.horizontal)
-                        .overlay{RoundedRectangle(cornerRadius: 8)
-                                .stroke(lineWidth: 1.0)
-                                .foregroundStyle(Color(.systemGray4))
-                        }
-                        if self.cityTo != ""{
-                            if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
-                                VStack(alignment: .leading){
-                                    Text("Не найден")
-                                }
-                                
-                                
-                            }
-                            else{
-                                VStack(alignment: .leading){
-                                    ForEach(filtereduser.prefix(1)) { item in
-                                        CityView(city: item)
-                                            .onTapGesture {
-                                                cityTo = item.name
-                                            }
-                                    }
-                                }
-                                .frame( maxWidth: .infinity, maxHeight: 60 )
-                                .padding(.horizontal)
-                                .overlay{RoundedRectangle(cornerRadius: 8)
-                                        .stroke(lineWidth: 1.0)
-                                        .foregroundStyle(Color(.systemGray4))
-                                }
-                            }
-                        }
-                        Spacer()
-                        
-                    } else{
-                        CollapsedPickerView(title: "Описание", description: "Написать")
-                    }
-                } .modifier(CollapsidDestModifier())
-                    .frame(height: selectedOption == .location ? 120  : 64)
-                    .onTapGesture {
-                        withAnimation(){selectedOption = .location}
-                    }
+                SearchBarView()
                 
                 VStack(alignment: .leading){
                     if selectedOption == .price{
@@ -282,11 +229,69 @@ struct Detail : View {
             
         }
         else {
-            SuccessView(successViewIsShowing: $successViewIsShowing)
+            SuccessView()
         }
     }
     
+    
     //MARK: - Views
+    func SearchBarView()->some View {
+        VStack(alignment: .leading){
+            if selectedOption == .location{
+                Text("Куда уезжаете?")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                HStack(){
+                    Image(systemName: "pencil.circle")
+                        .imageScale(.small)
+                    TextField("Укажите город", text: $cityTo)
+                        .font(.subheadline)
+                }
+                .frame(height: 60 )
+                .padding(.horizontal)
+                .overlay{RoundedRectangle(cornerRadius: 8)
+                        .stroke(lineWidth: 1.0)
+                        .foregroundStyle(Color(.systemGray4))
+                }
+                if self.cityTo != ""{
+                    if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
+                        VStack(alignment: .leading){
+                            Text("Не найден")
+                        }
+                        
+                        
+                    }
+                    else{
+                        VStack(alignment: .leading){
+                            ForEach(filtereduser.prefix(1)) { item in
+                                CityView(city: item)
+                                    .onTapGesture {
+                                        cityTo = item.name
+                                    }
+                            }
+                        }
+                        .frame( maxWidth: .infinity, maxHeight: 60 )
+                        .padding(.horizontal)
+                        .overlay{RoundedRectangle(cornerRadius: 8)
+                                .stroke(lineWidth: 1.0)
+                                .foregroundStyle(Color(.systemGray4))
+                        }
+                    }
+                }
+                Spacer()
+                
+            } else{
+                CollapsedPickerView(title: "Описание", description: "Написать")
+            }
+        } 
+        .modifier(CollapsidDestModifier())
+            .frame(height: selectedOption == .location ? 120  : 64)
+            .onTapGesture {
+                withAnimation(){selectedOption = .location}
+            }
+    }
+    
     func BlueArrowButton()->some View {
         VStack{
             Button(action : {
@@ -304,6 +309,9 @@ struct Detail : View {
     }
     
     //MARK: - helpers:
+    
+    
+    
     func UploadPostservice(freeForm: String )
     {
         guard let uid = viewModel.currentUser?.id else {return}
@@ -324,8 +332,9 @@ struct Detail : View {
 }
 
 struct SuccessView: View {
+    @Environment(\.presentationMode) var presentationMode
     //    @State var text: String
-    @Binding var successViewIsShowing: Bool
+//    @Binding var successViewIsShowing: Bool
     
     var body: some View {
         VStack {
@@ -336,9 +345,16 @@ struct SuccessView: View {
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 withAnimation {
-                    successViewIsShowing = false
+//                    successViewIsShowing = false
+                    backToHomeView()
                 }
             }
+        }
+    }
+    
+    func backToHomeView() {
+        withAnimation(.smooth) {
+            presentationMode.wrappedValue.dismiss()
         }
     }
 }
