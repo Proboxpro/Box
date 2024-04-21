@@ -30,20 +30,20 @@ struct Registration: View {
 
             VStack(spacing: 24){
                 InputView(text: $email,
-                          titel: "Email ",
+                          title: "Email ",
                           placeholder: "name@mail.ru")
                 .autocapitalization(.none)
                 
-                InputView(text: $login, titel:"Логин", placeholder:"Введите Логин")
+                InputView(text: $login, title:"Логин", placeholder:"Введите Логин")
                     .autocapitalization(.none)
                 
-                InputView(text: $fullName, titel:"ФИО", placeholder:"Как в паспорте")
+                InputView(text: $fullName, title:"ФИО", placeholder:"Как в паспорте")
                     .autocapitalization(.none)
                 
                 
-                InputView(text: $password, titel:"Пароль", placeholder:"Введите пароль",  isSecureField: false)
+                InputView(text: $password, title:"Пароль", placeholder:"Введите пароль",  isSecureField: false)
                 ZStack(alignment: .trailing){
-                    InputView(text: $confirmPassword, titel:"Подтвердите пароль", placeholder:"Повторите пароль",  isSecureField:false)
+                    InputView(text: $confirmPassword, title:"Подтвердите пароль", placeholder:"Повторите пароль",  isSecureField:false)
                     if !password.isEmpty && !confirmPassword.isEmpty{
                         if password == confirmPassword{
                             Image (systemName: "checkmark.circle.fill")

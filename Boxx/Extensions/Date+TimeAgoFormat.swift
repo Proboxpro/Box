@@ -33,4 +33,10 @@ extension Date {
         return "\(diff) weeks ago"
     }
     
+    func convertToMonthYearFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d.MM.yyyy в HH:mm"
+        return dateFormatter.string(from: self)
+    }
+    
 }

@@ -92,6 +92,7 @@ struct MainSearch: View {
         }
     }
     
+    //MARK: - Views
     func OrdersNotFoundView()->some View {
         VStack {
             HStack {
