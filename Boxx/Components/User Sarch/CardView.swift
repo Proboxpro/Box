@@ -2,7 +2,7 @@
 //  CardView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 29.12.2023.
+//  Created by Supunme Nanayakkarami on 29.12.2023.
 //
 
 import SwiftUI

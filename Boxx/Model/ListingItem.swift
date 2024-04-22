@@ -2,7 +2,7 @@
 //  ListingItem.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 16.12.2023.
+//  Created by Supunme Nanayakkarami on 16.12.2023.
 //
 
 

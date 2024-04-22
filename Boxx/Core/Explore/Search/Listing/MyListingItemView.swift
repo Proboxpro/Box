@@ -2,7 +2,7 @@
 //  MyListingItemView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 31.03.2024.
+//  Created by Supunme Nanayakkarami on 31.03.2024.
 //
 
 import SwiftUI

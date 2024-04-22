@@ -2,7 +2,7 @@
 //  ProfileView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 18.12.2023.
+//  Created by Supunme Nanayakkarami on 18.12.2023.
 //
 
 import SwiftUI

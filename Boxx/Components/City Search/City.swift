@@ -2,7 +2,7 @@
 //  CiityView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 14.03.2024.
+//  Created by Supunme Nanayakkarami on 14.03.2024.
 //
 
 import Foundation
