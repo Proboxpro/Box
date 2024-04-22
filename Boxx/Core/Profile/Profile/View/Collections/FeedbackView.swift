@@ -2,7 +2,7 @@
 //  FeedbackView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 19.12.2023.
+//  Created by Supunme Nanayakkarami on 19.12.2023.
 //
 
 import SwiftUI
