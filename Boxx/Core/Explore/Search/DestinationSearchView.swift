@@ -2,7 +2,7 @@
 //  DestinationSearchView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 17.11.2023.
+//  Created by Supunme Nanayakkarami on 17.11.2023.
 //
 
 import SwiftUI
