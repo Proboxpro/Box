@@ -17,7 +17,6 @@ struct OrderDetail: View {
     @EnvironmentObject var orderViewModel: OrderViewModel
     var item: ListingItem
     
-    @State private var showingMessage = false
     @State private var showingProfile = false
     @State private var value: String = ""
     @State private var recipient: String = ""
@@ -26,6 +25,7 @@ struct OrderDetail: View {
         return viewModel.orderDescription.last
     }
     
+    @State private var conversation: Conversation? = nil
     @State private var chatViewModel: ChatViewModel? = nil
     
     var isSendAviable: Bool {
@@ -111,10 +111,10 @@ struct OrderDetail: View {
                                     }
                                     
                                     if let conversation = await orderViewModel.conversationForUsers() {
-                                        DispatchQueue.main.async {
-                                            self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
-                                            self.showingMessage.toggle()
-                                        }
+                                        self.conversation = conversation
+                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
+                                        print("-----")
+                                        print(ChatViewModel(auth: viewModel, conversation: conversation).messages)
                                         self.orderViewModel.selectedUsers = []
                                     }
                                 }
@@ -128,31 +128,26 @@ struct OrderDetail: View {
                                     .fill(.white)
                                     .frame(width: 32, height: 32)
                             }
+                            .sheet(item: $conversation, content: { conversation in
+                                NavigationView {
+                                    ChatViewContainer()
+                                        .environmentObject(ChatViewModel(auth: viewModel, conversation: conversation))
+                                        .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
+                                            image
+                                                .resizable()
+                                                .frame(width: 32, height: 32)
+                                                .clipShape(Circle())
+                                        }, placeholder: {
+                                            Image(systemName: "person.circle.fill")
+                                                .resizable()
+                                                .frame(width: 32, height: 32)
+                                                .foregroundColor(Color(.systemGray))
+                                        }))
+                                        .navigationTitle(item.ownerName)
+                                        .navigationBarTitleDisplayMode(.inline)
+                                }
+                            })
                     }
-                    .sheet(isPresented: $showingMessage, content: {
-                        if let chatViewModel = self.chatViewModel {
-                            NavigationView {
-                                ChatViewContainer()
-                                    .environmentObject(chatViewModel)
-                                    .navigationBarItems(leading: Button("Back", action: {
-                                        showingMessage.toggle()
-                                    }))
-                                    .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
-                                        image
-                                            .resizable()
-                                            .frame(width: 32, height: 32)
-                                            .clipShape(Circle())
-                                    }, placeholder: {
-                                        Image(systemName: "person.circle.fill")
-                                            .resizable()
-                                            .frame(width: 32, height: 32)
-                                            .foregroundColor(Color(.systemGray))
-                                    }))
-                                    .navigationTitle(item.ownerName)
-                                    .navigationBarTitleDisplayMode(.inline)
-                            }
-                        }
-                    })
                     .disabled(!isSendAviable)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16))
                     

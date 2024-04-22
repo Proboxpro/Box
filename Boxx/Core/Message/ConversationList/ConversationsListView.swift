@@ -12,34 +12,27 @@ import SDWebImageSwiftUI
 @available(iOS 17.0, *)
 struct ConversationsListView: View {
     /// auth "service"
-    @EnvironmentObject var authViewModel: AuthViewModel
-    /// view model for selected chat
-    @State var chatViewModel: ChatViewModel? = nil
-    /// current screen view model
-    @StateObject var viewModel = ConversationListViewModel()
+    @EnvironmentObject var viewModel: AuthViewModel
     
-    @State private var shoulShowChat: Bool = false
-    @State private var conversationToOpen: Conversation?
+    private var items: [ListingItem] {
+        return viewModel.orders
+    }
+    @State private var selectedItem: ListingItem? = nil
     
     var body: some View {
-        if let user = authViewModel.currentUser {
+        if let user = viewModel.currentUser {
             NavigationStack {
                 ScrollView {
-                    Text("")
-                    ForEach(viewModel.conversations) { conversation in
-                        ConversationRowView(conversationTitle: conversation.title, imageURL: conversation.pictureURL, latestMessageText: conversation.latestMessage?.text ?? "", formattedDateString: conversation.latestMessage?.createdAt?.timeAgoDisplay() ?? "")
+                    ForEach(viewModel.orderDescription, id: \.hashValue) { order in
+                        ConversationRowView(isCompleted: order.isCompleted,
+                                            orderImageURL: order.image,
+                                            profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                            orderDescription: order.description ?? "Описание")
                             .onTapGesture {
-                                self.conversationToOpen = conversation
-                                chatViewModel = ChatViewModel(auth: authViewModel, conversation: conversation)
-                                shoulShowChat.toggle()
+                                self.selectedItem = items.filter{ $0.ownerUid == order.ownerId }.last
                             }
                     }
-                    
                 }
-                .task ({
-                    viewModel.subscribeToUpdates()
-                    viewModel.fetchData()
-                })
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading)
                     {
@@ -59,55 +52,29 @@ struct ConversationsListView: View {
                             }
                         }
                     }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing)
-                    {
-                        Button{
-                            Profile()
-                        }label: {
-                            Image(systemName: "plus")
-                        }
-                    }
                 }
-                .fullScreenCover(isPresented: $shoulShowChat, onDismiss: {
-                    viewModel.subscribeToUpdates()
-                    viewModel.fetchData()
-                }, content: {
-                    if let conversationToOpen = conversationToOpen, let chatViewModel = chatViewModel {
-                        NavigationView {
-                            ChatViewContainer()
-                                .environmentObject(chatViewModel)
-                                .navigationBarItems(leading: Button("Back", action: {
-                                    shoulShowChat.toggle()
-                                }))
-                                .navigationBarItems(trailing: AsyncImage(url: conversationToOpen.pictureURL, content: { image in
-                                    image
-                                        .resizable()
-                                        .frame(width: 32, height: 32)
-                                        .clipShape(Circle())
-                                }, placeholder: {
-                                    Image(systemName: "person.circle.fill")
-                                        .resizable()
-                                        .frame(width: 32, height: 32)
-                                        .foregroundColor(Color(.systemGray))
-                                }))
-//                                .navigationBarBackButtonHidden(false)
-                                .navigationTitle(conversationToOpen.title)
-                                .navigationBarTitleDisplayMode(.inline)
-                        }
+                .fullScreenCover(item: $selectedItem, onDismiss: {
+                    viewModel.fetchOrderDescription()
+                }, content: { item in
+                    NavigationView{
+                        OrderDetail(item: item)
+                            .environmentObject(OrderViewModel(authViewModel: self.viewModel))
+                            .navigationBarBackButtonHidden()
                     }
                 })
                 
-                Text("\(conversationToOpen?.title ?? "")")
-                    .hidden()
-                
+            }
+            .onAppear {
+                viewModel.fetchOrderDescription()
+                viewModel.fetchOrder()
             }
         }
     }
 }
-@available(iOS 17.0, *)
-struct Inbox_Previews: PreviewProvider {
-    static var previews: some View {
-        ConversationsListView()
-    }
-}
+
+//@available(iOS 17.0, *)
+//struct Inbox_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ConversationsListView()
+//    }
+//}

@@ -300,14 +300,15 @@ class AuthViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
-        fetchInnerCollection(ref: infoRef) { description, url, isSent, isInDelivery, isDelivered, isCompleted in
-            let order = OrderDescriptionItem(id: uid, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered, isCompleted: isCompleted)
+        fetchInnerCollection(ref: infoRef) { ownerId, description, url, isSent, isInDelivery, isDelivered, isCompleted in
+            let order = OrderDescriptionItem(id: uid, ownerId: ownerId, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered, isCompleted: isCompleted)
+            print(99999)
             print(order)
             self.orderDescription.append(order)
         }
     }
     
-    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, URL?, Bool, Bool, Bool, Bool) -> Void)) {
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, URL?, Bool, Bool, Bool, Bool) -> Void)) {
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -316,6 +317,7 @@ class AuthViewModel: ObservableObject {
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let data = document.data()
+                    let ownerId = data["ownerId"]as? String ?? ""
                     let description = data["description"]as? String ?? ""
                     let image = data["image"]as? String ?? ""
                     let isSent = data["isSent"]as? Bool ?? false
@@ -323,7 +325,7 @@ class AuthViewModel: ObservableObject {
                     let isDelivered = data["isDelivered"]as? Bool ?? false
                     let isCompleted = data["isCompleted"]as? Bool ?? false
                     let url = URL(string: image)
-                    completion(description, url, isSent, isInDelivery, isDelivered, isCompleted)
+                    completion(ownerId, description, url, isSent, isInDelivery, isDelivered, isCompleted)
                 }
             }
         }
@@ -510,7 +512,7 @@ class AuthViewModel: ObservableObject {
         }.value
     }
     
-    func saveOrder(imageData: Data, description: String) async throws {
+    func saveOrder(ownerId: String, imageData: Data, description: String) async throws {
         guard let UserId = Auth.auth().currentUser?.uid else { return }
         
         do {
@@ -534,11 +536,13 @@ class AuthViewModel: ObservableObject {
                              .collection("information")
                              .document(id)
                          try await thisDoc.updateData([
+                            "ownerId": ownerId,
                              "description": description,
                              "image": url?.absoluteString ?? ""
                          ])
                     } else {
                         try await infoDoc.setData([
+                            "ownerId": ownerId,
                             "description": description,
                             "image": url?.absoluteString ?? "",
                             "isCompleted": false
@@ -550,6 +554,7 @@ class AuthViewModel: ObservableObject {
                         "id": UserId
                     ])
                     try await infoDoc.setData([
+                        "ownerId": ownerId,
                         "description": description,
                         "image": url?.absoluteString ?? "",
                         "isCompleted": false
@@ -582,6 +587,9 @@ class AuthViewModel: ObservableObject {
                             try await completion(document.documentID)
                         }
                     }
+                }
+                Task {
+                    try await completion(nil)
                 }
             }
         }

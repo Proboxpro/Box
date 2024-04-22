@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 
 struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let id: String
+    let ownerId: String
     let description: String?
     let image: URL?
     

@@ -10,11 +10,18 @@ import ExyteChat
 
 struct ChatViewContainer: View {
     @EnvironmentObject var viewModel: ChatViewModel
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         ChatView(messages: viewModel.messages) { draft in
             viewModel.sendMessage(draft)
         } 
         .interactiveDismissDisabled()
+        .navigationBarItems(leading: Button(action: {
+            dismiss()
+        }, label: {
+            Text("Back")
+        }))
     }
 }
 //

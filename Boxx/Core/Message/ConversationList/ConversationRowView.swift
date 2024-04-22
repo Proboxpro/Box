@@ -8,51 +8,64 @@
 import SwiftUI
 
 struct ConversationRowView: View {
-    var conversationTitle: String
-    var imageURL: URL?
-    var latestMessageText: String
-    var formattedDateString: String
+    var isCompleted: Bool
+    var orderImageURL: URL?
+    var profileName: String
+    var orderDescription: String
     
     var body: some View {
         HStack(alignment: .top, spacing: 15){
-            AsyncImage(url: imageURL, content: { image in
-                image
-                    .resizable()
-                    .frame(width: 64, height: 64)
-                    .clipShape(Circle())
-            }, placeholder: {
-                Image(systemName: "person.circle.fill")
+            if let url = orderImageURL {
+                AsyncImage(url: url, content: { phase in
+                    if let image = phase.image {
+                        image
+                            .resizable()
+                            .frame(width: 64, height: 64)
+                            .clipShape(Circle())
+                            .overlay {
+                                if isCompleted {
+                                    Rectangle()
+                                        .foregroundColor(.gray)
+                                        .opacity(0.4)
+                                }
+                            }
+                    }
+                })
+            } else {
+                Image(systemName: "shippingbox.fill")
                     .resizable()
                     .frame(width: 64, height: 64)
                     .foregroundColor(Color(.systemGray))
-            })
+            }
             
             VStack(alignment: .leading, spacing: 4){
-                Text(conversationTitle)
+                Text(profileName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                Text(latestMessageText)
+                Text(orderDescription)
                     .font(.subheadline)
                     .foregroundColor(Color(.systemGray))
                     .lineLimit(2)
                     .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
             }
             
-            HStack{
-                Text(formattedDateString)
+            Spacer()
+            HStack {
+                Text(isCompleted ? "Выполнен" : "Активный")
+                    .font(.subheadline)
+                    .foregroundColor(isCompleted ? .gray : .black)
+                    .lineLimit(2)
                 Image(systemName: "chevron.right")
+                    .foregroundColor(isCompleted ? .gray : .black)
             }
-            .font(.footnote)
-            .foregroundColor(.gray)
-            
         }
         .padding()
         .frame(height: 72)
     }
 }
 
-struct InboxRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        ConversationRowView(conversationTitle: "Вася Пупкин", latestMessageText: "Привет спишь?)", formattedDateString: "Yesterday")
-    }
-}
+//struct InboxRowView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ConversationRowView(conversationTitle: "Вася Пупкин", latestMessageText: "Привет спишь?)", formattedDateString: "Yesterday")
+//    }
+//}

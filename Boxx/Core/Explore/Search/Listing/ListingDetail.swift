@@ -22,7 +22,6 @@ struct ListingDetail: View {
     @State private var photosPickerItem: PhotosPickerItem?
     
     @State private var productImageData: Data? = nil
-    @State private var productImageUrl: URL? = nil
     @State private var showingOrder = false
     @State private var showingProfile = false
     @State private var value: String = ""
@@ -211,8 +210,6 @@ struct ListingDetail: View {
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                                 productImageData = data
-                                let url = try? await viewModel.saveOrderImage(data: data)
-                                productImageUrl = url
                             }
                         }
                     }
@@ -246,7 +243,7 @@ struct ListingDetail: View {
                     Spacer()
                     Button {
                         Task {
-                            try await viewModel.saveOrder(imageData: productImageData ?? Data(), description: description)
+                            try await viewModel.saveOrder(ownerId: item.ownerUid, imageData: productImageData ?? Data(), description: description)
                             showingOrder.toggle()
                         }
                     } label: {
