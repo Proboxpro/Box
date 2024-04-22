@@ -2,7 +2,7 @@
 //  CityView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 15.03.2024.
+//  Created by Supunme Nanayakkarami on 15.03.2024.
 import SwiftUI
 import Firebase
 import SDWebImageSwiftUI
