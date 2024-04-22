@@ -124,6 +124,42 @@ class AuthViewModel: ObservableObject {
     }
     
     
+    //MARK: fetch user to show
+    func fetchUserToShow(id: String, completion: @escaping (Result<User, Error>) -> Void) {
+        let userRef = db.collection("users").document(id)
+        
+        userRef.getDocument { document, error in
+            if let error = error {
+                completion(.failure(error)) // Если произошла ошибка, вызываем замыкание с ошибкой
+                return
+            }
+            
+            guard let document = document, document.exists else {
+                let error = NSError(domain: "DocumentNotFound", code: 404, userInfo: nil)
+                completion(.failure(error)) // Если документ не найден, вызываем замыкание с ошибкой
+                return
+            }
+            
+            guard let data = document.data() else {
+                let error = NSError(domain: "DocumentDataError", code: 500, userInfo: nil)
+                completion(.failure(error)) // Если данные не найдены, вызываем замыкание с ошибкой
+                return
+            }
+            
+            let fullname = data["fullname"] as? String ?? ""
+            let id = data["id"] as? String ?? ""
+            let login = data["login"] as? String ?? ""
+            let email = data["email"] as? String ?? ""
+            let profileImageUrlString = data["imageUrl"] as? String
+            let uid = data["id"] as? String
+            
+            let user = User(id: uid ?? "", fullname: fullname, login: login, email: email, imageUrl: profileImageUrlString)
+            
+            completion(.success(user)) // Вызываем замыкание с объектом User в качестве успешного результата
+        }
+    }
+    
+    
     func usersearch(){
         users.removeAll()
         let db = Firestore.firestore()
@@ -264,14 +300,14 @@ class AuthViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
-        fetchInnerCollection(ref: infoRef) { description, url, isSent, isInDelivery, isDelivered in
-            let order = OrderDescriptionItem(id: uid, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered)
+        fetchInnerCollection(ref: infoRef) { description, url, isSent, isInDelivery, isDelivered, isCompleted in
+            let order = OrderDescriptionItem(id: uid, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered, isCompleted: isCompleted)
             print(order)
             self.orderDescription.append(order)
         }
     }
     
-    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, URL?, Bool, Bool, Bool) -> Void)) {
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, URL?, Bool, Bool, Bool, Bool) -> Void)) {
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -285,8 +321,9 @@ class AuthViewModel: ObservableObject {
                     let isSent = data["isSent"]as? Bool ?? false
                     let isInDelivery = data["isInDelivery"]as? Bool ?? false
                     let isDelivered = data["isDelivered"]as? Bool ?? false
+                    let isCompleted = data["isCompleted"]as? Bool ?? false
                     let url = URL(string: image)
-                    completion(description, url, isSent, isInDelivery, isDelivered)
+                    completion(description, url, isSent, isInDelivery, isDelivered, isCompleted)
                 }
             }
         }
@@ -303,7 +340,7 @@ class AuthViewModel: ObservableObject {
         
         if searchParameters.datesIsSelected {
         //MARK: - показываем результа по датам и городу
-            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! > searchParameters.startDate && $0.startdate.toDate()! < searchParameters.endDate})
+            filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName}).filter({$0.startdate.toDate()! >= searchParameters.startDate && $0.startdate.toDate()! <= searchParameters.endDate})
         } else if (searchParameters.cityName != "") {
             //MARK: - результат если даты не выбраны город есть
             filteredItems  =    myorder.filter({$0.cityTo == searchParameters.cityName})
@@ -475,6 +512,7 @@ class AuthViewModel: ObservableObject {
     
     func saveOrder(imageData: Data, description: String) async throws {
         guard let UserId = Auth.auth().currentUser?.uid else { return }
+        
         do {
             let url = try await getImageUrl(imageData: imageData)
             print (url)
@@ -488,22 +526,64 @@ class AuthViewModel: ObservableObject {
                 .collection("information")
                 .document()
             if document.exists {
-                try await infoDoc.setData([
-                    "description": description,
-                    "image": url?.absoluteString ?? ""
-                ])
-                } else {
+                getExistedDocumentId { id in
+                    if let id = id {
+                        let thisDoc = Firestore.firestore()
+                             .collection("orderDescription")
+                             .document(UserId)
+                             .collection("information")
+                             .document(id)
+                         try await thisDoc.updateData([
+                             "description": description,
+                             "image": url?.absoluteString ?? ""
+                         ])
+                    } else {
+                        try await infoDoc.setData([
+                            "description": description,
+                            "image": url?.absoluteString ?? "",
+                            "isCompleted": false
+                        ])
+                    }
+                }
+            } else {
                     try await doc.setData([
                         "id": UserId
                     ])
                     try await infoDoc.setData([
                         "description": description,
-                        "image": url?.absoluteString ?? ""
+                        "image": url?.absoluteString ?? "",
+                        "isCompleted": false
                     ])
                 }
         } catch {
             print("bags \(error.localizedDescription)")
             return
+        }
+    }
+    
+    private func getExistedDocumentId(completion: @escaping ((String?) async throws -> Void)) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let ref = db.collection( "orderDescription")
+        let infoRef = ref.document(uid).collection("information")
+        infoRef.getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let isCompleted = data["isCompleted"]as? Bool ?? false
+                    print("--Completement--")
+                    print(isCompleted)
+                    if isCompleted == false {
+                        Task {
+                            try await completion(document.documentID)
+                        }
+                    }
+                }
+            }
         }
     }
     

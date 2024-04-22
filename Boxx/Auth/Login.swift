@@ -23,11 +23,11 @@ struct Login: View {
                 
                 VStack(spacing: 24){
                     InputView(text: $email,
-                              titel: "Email ",
+                              title: "Email ",
                               placeholder: "name@mail.ru")
                     .autocapitalization(.none)
                     
-                    InputView(text: $password, titel:"Пароль", placeholder:"Введите пароль",  isSecureField: true)
+                    InputView(text: $password, title:"Пароль", placeholder:"Введите пароль",  isSecureField: true)
                     
                 }.padding(.horizontal)
                     .padding(.top, 20)

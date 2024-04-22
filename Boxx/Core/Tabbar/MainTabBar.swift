@@ -11,6 +11,8 @@ import Firebase
 @available(iOS 17.0, *)
 struct MainTabBar: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @State var selectedTab: Int = 0
+    
     var body: some View {
         if let user = viewModel.currentUser{
             TabView{
@@ -23,7 +25,6 @@ struct MainTabBar: View {
                     .tag("2")
                     .tabItem {
                         Image(systemName: "plus.circle")
-                        
                     }
                 
                 ConversationsListView()
@@ -41,9 +42,10 @@ struct MainTabBar: View {
                     .tabItem {
                         Image(systemName: "person")
                     }
-                
-                
-                
+            }
+            
+            .onChange(of: selectedTab) { newValue in
+
             }
         }
         

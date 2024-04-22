@@ -14,14 +14,13 @@ struct UserProfileHome: View {
     var user: User
     @EnvironmentObject var viewModel: AuthViewModel
     
-    
     @State private var offsetY: CGFloat = 0
     
     @State var tabSelection: Int = 0
     
     
     var body: some View {
-        if let user = viewModel.currentUser{
+//        if let user = viewModel.currentUser {
             ScrollViewReader { scrollProxy in
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 0) {
@@ -58,10 +57,10 @@ struct UserProfileHome: View {
                 }
             }
         }
-    }
+//    }
 }
-struct Home_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
-    }
-}
+//struct Home_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView()
+//    }
+//}

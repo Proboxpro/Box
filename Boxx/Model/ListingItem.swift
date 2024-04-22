@@ -22,5 +22,4 @@ struct ListingItem: Identifiable, Codable, Hashable{
     var conversation: FirestoreConversation?
     var isAuthorized: Bool = false
     var dataIsExpired: Bool = false
-
 }

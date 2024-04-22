@@ -18,62 +18,59 @@ struct Mylistning: View {
     
     
     var body: some View {
-                Spacer()
-
-                List {
-
-                    ForEach(viewModel.myorder) { item in
-
-                        if item.isAuthorized && !item.dataIsExpired {
-
-                            MyListingItemView(item: item) {
-
-                                if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
-
-                                    print(viewModel.myorder.remove(at: index).ownerName)
-
-                                }
-
-                           
-                            }
-                            }
+        Spacer()
+        
+        List {
+            
+            ForEach(viewModel.myorder) { item in
+                
+                if item.isAuthorized && !item.dataIsExpired {
+                    
+                    MyListingItemView(item: item) {
+                        
+                        if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
                             
-                                           
-                                           
-                                           
+                            print(viewModel.myorder.remove(at: index).ownerName)
+                            
+                        }
+                        
+                        
                     }
-
-                    HStack {
-                        Spacer()
-
-                        Text("История")
-
-                        Spacer()
-
+                }
+                
+            }
+            
+            HStack {
+                Spacer()
+                
+                Text("История")
+                
+                Spacer()
+                
+            }
+            
+            
+            ForEach(viewModel.myorder) { item in
+                
+                if item.dataIsExpired {
+                    
+                    MyListingItemView(item: item) {
+                        
+                        if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
+                            
+                            print(viewModel.myorder.remove(at: index).ownerName)
+                            
+                        }
+                        
                     }
                     
-
-                    ForEach(viewModel.myorder) { item in
-
-                        if item.dataIsExpired {
-
-                            MyListingItemView(item: item) {
-
-                                if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
-
-                                    print(viewModel.myorder.remove(at: index).ownerName)
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-                .frame(height: 160)
-            }                .listStyle(PlainListStyle())
-
-                .onAppear{
+                }
+                
+            }
+            .frame(height: 160)
+        }                .listStyle(PlainListStyle())
+        
+            .onAppear{
                 viewModel.fetchOrder()
             }
         

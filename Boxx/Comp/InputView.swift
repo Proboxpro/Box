@@ -9,13 +9,13 @@ import SwiftUI
 
 struct InputView: View {
     @Binding var text: String
-    let titel: String
+    let title: String
     let placeholder: String
     var isSecureField = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12){
-            Text(titel)
+            Text(title)
                 .foregroundColor(Color(.darkGray))
                 .fontWeight (.semibold)
                 .font (.footnote)
@@ -34,5 +34,5 @@ struct InputView: View {
 
 struct InputView_Previews: PreviewProvider {
     static var previews: some View {
-        InputView(text: .constant(""), titel: "Email Adress", placeholder: "placeholder@mail.ru")    }
+        InputView(text: .constant(""), title: "Email Adress", placeholder: "placeholder@mail.ru")    }
 }

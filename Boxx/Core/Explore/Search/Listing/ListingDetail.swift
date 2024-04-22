@@ -17,6 +17,8 @@ struct ListingDetail: View {
     @EnvironmentObject var viewModel: AuthViewModel
     var item: ListingItem
     
+    @State var itemUser: User?
+    
     @State private var photosPickerItem: PhotosPickerItem?
     
     @State private var productImageData: Data? = nil
@@ -32,6 +34,8 @@ struct ListingDetail: View {
     
     @State private var conversationToOpen: Conversation? = nil
     @State var chatViewModel: ChatViewModel? = nil
+    
+    @Binding var showingListingDetailView : Bool
     
     var isSendAviable: Bool {
         return description != "" && value != ""
@@ -53,7 +57,10 @@ struct ListingDetail: View {
                     .resizable()
                     .frame(maxHeight: 350)
                 Button{
-                    dismiss()
+//                    dismiss()
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.25)) {
+                        showingListingDetailView = false
+                    }
                 }  label: { Image(systemName:"chevron.left")
                         .foregroundStyle(.black)
                         .background{
@@ -108,7 +115,7 @@ struct ListingDetail: View {
                         .frame(width: 64, height: 64)
                         .clipShape(Circle())
                 }.sheet(isPresented: $showingProfile, content: {
-                    ProfileView()
+                    ProfileView(ownerUid: item.ownerUid)
                 })
             }
             .padding()
@@ -265,7 +272,9 @@ struct ListingDetail: View {
             }
             .background(.white)
         }
-        
+        .onAppear {
+            
+        }
     }
     
 }
