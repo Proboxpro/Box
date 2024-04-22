@@ -16,7 +16,7 @@ struct Registration: View {
     @State private var fullName = ""
     @State private var password = ""
     @State private var confirmPassword = ""
-    @State private var imageUrl = ""
+    @State private var imageUrl = "https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/user%2Flogo.png?alt=media&token=77b3ec3c-1dfd-4ba8-91a4-b52b4d738b2c"
     @State private var backgroundPicture = ""
 
     
