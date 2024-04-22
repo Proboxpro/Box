@@ -2,7 +2,7 @@
 //  CreateNewMessageView.swift
 //  Boxx
 //
-//  Created by Nikita Larin on 11.12.2023.
+//  Created by Supunme Nanayakkarami on 11.12.2023.
 //
 
 import SwiftUI
