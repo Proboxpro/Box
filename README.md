@@ -1,4 +1,5 @@
-![logo](supun-new.png)
+<img align="center" src="https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/user%2Fbox-cube-icon-on-transparent-background-free-png%20(1).png?alt=media&token=c281b1e7-6c99-4072-b5ce-5fb617b2c00f" width="51%" style="display:inline;"><img align="right" src="https://user-images.githubusercontent.com/65187002/144930161-2f783401-8d27-4fdf-a2f7-cc0ba32f1f1f.gif" width="21%" style="display:inline;">
+
 <img align="left" src="https://user-images.githubusercontent.com/65187002/144930161-2f783401-8d27-4fdf-a2f7-cc0ba32f1f1f.gif" width="21%" style="display:inline;"><img align="right" src="https://user-images.githubusercontent.com/65187002/144930161-2f783401-8d27-4fdf-a2f7-cc0ba32f1f1f.gif" width="21%" style="display:inline;">
 
 <h1 align="center">Hi 👋, I'm Supunme Nanayakkarami</h1>
