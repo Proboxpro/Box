@@ -9,12 +9,12 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 
-struct MyListingItemView: View {
+struct OrderItemView: View {
     var onDelete: (() -> Void)?  // Замыкание для удаления элемента
     var item: ListingItem
-
-
-     
+    
+    @EnvironmentObject var viewModel: AuthViewModel
+    @State private var shouldShowDetails = false
 
      init(item: ListingItem, onDelete: (() -> Void)? = nil) {
 
@@ -23,6 +23,7 @@ struct MyListingItemView: View {
          self.onDelete = onDelete
 
      }
+    
     var body: some View {
         ZStack(alignment: .top){
             HStack{
@@ -98,6 +99,15 @@ struct MyListingItemView: View {
 
                    }
 
+               }
+               .onTapGesture {
+                   shouldShowDetails.toggle()
+               }
+               .fullScreenCover(isPresented: $shouldShowDetails) {
+                   NavigationView {
+                       OrderDetail(item: item)
+                           .environmentObject(OrderViewModel(authViewModel: self.viewModel))
+                   }
                }
                .listRowInsets(EdgeInsets())
 

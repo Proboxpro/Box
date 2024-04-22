@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ConversationRowView: View {
+struct OrderRow: View {
     var isCompleted: Bool
     var orderImageURL: URL?
     var profileName: String

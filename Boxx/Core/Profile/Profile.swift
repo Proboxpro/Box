@@ -102,17 +102,6 @@ struct Profile: View {
                             ProfileView()
                         })
                         HStack{
-                            Image(systemName: "bell.fill")
-                            Button(action: {
-                                showingVerif.toggle()
-                            }) {
-                                Text("Мои объявления")}
-                            .foregroundColor(.black)
-                        }
-                        .sheet(isPresented: $showingVerif, content: {
-                            Mylistning()
-                        })
-                        HStack{
                             Image(systemName: "checkmark.seal")
                             Button(action: {
                                 showingRules.toggle()
