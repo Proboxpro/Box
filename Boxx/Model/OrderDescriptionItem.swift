@@ -11,9 +11,14 @@ import FirebaseFirestoreSwift
 
 struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let id: String
+    
+    let announcementId: String
     let ownerId: String
+    let recipientId: String
+    
     let description: String?
     let image: URL?
+    let price: Int?
     
     let isSent: Bool
     let isInDelivery: Bool

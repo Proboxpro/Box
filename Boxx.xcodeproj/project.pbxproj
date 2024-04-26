@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		211CD9732BCC5C6700DE4317 /* OrderDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211CD9722BCC5C6700DE4317 /* OrderDetail.swift */; };
+		216CF48E2BDB77B500AF6A9E /* MyListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CF48D2BDB77B500AF6A9E /* MyListing.swift */; };
 		21F3E5642BD0315900019E75 /* OrderDescriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F3E5632BD0315900019E75 /* OrderDescriptionItem.swift */; };
 		881540262BA5F22C00D8AD2C /* UIImage+MergeBySide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */; };
 		882C20662B9DF101002CE6FE /* Date+TimeAgoFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882C20652B9DF101002CE6FE /* Date+TimeAgoFormat.swift */; };
@@ -26,7 +27,7 @@
 		F7A533862B21C8D00073C221 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F7A533852B21C8D00073C221 /* FirebaseStorage */; };
 		F7BA70C02BAAB02A00DC1856 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BA70BF2BAAB02A00DC1856 /* City.swift */; };
 		F7BA70C22BAAB03D00DC1856 /* CityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BA70C12BAAB03D00DC1856 /* CityView.swift */; };
-		F7C145422BB91D41006D80DF /* OrderItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C145412BB91D41006D80DF /* OrderItemView.swift */; };
+		F7C145422BB91D41006D80DF /* MyListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C145412BB91D41006D80DF /* MyListingView.swift */; };
 		F7E9B81A2B2DF15E001169BE /* ListingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E9B8192B2DF15E001169BE /* ListingItem.swift */; };
 		F7E9B8282B30E6CF001169BE /* ScrollDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E9B8272B30E6CF001169BE /* ScrollDetector.swift */; };
 		F7E9B82B2B30E897001169BE /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E9B82A2B30E897001169BE /* ViewModifiers.swift */; };
@@ -108,6 +109,7 @@
 
 /* Begin PBXFileReference section */
 		211CD9722BCC5C6700DE4317 /* OrderDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetail.swift; sourceTree = "<group>"; };
+		216CF48D2BDB77B500AF6A9E /* MyListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListing.swift; sourceTree = "<group>"; };
 		21F3E5632BD0315900019E75 /* OrderDescriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDescriptionItem.swift; sourceTree = "<group>"; };
 		8814B3602BA5D4B0004A57F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+MergeBySide.swift"; sourceTree = "<group>"; };
@@ -124,7 +126,7 @@
 		F7A533812B1F70D70073C221 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		F7BA70BF2BAAB02A00DC1856 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		F7BA70C12BAAB03D00DC1856 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
-		F7C145412BB91D41006D80DF /* OrderItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemView.swift; sourceTree = "<group>"; };
+		F7C145412BB91D41006D80DF /* MyListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListingView.swift; sourceTree = "<group>"; };
 		F7E9B8192B2DF15E001169BE /* ListingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingItem.swift; sourceTree = "<group>"; };
 		F7E9B8272B30E6CF001169BE /* ScrollDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollDetector.swift; sourceTree = "<group>"; };
 		F7E9B82A2B30E897001169BE /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
@@ -232,7 +234,6 @@
 			children = (
 				F7F7EE512B07204600817353 /* OrdersList.swift */,
 				F7F7EE532B07206400817353 /* OrderRow.swift */,
-				F7C145412BB91D41006D80DF /* OrderItemView.swift */,
 			);
 			path = ConversationList;
 			sourceTree = "<group>";
@@ -283,6 +284,7 @@
 				F7E9B82E2B30E99D001169BE /* View */,
 				F7E9B8272B30E6CF001169BE /* ScrollDetector.swift */,
 				F7E9B82A2B30E897001169BE /* ViewModifiers.swift */,
+				216CF48D2BDB77B500AF6A9E /* MyListing.swift */,
 				F7E9B82C2B30E970001169BE /* ProfileView.swift */,
 			);
 			path = Profile;
@@ -294,6 +296,7 @@
 				F7E9B8372B30EA58001169BE /* Collections */,
 				F7E9B82F2B30E9AB001169BE /* TabBarView.swift */,
 				F7E9B8312B30E9E5001169BE /* BottomCollections.swift */,
+				F7C145412BB91D41006D80DF /* MyListingView.swift */,
 				F7E9B8332B30E9FF001169BE /* HeaderView.swift */,
 				F7E9B8352B30EA15001169BE /* UserProfileHome.swift */,
 			);
@@ -725,6 +728,7 @@
 				F7F7EE542B07206400817353 /* OrderRow.swift in Sources */,
 				F7F7EE052B06095900817353 /* Login.swift in Sources */,
 				FA6233492BC99D3A008CBD84 /* String+Extension.swift in Sources */,
+				216CF48E2BDB77B500AF6A9E /* MyListing.swift in Sources */,
 				F7E9B8362B30EA15001169BE /* UserProfileHome.swift in Sources */,
 				F7F7EE582B07306300817353 /* DestinationSearchView.swift in Sources */,
 				F7E9B83D2B30EAB2001169BE /* ReviewCollection.swift in Sources */,
@@ -752,7 +756,7 @@
 				F7E9B8432B32396C001169BE /* Order.swift in Sources */,
 				F7F7EE442B066CB600817353 /* MainSearch.swift in Sources */,
 				F7F7EE5E2B07582900817353 /* Search.swift in Sources */,
-				F7C145422BB91D41006D80DF /* OrderItemView.swift in Sources */,
+				F7C145422BB91D41006D80DF /* MyListingView.swift in Sources */,
 				F7F7EE0E2B0610F900817353 /* Registration.swift in Sources */,
 				F7F7EDD22B06049300817353 /* BoxxApp.swift in Sources */,
 				8850C6EA2B8F731300DC7A70 /* MessageService.swift in Sources */,

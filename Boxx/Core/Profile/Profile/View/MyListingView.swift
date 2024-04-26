@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 
-struct OrderItemView: View {
+struct MyListingView: View {
     var onDelete: (() -> Void)?  // Замыкание для удаления элемента
     var item: ListingItem
     

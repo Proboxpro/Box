@@ -36,7 +36,7 @@ class AuthViewModel: ObservableObject {
     @Published var city: [City] = []
     
     @Published var orderDescription: [OrderDescriptionItem] = []
-    @Published var orderImg: URL?
+    @Published var allOrderDescription: [OrderDescriptionItem] = []
     
 //    @Publisher var currentCity: City?
 //    @Published var destinationSearchViewModel = DestinationSearchViewModel(
@@ -300,15 +300,28 @@ class AuthViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
-        fetchInnerCollection(ref: infoRef) { ownerId, description, url, isSent, isInDelivery, isDelivered, isCompleted in
-            let order = OrderDescriptionItem(id: uid, ownerId: ownerId, description: description, image: url, isSent: isSent, isInDelivery: isInDelivery, isDelivered: isDelivered, isCompleted: isCompleted)
+        fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+            let order = OrderDescriptionItem(id: uid,
+                                             announcementId: announcementId, 
+                                             ownerId: ownerId,
+                                             recipientId: recipientId,
+                                             description: description,
+                                             image: url,
+                                             price: price,
+                                             isSent: isSent,
+                                             isInDelivery: isInDelivery,
+                                             isDelivered: isDelivered,
+                                             isCompleted: isCompleted)
             print(99999)
             print(order)
             self.orderDescription.append(order)
         }
     }
     
-    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, URL?, Bool, Bool, Bool, Bool) -> Void)) {
+    func fetchAllOrderDescription(){
+        allOrderDescription.removeAll()
+        let db = Firestore.firestore()
+        let ref = db.collection( "orderDescription")
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -317,15 +330,48 @@ class AuthViewModel: ObservableObject {
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let data = document.data()
+                    let id = data["id"]as? String ?? ""
+                    let infoRef = ref.document(id).collection("information")
+                    self.fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                        let order = OrderDescriptionItem(id: id,
+                                                         announcementId: announcementId,
+                                                         ownerId: ownerId,
+                                                         recipientId: recipientId,
+                                                         description: description,
+                                                         image: url,
+                                                         price: price,
+                                                         isSent: isSent,
+                                                         isInDelivery: isInDelivery,
+                                                         isDelivered: isDelivered,
+                                                         isCompleted: isCompleted)
+                        self.allOrderDescription.append(order)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, URL?, Int, Bool, Bool, Bool, Bool) -> Void)) {
+        ref.getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let announcementId = data["announcementId"]as? String ?? ""
                     let ownerId = data["ownerId"]as? String ?? ""
+                    let recipientId = data["recipientId"]as? String ?? ""
                     let description = data["description"]as? String ?? ""
                     let image = data["image"]as? String ?? ""
+                    let price = data["price"]as? Int ?? 0
                     let isSent = data["isSent"]as? Bool ?? false
                     let isInDelivery = data["isInDelivery"]as? Bool ?? false
                     let isDelivered = data["isDelivered"]as? Bool ?? false
                     let isCompleted = data["isCompleted"]as? Bool ?? false
                     let url = URL(string: image)
-                    completion(ownerId, description, url, isSent, isInDelivery, isDelivered, isCompleted)
+                    completion(announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted)
                 }
             }
         }
@@ -489,30 +535,29 @@ class AuthViewModel: ObservableObject {
     }
     
     func saveOrderImage(data: Data) async throws -> URL? {
-        try await Task { () -> URL? in
-            guard let UserId = Auth.auth().currentUser?.uid else { return nil }
-            let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
-            print ("SUCCESS!")
-            print (path)
-            print (name)
-            do {
-                let storageRef = Storage.storage().reference(withPath: (name))
-                let url = try await storageRef.downloadURL()
-                print (url)
-                orderImg = url
-                try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
-                    "orderimageUrl": url.absoluteString,
-                    "UserId": UserId
-                ])
-                return url
-            } catch {
-                print("bags \(error.localizedDescription)")
-                return nil
-            }
-        }.value
-    }
+            try await Task { () -> URL? in
+                guard let UserId = Auth.auth().currentUser?.uid else { return nil }
+                let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
+                print ("SUCCESS!")
+                print (path)
+                print (name)
+                do {
+                    let storageRef = Storage.storage().reference(withPath: (name))
+                    let url = try await storageRef.downloadURL()
+                    print (url)
+                    try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
+                        "orderimageUrl": url.absoluteString,
+                        "UserId": UserId
+                    ])
+                    return url
+                } catch {
+                    print("bags \(error.localizedDescription)")
+                    return nil
+                }
+            }.value
+        }
     
-    func saveOrder(ownerId: String, imageData: Data, description: String) async throws {
+    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws {
         guard let UserId = Auth.auth().currentUser?.uid else { return }
         
         do {
@@ -528,70 +573,32 @@ class AuthViewModel: ObservableObject {
                 .collection("information")
                 .document()
             if document.exists {
-                getExistedDocumentId { id in
-                    if let id = id {
-                        let thisDoc = Firestore.firestore()
-                             .collection("orderDescription")
-                             .document(UserId)
-                             .collection("information")
-                             .document(id)
-                         try await thisDoc.updateData([
-                            "ownerId": ownerId,
-                             "description": description,
-                             "image": url?.absoluteString ?? ""
-                         ])
-                    } else {
-                        try await infoDoc.setData([
-                            "ownerId": ownerId,
-                            "description": description,
-                            "image": url?.absoluteString ?? "",
-                            "isCompleted": false
-                        ])
-                    }
-                }
+                try await infoDoc.setData([
+                    "ownerId": ownerId,
+                    "recipientId": recipientId,
+                    "announcementId": announcementId,
+                    "description": description,
+                    "image": url?.absoluteString ?? "",
+                    "price": price,
+                    "isCompleted": false
+                ])
             } else {
                     try await doc.setData([
                         "id": UserId
                     ])
                     try await infoDoc.setData([
                         "ownerId": ownerId,
+                        "recipientId": recipientId,
+                        "announcementId": announcementId,
                         "description": description,
                         "image": url?.absoluteString ?? "",
+                        "price": price,
                         "isCompleted": false
                     ])
                 }
         } catch {
             print("bags \(error.localizedDescription)")
             return
-        }
-    }
-    
-    private func getExistedDocumentId(completion: @escaping ((String?) async throws -> Void)) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
-        let ref = db.collection( "orderDescription")
-        let infoRef = ref.document(uid).collection("information")
-        infoRef.getDocuments { snapshot, error in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return
-            }
-            if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let data = document.data()
-                    let isCompleted = data["isCompleted"]as? Bool ?? false
-                    print("--Completement--")
-                    print(isCompleted)
-                    if isCompleted == false {
-                        Task {
-                            try await completion(document.documentID)
-                        }
-                    }
-                }
-                Task {
-                    try await completion(nil)
-                }
-            }
         }
     }
     

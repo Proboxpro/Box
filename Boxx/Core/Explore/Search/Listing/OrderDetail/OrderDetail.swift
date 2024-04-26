@@ -22,7 +22,8 @@ struct OrderDetail: View {
     @State private var recipient: String = ""
     
     private var orderItem: OrderDescriptionItem? {
-        return viewModel.orderDescription.last
+        let orders = viewModel.orderDescription.filter { $0.announcementId == item.id }
+        return orders.last
     }
     
     @State private var conversation: Conversation? = nil

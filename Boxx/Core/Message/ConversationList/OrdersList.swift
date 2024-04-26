@@ -11,84 +11,63 @@ import SDWebImageSwiftUI
 
 @available(iOS 17.0, *)
 struct OrdersList: View {
-    /// auth "service"
     @EnvironmentObject var viewModel: AuthViewModel
     
+    private var items: [ListingItem] {
+        return viewModel.orders
+    }
+    @State private var selectedItem: ListingItem? = nil
+
     var body: some View {
         if let user = viewModel.currentUser {
-            VStack {
-                List {
-                    
-                    ForEach(viewModel.myorder) { item in
-                        
-                        if item.isAuthorized && !item.dataIsExpired {
-                            
-                            OrderItemView(item: item) {
-                                if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
-                                    
-                                    print(viewModel.myorder.remove(at: index).ownerName)
-                                    
-                                }
-                            }
-                            .environmentObject(viewModel)
-                        }
-                        
-                    }
-                    
-                    HStack {
-                        Spacer()
-                        
-                        Text("История")
-                        
-                        Spacer()
-                        
-                    }
-                    
-                    
-                    ForEach(viewModel.myorder) { item in
-                        
-                        if item.dataIsExpired {
-                            
-                            OrderItemView(item: item) {
-                                if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
-                                    
-                                    print(viewModel.myorder.remove(at: index).ownerName)
-                                    
-                                }
-                            }
-                            .environmentObject(viewModel)
-                            
-                        }
-                        
-                    }
-                    .frame(height: 160)
-                }
-                .listStyle(PlainListStyle())
-            }
-            .onAppear{
-                viewModel.fetchOrder()
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading)
-                {
-                    VStack{
-                        HStack{
-                            WebImage(url: URL(string: user.imageUrl ?? ""))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 50, height: 50)
-                                .clipped()
-                                .cornerRadius(50)
-                                .shadow(radius: 5)
-                            
-                            Text(user.login)
-                                .font(.title)
-                                .fontWeight(.semibold)
-                        }
-                    }
-                }
-            }
-        }
+           NavigationStack {
+               ScrollView {
+                   ForEach(viewModel.orderDescription, id: \.hashValue) { order in
+                       OrderRow(isCompleted: order.isCompleted,
+                                orderImageURL: order.image,
+                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                orderDescription: order.description ?? "Описание")
+                           .onTapGesture {
+                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                           }
+                   }
+               }
+               .toolbar {
+                   ToolbarItem(placement: .navigationBarLeading)
+                   {
+                       VStack{
+                           HStack{
+                               WebImage(url: URL(string: user.imageUrl ?? ""))
+                                   .resizable()
+                                   .scaledToFill()
+                                   .frame(width: 50, height: 50)
+                                   .clipped()
+                                   .cornerRadius(50)
+                                   .shadow(radius: 5)
+                               
+                               Text(user.login)
+                                   .font(.title)
+                                   .fontWeight(.semibold)
+                           }
+                       }
+                   }
+               }
+               .fullScreenCover(item: $selectedItem, onDismiss: {
+                   viewModel.fetchOrderDescription()
+               }, content: { item in
+                   NavigationView{
+                       OrderDetail(item: item)
+                           .environmentObject(OrderViewModel(authViewModel: self.viewModel))
+                           .navigationBarBackButtonHidden()
+                   }
+               })
+               
+           }
+           .onAppear {
+               viewModel.fetchOrderDescription()
+               viewModel.fetchOrder()
+           }
+       }
     }
 }
 
