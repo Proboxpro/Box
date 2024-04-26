@@ -36,7 +36,8 @@ class AuthViewModel: ObservableObject {
     @Published var city: [City] = []
     
     @Published var orderDescription: [OrderDescriptionItem] = []
-    @Published var allOrderDescription: [OrderDescriptionItem] = []
+    @Published var ownerOrderDescription: [OrderDescriptionItem] = []
+    @Published var recipientOrderDescription: [OrderDescriptionItem] = []
     
 //    @Publisher var currentCity: City?
 //    @Published var destinationSearchViewModel = DestinationSearchViewModel(
@@ -318,8 +319,9 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchAllOrderDescription(){
-        allOrderDescription.removeAll()
+    func fetchOrderDescriptionAsOwner(){
+        ownerOrderDescription.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {return}
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         ref.getDocuments { snapshot, error in
@@ -333,18 +335,57 @@ class AuthViewModel: ObservableObject {
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
                     self.fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
-                        let order = OrderDescriptionItem(id: id,
-                                                         announcementId: announcementId,
-                                                         ownerId: ownerId,
-                                                         recipientId: recipientId,
-                                                         description: description,
-                                                         image: url,
-                                                         price: price,
-                                                         isSent: isSent,
-                                                         isInDelivery: isInDelivery,
-                                                         isDelivered: isDelivered,
-                                                         isCompleted: isCompleted)
-                        self.allOrderDescription.append(order)
+                        if ownerId == uid {
+                            let order = OrderDescriptionItem(id: id,
+                                                             announcementId: announcementId,
+                                                             ownerId: ownerId,
+                                                             recipientId: recipientId,
+                                                             description: description,
+                                                             image: url,
+                                                             price: price,
+                                                             isSent: isSent,
+                                                             isInDelivery: isInDelivery,
+                                                             isDelivered: isDelivered,
+                                                             isCompleted: isCompleted)
+                            self.ownerOrderDescription.append(order)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    func fetchOrderDescriptionAsRecipient(){
+        recipientOrderDescription.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let db = Firestore.firestore()
+        let ref = db.collection( "orderDescription")
+        ref.getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let id = data["id"]as? String ?? ""
+                    let infoRef = ref.document(id).collection("information")
+                    self.fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                        if recipientId == uid {
+                            let order = OrderDescriptionItem(id: id,
+                                                             announcementId: announcementId,
+                                                             ownerId: ownerId,
+                                                             recipientId: recipientId,
+                                                             description: description,
+                                                             image: url,
+                                                             price: price,
+                                                             isSent: isSent,
+                                                             isInDelivery: isInDelivery,
+                                                             isDelivered: isDelivered,
+                                                             isCompleted: isCompleted)
+                            self.recipientOrderDescription.append(order)
+                        }
                     }
                 }
             }
@@ -535,27 +576,27 @@ class AuthViewModel: ObservableObject {
     }
     
     func saveOrderImage(data: Data) async throws -> URL? {
-            try await Task { () -> URL? in
-                guard let UserId = Auth.auth().currentUser?.uid else { return nil }
-                let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
-                print ("SUCCESS!")
-                print (path)
-                print (name)
-                do {
-                    let storageRef = Storage.storage().reference(withPath: (name))
-                    let url = try await storageRef.downloadURL()
-                    print (url)
-                    try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
-                        "orderimageUrl": url.absoluteString,
-                        "UserId": UserId
-                    ])
-                    return url
-                } catch {
-                    print("bags \(error.localizedDescription)")
-                    return nil
-                }
-            }.value
-        }
+        try await Task { () -> URL? in
+            guard let UserId = Auth.auth().currentUser?.uid else { return nil }
+            let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
+            print ("SUCCESS!")
+            print (path)
+            print (name)
+            do {
+                let storageRef = Storage.storage().reference(withPath: (name))
+                let url = try await storageRef.downloadURL()
+                print (url)
+                try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
+                    "orderimageUrl": url.absoluteString,
+                    "UserId": UserId
+                ])
+                return url
+            } catch {
+                print("bags \(error.localizedDescription)")
+                return nil
+            }
+        }.value
+    }
     
     func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws {
         guard let UserId = Auth.auth().currentUser?.uid else { return }

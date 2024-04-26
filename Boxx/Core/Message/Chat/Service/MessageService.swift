@@ -102,6 +102,8 @@ class MessageService {
                     return $0.displayTitle < $1.displayTitle
                 }
             ?? []
+            print("----------")
+            print(self?.conversations.count)
         }
     }
     

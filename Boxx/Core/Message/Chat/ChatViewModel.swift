@@ -12,7 +12,7 @@ import Firebase
 import Combine
 
 @MainActor
-class ChatViewModel: ObservableObject {
+class ChatViewModel: ObservableObject, Identifiable {
     // MARK: - Properties
     var authViewModel: AuthViewModel
     

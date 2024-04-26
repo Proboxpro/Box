@@ -105,17 +105,15 @@ struct OrderDetail: View {
                         if isSendAviable {
                             Task{
                                 do {
-                                    if let receipentUser = receipentUser {
-                                        await orderViewModel.selectUsers([item.ownerUid, viewModel.currentUser?.id ?? ""] + [receipentUser.id])
+                                    if let receipentUser = orderItem?.recipientId {
+                                        await orderViewModel.selectUsers([item.ownerUid, orderItem?.id ?? ""] + [receipentUser])
                                     } else {
-                                        await orderViewModel.selectUsers([item.ownerUid, viewModel.currentUser?.id ?? ""])
+                                        await orderViewModel.selectUsers([item.ownerUid, orderItem?.id ?? ""])
                                     }
                                     
                                     if let conversation = await orderViewModel.conversationForUsers() {
                                         self.conversation = conversation
                                         self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
-                                        print("-----")
-                                        print(ChatViewModel(auth: viewModel, conversation: conversation).messages)
                                         self.orderViewModel.selectedUsers = []
                                     }
                                 }
@@ -129,10 +127,12 @@ struct OrderDetail: View {
                                     .fill(.white)
                                     .frame(width: 32, height: 32)
                             }
-                            .sheet(item: $conversation, content: { conversation in
+                            .sheet(item: $chatViewModel, onDismiss: {
+                                orderViewModel.fetchData()
+                            }, content: { chatViewModel in
                                 NavigationView {
                                     ChatViewContainer()
-                                        .environmentObject(ChatViewModel(auth: viewModel, conversation: conversation))
+                                        .environmentObject(chatViewModel)
                                         .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
                                             image
                                                 .resizable()
@@ -252,8 +252,8 @@ struct OrderDetail: View {
                 .cornerRadius(12))
         }
         .onAppear {
-            viewModel.fetchOrderDescription()
             orderViewModel.fetchData()
+            viewModel.fetchOrderDescription()
         }
         .navigationBarHidden(true)
         .background(Rectangle()

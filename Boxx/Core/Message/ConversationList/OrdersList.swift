@@ -22,7 +22,42 @@ struct OrdersList: View {
         if let user = viewModel.currentUser {
            NavigationStack {
                ScrollView {
+                   if !viewModel.ownerOrderDescription.isEmpty {
+                       Text("Мои заказы")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
+                   ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
+                       OrderRow(isCompleted: order.isCompleted,
+                                orderImageURL: order.image,
+                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                orderDescription: order.description ?? "Описание")
+                           .onTapGesture {
+                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                           }
+                   }
+                   
+                   if !viewModel.orderDescription.isEmpty {
+                       Text("Заказанные товары")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
                    ForEach(viewModel.orderDescription, id: \.hashValue) { order in
+                       OrderRow(isCompleted: order.isCompleted,
+                                orderImageURL: order.image,
+                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                orderDescription: order.description ?? "Описание")
+                           .onTapGesture {
+                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                           }
+                   }
+                   
+                   if !viewModel.recipientOrderDescription.isEmpty {
+                       Text("Нужно получить")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
+                   ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
                                 profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
@@ -65,6 +100,9 @@ struct OrdersList: View {
            }
            .onAppear {
                viewModel.fetchOrderDescription()
+               viewModel.fetchOrderDescriptionAsOwner()
+               viewModel.fetchOrderDescriptionAsRecipient()
+               
                viewModel.fetchOrder()
            }
        }

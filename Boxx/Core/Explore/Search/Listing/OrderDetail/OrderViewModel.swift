@@ -32,7 +32,7 @@ class OrderViewModel: ObservableObject {
         //        userIds.forEach { id in
         for id in userIds {
             let userr = await authViewModel.fetchUser(by: id)
-            if let user = userr {
+            if let user = userr, !user.id.isEmpty {
                 selectedUsers.append(user)
             }
         }
@@ -40,9 +40,16 @@ class OrderViewModel: ObservableObject {
     
     func conversationForUsers() async -> Conversation? {
         // search in existing conversations
+        print(111111111)
+        print("Convs: \(MessageService.shared.conversations)")
         for conversation in MessageService.shared.conversations {
+            print("pass 0")
+            print("\(conversation.users.count) - \(selectedUsers.count)")
             if conversation.users.count == selectedUsers.count {
+                print("pass 1")
                 if conversation.users.sorted(by: { $0.fullname > $1.fullname }) == self.selectedUsers.sorted(by: { $0.fullname > $1.fullname }) {
+                    print("pass 2")
+                    print(conversation)
                     return conversation
                 }
             }
