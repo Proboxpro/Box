@@ -22,12 +22,12 @@ struct ListingDetail: View {
     @State private var photosPickerItem: PhotosPickerItem?
     
     @State private var productImageData: Data? = nil
-    @State private var productImageUrl: URL? = nil
     @State private var showingOrder = false
     @State private var showingProfile = false
     @State private var value: String = ""
     @State private var description: String = ""
     @State private var recipient: String = ""
+    @State private var recipientId: String = ""
     @State private var imageUrls: String = ""
     @State private var ownerImageUrl: String = ""
     @State private var text = ""
@@ -176,6 +176,7 @@ struct ListingDetail: View {
                                                 CardView(user: item )
                                                     .onTapGesture {
                                                         recipient = item.login
+                                                        recipientId = item.id
                                                     }
                                             }
                                         }
@@ -188,6 +189,7 @@ struct ListingDetail: View {
                                     .imageScale(.small)
                                 TextField("Стоимость", text: $value)
                                     .font(.subheadline)
+                                    .keyboardType(.decimalPad)
                             }
                             .frame(width: 150, height: 44 )
                             .padding(.horizontal)
@@ -211,8 +213,6 @@ struct ListingDetail: View {
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                                 productImageData = data
-                                let url = try? await viewModel.saveOrderImage(data: data)
-                                productImageUrl = url
                             }
                         }
                     }
@@ -246,7 +246,7 @@ struct ListingDetail: View {
                     Spacer()
                     Button {
                         Task {
-                            try await viewModel.saveOrder(imageData: productImageData ?? Data(), description: description)
+                            try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0)
                             showingOrder.toggle()
                         }
                     } label: {

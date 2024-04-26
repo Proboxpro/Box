@@ -70,7 +70,7 @@ struct MainSearch: View {
                     SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView)
                 }
                 
-                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate()! >= Date()})
+                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() >= Date()})
                 
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()

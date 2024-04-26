@@ -21,7 +21,7 @@ struct Profile: View {
     @State private var showingProfile = false
     @State private var showingVerif = false
     @State private var showingRules = false
-
+    @State private var showingListing = false
 
 
     
@@ -102,17 +102,6 @@ struct Profile: View {
                             ProfileView()
                         })
                         HStack{
-                            Image(systemName: "bell.fill")
-                            Button(action: {
-                                showingVerif.toggle()
-                            }) {
-                                Text("Мои объявления")}
-                            .foregroundColor(.black)
-                        }
-                        .sheet(isPresented: $showingVerif, content: {
-                            Mylistning()
-                        })
-                        HStack{
                             Image(systemName: "checkmark.seal")
                             Button(action: {
                                 showingRules.toggle()
@@ -122,6 +111,17 @@ struct Profile: View {
                         }
                         .sheet(isPresented: $showingRules, content: {
                             ProfileView()
+                        })
+                        HStack{
+                            Image(systemName: "doc.questionmark")
+                            Button(action: {
+                                showingListing.toggle()
+                            }) {
+                                Text("Мои объявления")}
+                            .foregroundColor(.black)
+                        }
+                        .sheet(isPresented: $showingListing, content: {
+                            MyListing()
                         })
                     }
                 
@@ -133,7 +133,9 @@ struct Profile: View {
                             Text("Поддержка")}
                     }
                     Section{
-                        Button(action: {viewModel.signOut()}){
+                        Button(action: {
+                            viewModel.signOut()
+                        }){
                             Text("Выход")}
                     }
                     
