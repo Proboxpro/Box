@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 
 struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let id: String
+    let documentId: String
     
     let announcementId: String
     let ownerId: String
@@ -20,9 +21,13 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let image: URL?
     let price: Int?
     
-    let isSent: Bool
-    let isInDelivery: Bool
-    let isDelivered: Bool
+    var isSent: Bool
+    var isInDelivery: Bool
+    var isDelivered: Bool
     
     let isCompleted: Bool
+}
+
+enum OrderStatus {
+    case isSent, isInDelivery, isDelivered
 }

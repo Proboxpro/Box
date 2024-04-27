@@ -8,27 +8,58 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-
 @available(iOS 17.0, *)
 struct OrdersList: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
-    private var items: [ListingItem] {
-        return viewModel.orders
-    }
-    @State private var selectedItem: ListingItem? = nil
+    @State private var orderItem: OrderDescriptionItem? = nil
 
     var body: some View {
         if let user = viewModel.currentUser {
            NavigationStack {
                ScrollView {
+                   if !viewModel.ownerOrderDescription.isEmpty {
+                       Text("Мои заказы")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
+                   ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
+                       OrderRow(isCompleted: order.isCompleted,
+                                orderImageURL: order.image,
+                                profileName: "Заказ",
+                                orderDescription: order.description ?? "Описание")
+                           .onTapGesture {
+                               self.orderItem = order
+                           }
+                   }
+                   
+                   if !viewModel.orderDescription.isEmpty {
+                       Text("Заказанные товары")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
                    ForEach(viewModel.orderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                profileName: "Заказ",
                                 orderDescription: order.description ?? "Описание")
                            .onTapGesture {
-                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                               self.orderItem = order
+                           }
+                   }
+                   
+                   if !viewModel.recipientOrderDescription.isEmpty {
+                       Text("Нужно получить")
+                           .fontWeight(.medium)
+                           .foregroundStyle(.black)
+                   }
+                   ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
+                       OrderRow(isCompleted: order.isCompleted,
+                                orderImageURL: order.image,
+                                profileName: "Заказ",
+                                orderDescription: order.description ?? "Описание")
+                           .onTapGesture {
+                               self.orderItem = order
                            }
                    }
                }
@@ -52,11 +83,11 @@ struct OrdersList: View {
                        }
                    }
                }
-               .fullScreenCover(item: $selectedItem, onDismiss: {
+               .fullScreenCover(item: $orderItem, onDismiss: {
                    viewModel.fetchOrderDescription()
                }, content: { item in
                    NavigationView{
-                       OrderDetail(item: item)
+                       OrderDetail(orderItem: item)
                            .environmentObject(OrderViewModel(authViewModel: self.viewModel))
                            .navigationBarBackButtonHidden()
                    }
@@ -65,7 +96,8 @@ struct OrdersList: View {
            }
            .onAppear {
                viewModel.fetchOrderDescription()
-               viewModel.fetchOrder()
+               viewModel.fetchOrderDescriptionAsOwner()
+               viewModel.fetchOrderDescriptionAsRecipient()
            }
        }
     }

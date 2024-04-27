@@ -36,7 +36,8 @@ class AuthViewModel: ObservableObject {
     @Published var city: [City] = []
     
     @Published var orderDescription: [OrderDescriptionItem] = []
-    @Published var allOrderDescription: [OrderDescriptionItem] = []
+    @Published var ownerOrderDescription: [OrderDescriptionItem] = []
+    @Published var recipientOrderDescription: [OrderDescriptionItem] = []
     
 //    @Publisher var currentCity: City?
 //    @Published var destinationSearchViewModel = DestinationSearchViewModel(
@@ -110,9 +111,9 @@ class AuthViewModel: ObservableObject {
     }
     
     func fetchUser(by id: String) async -> User? {
+        guard id != "" else { return nil }
         guard let snapshot = try? await Firestore.firestore().collection("users").document(id).getDocument()
         else { return nil }
-        print(snapshot.data())
         //        guard let user = try? snapshot.data(as: User.self) else { return nil }
         let dict = snapshot.data()
         let fullname = dict?["fullname"] as? String ?? ""
@@ -300,9 +301,10 @@ class AuthViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
-        fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+        fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
             let order = OrderDescriptionItem(id: uid,
-                                             announcementId: announcementId, 
+                                             documentId: documentId,
+                                             announcementId: announcementId,
                                              ownerId: ownerId,
                                              recipientId: recipientId,
                                              description: description,
@@ -318,8 +320,9 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchAllOrderDescription(){
-        allOrderDescription.removeAll()
+    func fetchOrderDescriptionAsOwner(){
+        ownerOrderDescription.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {return}
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         ref.getDocuments { snapshot, error in
@@ -332,26 +335,67 @@ class AuthViewModel: ObservableObject {
                     let data = document.data()
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
-                    self.fetchInnerCollection(ref: infoRef) { announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
-                        let order = OrderDescriptionItem(id: id,
-                                                         announcementId: announcementId,
-                                                         ownerId: ownerId,
-                                                         recipientId: recipientId,
-                                                         description: description,
-                                                         image: url,
-                                                         price: price,
-                                                         isSent: isSent,
-                                                         isInDelivery: isInDelivery,
-                                                         isDelivered: isDelivered,
-                                                         isCompleted: isCompleted)
-                        self.allOrderDescription.append(order)
+                    self.fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                        if ownerId == uid {
+                            let order = OrderDescriptionItem(id: id,
+                                                             documentId: documentId,
+                                                             announcementId: announcementId,
+                                                             ownerId: ownerId,
+                                                             recipientId: recipientId,
+                                                             description: description,
+                                                             image: url,
+                                                             price: price,
+                                                             isSent: isSent,
+                                                             isInDelivery: isInDelivery,
+                                                             isDelivered: isDelivered,
+                                                             isCompleted: isCompleted)
+                            self.ownerOrderDescription.append(order)
+                        }
                     }
                 }
             }
         }
     }
     
-    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, URL?, Int, Bool, Bool, Bool, Bool) -> Void)) {
+    
+    func fetchOrderDescriptionAsRecipient(){
+        recipientOrderDescription.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let db = Firestore.firestore()
+        let ref = db.collection( "orderDescription")
+        ref.getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let id = data["id"]as? String ?? ""
+                    let infoRef = ref.document(id).collection("information")
+                    self.fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                        if recipientId == uid {
+                            let order = OrderDescriptionItem(id: id,
+                                                             documentId: documentId,
+                                                             announcementId: announcementId,
+                                                             ownerId: ownerId,
+                                                             recipientId: recipientId,
+                                                             description: description,
+                                                             image: url,
+                                                             price: price,
+                                                             isSent: isSent,
+                                                             isInDelivery: isInDelivery,
+                                                             isDelivered: isDelivered,
+                                                             isCompleted: isCompleted)
+                            self.recipientOrderDescription.append(order)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, String, URL?, Int, Bool, Bool, Bool, Bool) -> Void)) {
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -371,7 +415,7 @@ class AuthViewModel: ObservableObject {
                     let isDelivered = data["isDelivered"]as? Bool ?? false
                     let isCompleted = data["isCompleted"]as? Bool ?? false
                     let url = URL(string: image)
-                    completion(announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted)
+                    completion(document.documentID, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted)
                 }
             }
         }
@@ -535,31 +579,30 @@ class AuthViewModel: ObservableObject {
     }
     
     func saveOrderImage(data: Data) async throws -> URL? {
-            try await Task { () -> URL? in
-                guard let UserId = Auth.auth().currentUser?.uid else { return nil }
-                let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
-                print ("SUCCESS!")
-                print (path)
-                print (name)
-                do {
-                    let storageRef = Storage.storage().reference(withPath: (name))
-                    let url = try await storageRef.downloadURL()
-                    print (url)
-                    try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
-                        "orderimageUrl": url.absoluteString,
-                        "UserId": UserId
-                    ])
-                    return url
-                } catch {
-                    print("bags \(error.localizedDescription)")
-                    return nil
-                }
-            }.value
-        }
+        try await Task { () -> URL? in
+            guard let UserId = Auth.auth().currentUser?.uid else { return nil }
+            let (path,name) = try await AuthViewModel.shared.saveOrderImage (data: data, UserId: UserId)
+            print ("SUCCESS!")
+            print (path)
+            print (name)
+            do {
+                let storageRef = Storage.storage().reference(withPath: (name))
+                let url = try await storageRef.downloadURL()
+                print (url)
+                try await  Firestore.firestore().collection("orderimg").document(UserId).setData([
+                    "orderimageUrl": url.absoluteString,
+                    "UserId": UserId
+                ])
+                return url
+            } catch {
+                print("bags \(error.localizedDescription)")
+                return nil
+            }
+        }.value
+    }
     
-    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws {
-        guard let UserId = Auth.auth().currentUser?.uid else { return }
-        
+    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws -> OrderDescriptionItem? {
+        guard let UserId = Auth.auth().currentUser?.uid else { return nil }
         do {
             let url = try await getImageUrl(imageData: imageData)
             print (url)
@@ -580,6 +623,9 @@ class AuthViewModel: ObservableObject {
                     "description": description,
                     "image": url?.absoluteString ?? "",
                     "price": price,
+                    "isSent": false,
+                    "isInDelivery": false,
+                    "isDelivered": false,
                     "isCompleted": false
                 ])
             } else {
@@ -593,9 +639,46 @@ class AuthViewModel: ObservableObject {
                         "description": description,
                         "image": url?.absoluteString ?? "",
                         "price": price,
+                        "isSent": false,
+                        "isInDelivery": false,
+                        "isDelivered": false,
                         "isCompleted": false
                     ])
                 }
+            let order = OrderDescriptionItem(id: UserId,
+                                             documentId: infoDoc.documentID,
+                                             announcementId: announcementId,
+                                             ownerId: ownerId,
+                                             recipientId: recipientId,
+                                             description: description,
+                                             image: url,
+                                             price: price,
+                                             isSent: false,
+                                             isInDelivery: false,
+                                             isDelivered: false,
+                                             isCompleted: false)
+            return order
+        } catch {
+            print("bags \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func updateOrderStatus(type: OrderStatus, value: Bool, id: String, documentId: String) async throws {
+        do {
+            let infoDoc = Firestore.firestore()
+                .collection("orderDescription")
+                .document(id)
+                .collection("information")
+                .document(documentId)
+            switch type {
+            case .isSent:
+                try await infoDoc.updateData([ "isSent": value ])
+            case .isInDelivery:
+                try await infoDoc.updateData([ "isInDelivery": value ])
+            case .isDelivered:
+                try await infoDoc.updateData([ "isDelivered": value ])
+            }
         } catch {
             print("bags \(error.localizedDescription)")
             return

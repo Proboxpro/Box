@@ -14,7 +14,6 @@ struct MyListingView: View {
     var item: ListingItem
     
     @EnvironmentObject var viewModel: AuthViewModel
-    @State private var shouldShowDetails = false
 
      init(item: ListingItem, onDelete: (() -> Void)? = nil) {
 
@@ -99,15 +98,6 @@ struct MyListingView: View {
 
                    }
 
-               }
-               .onTapGesture {
-                   shouldShowDetails.toggle()
-               }
-               .fullScreenCover(isPresented: $shouldShowDetails) {
-                   NavigationView {
-                       OrderDetail(item: item)
-                           .environmentObject(OrderViewModel(authViewModel: self.viewModel))
-                   }
                }
                .listRowInsets(EdgeInsets())
 
