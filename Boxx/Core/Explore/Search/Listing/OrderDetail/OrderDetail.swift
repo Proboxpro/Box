@@ -15,23 +15,20 @@ struct OrderDetail: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var orderViewModel: OrderViewModel
-    var item: ListingItem
+    var orderItem: OrderDescriptionItem
+    
+    private var item: ListingItem? {
+        let items = viewModel.orders
+        let item = items.filter{ $0.id == orderItem.announcementId }.last
+        return item
+    }
     
     @State private var showingProfile = false
     @State private var value: String = ""
     @State private var recipient: String = ""
     
-    private var orderItem: OrderDescriptionItem? {
-        let orders = viewModel.orderDescription.filter { $0.announcementId == item.id }
-        return orders.last
-    }
-    
     @State private var conversation: Conversation? = nil
     @State private var chatViewModel: ChatViewModel? = nil
-    
-    var isSendAviable: Bool {
-        return orderItem?.description != ""
-    }
     
     var filtereduser: [User] {
         guard !recipient.isEmpty else { return viewModel.users }
@@ -73,19 +70,21 @@ struct OrderDetail: View {
             VStack{
                 HStack(spacing: 8){
                     HStack{
-                        Button{
-                            showingProfile.toggle()
-                        } label: {
-                            WebImage(url: URL(string: item.imageUrl))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 32, height: 32)
-                                .clipShape(Circle())
-                        }.sheet(isPresented: $showingProfile, content: {
-                            ProfileView()
-                        })
+                        if let image = item?.imageUrl {
+                            Button{
+                                showingProfile.toggle()
+                            } label: {
+                                WebImage(url: URL(string: image))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 32)
+                                    .clipShape(Circle())
+                            }.sheet(isPresented: $showingProfile, content: {
+                                ProfileView()
+                            })
+                        }
                         VStack(alignment: .leading, spacing: 0){
-                            Text("\(item.ownerName)")
+                            Text(item?.ownerName ?? "")
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.white)
                             HStack(spacing: 8){
@@ -102,20 +101,14 @@ struct OrderDetail: View {
                     }
                     Spacer()
                     Button {
-                        if isSendAviable {
-                            Task{
-                                do {
-                                    if let receipentUser = orderItem?.recipientId {
-                                        await orderViewModel.selectUsers([item.ownerUid, orderItem?.id ?? ""] + [receipentUser])
-                                    } else {
-                                        await orderViewModel.selectUsers([item.ownerUid, orderItem?.id ?? ""])
-                                    }
-                                    
-                                    if let conversation = await orderViewModel.conversationForUsers() {
-                                        self.conversation = conversation
-                                        self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
-                                        self.orderViewModel.selectedUsers = []
-                                    }
+                        Task{
+                            do {
+                                await orderViewModel.selectUsers([item?.ownerUid ?? "", orderItem.id] + [orderItem.recipientId])
+                                
+                                if let conversation = await orderViewModel.conversationForUsers() {
+                                    self.conversation = conversation
+                                    self.chatViewModel = ChatViewModel(auth: viewModel, conversation: conversation)
+                                    self.orderViewModel.selectedUsers = []
                                 }
                             }
                         }
@@ -133,7 +126,7 @@ struct OrderDetail: View {
                                 NavigationView {
                                     ChatViewContainer()
                                         .environmentObject(chatViewModel)
-                                        .navigationBarItems(trailing: AsyncImage(url: URL(string: item.imageUrl), content: { image in
+                                        .navigationBarItems(trailing: AsyncImage(url: URL(string: item?.imageUrl ?? ""), content: { image in
                                             image
                                                 .resizable()
                                                 .frame(width: 32, height: 32)
@@ -144,12 +137,11 @@ struct OrderDetail: View {
                                                 .frame(width: 32, height: 32)
                                                 .foregroundColor(Color(.systemGray))
                                         }))
-                                        .navigationTitle(item.ownerName)
+                                        .navigationTitle(item?.ownerName ?? "")
                                         .navigationBarTitleDisplayMode(.inline)
                                 }
                             })
                     }
-                    .disabled(!isSendAviable)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16))
                     
                     Button{
@@ -172,11 +164,11 @@ struct OrderDetail: View {
                         HStack{
                             Spacer()
                             Rectangle()
-                                .foregroundColor((orderItem?.isInDelivery ?? false) ? .green : .gray)
+                                .foregroundColor((orderItem.isInDelivery) ? .green : .gray)
                                 .frame(width: 128, height: 2)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Rectangle()
-                                .foregroundColor((orderItem?.isDelivered ?? false) ? .green : .gray)
+                                .foregroundColor((orderItem.isDelivered) ? .green : .gray)
                                 .frame(width: 128, height: 2)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 36, trailing: 0))
                             Spacer()
@@ -187,7 +179,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill((orderItem?.isSent ?? false) ? .green : .gray)
+                                            .fill((orderItem.isSent) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("Отправлен")
@@ -201,7 +193,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill((orderItem?.isInDelivery ?? false) ? .green : .gray)
+                                            .fill((orderItem.isInDelivery) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("В доставке")
@@ -215,7 +207,7 @@ struct OrderDetail: View {
                                     .foregroundStyle(.white)
                                     .background(
                                         Circle()
-                                            .fill((orderItem?.isDelivered ?? false) ? .green : .gray)
+                                            .fill((orderItem.isDelivered) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("Доставлен")
@@ -227,13 +219,13 @@ struct OrderDetail: View {
                     }
                     
                     HStack(spacing: 16){
-                        if let url = orderItem?.image {
+                        if let url = orderItem.image {
                             WebImage(url: url)
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
                         
-                        if let description = orderItem?.description {
+                        if let description = orderItem.description {
                             Text("Описание: \(description)")
                                 .fontWeight(.regular)
                                 .foregroundStyle(.gray)
@@ -254,6 +246,7 @@ struct OrderDetail: View {
         .onAppear {
             orderViewModel.fetchData()
             viewModel.fetchOrderDescription()
+            viewModel.fetchOrder()
         }
         .navigationBarHidden(true)
         .background(Rectangle()

@@ -32,8 +32,7 @@ struct ListingDetail: View {
     @State private var ownerImageUrl: String = ""
     @State private var text = ""
     
-    @State private var conversationToOpen: Conversation? = nil
-    @State var chatViewModel: ChatViewModel? = nil
+    @State private var orderItem: OrderDescriptionItem? = nil
     
     @Binding var showingListingDetailView : Bool
     
@@ -246,8 +245,9 @@ struct ListingDetail: View {
                     Spacer()
                     Button {
                         Task {
-                            try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0)
-                            showingOrder.toggle()
+                            if let order = try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0) {
+                                self.orderItem = order
+                            }
                         }
                     } label: {
                         Text ("Отправить")
@@ -257,9 +257,9 @@ struct ListingDetail: View {
                             .frame(width: 140, height: 40 )
                             .background(.pink)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .fullScreenCover(isPresented: $showingOrder, content: {
+                            .fullScreenCover(item: $orderItem, content: { order in
                                 NavigationView{
-                                    OrderDetail(item: item)
+                                    OrderDetail(orderItem: order)
                                         .environmentObject(OrderViewModel(authViewModel: self.viewModel))
                                         .navigationBarBackButtonHidden()
                                 }

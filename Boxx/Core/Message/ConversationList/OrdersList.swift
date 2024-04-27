@@ -13,10 +13,7 @@ import SDWebImageSwiftUI
 struct OrdersList: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
-    private var items: [ListingItem] {
-        return viewModel.orders
-    }
-    @State private var selectedItem: ListingItem? = nil
+    @State private var orderItem: OrderDescriptionItem? = nil
 
     var body: some View {
         if let user = viewModel.currentUser {
@@ -30,10 +27,10 @@ struct OrdersList: View {
                    ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                profileName: "Заказ",
                                 orderDescription: order.description ?? "Описание")
                            .onTapGesture {
-                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                               self.orderItem = order
                            }
                    }
                    
@@ -45,10 +42,10 @@ struct OrdersList: View {
                    ForEach(viewModel.orderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                profileName: "Заказ",
                                 orderDescription: order.description ?? "Описание")
                            .onTapGesture {
-                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                               self.orderItem = order
                            }
                    }
                    
@@ -60,10 +57,10 @@ struct OrdersList: View {
                    ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: items.filter{ $0.ownerUid == order.ownerId }.last?.ownerName ?? "Заказ",
+                                profileName: "Заказ",
                                 orderDescription: order.description ?? "Описание")
                            .onTapGesture {
-                               self.selectedItem = items.filter{ $0.id == order.announcementId }.last
+                               self.orderItem = order
                            }
                    }
                }
@@ -87,11 +84,11 @@ struct OrdersList: View {
                        }
                    }
                }
-               .fullScreenCover(item: $selectedItem, onDismiss: {
+               .fullScreenCover(item: $orderItem, onDismiss: {
                    viewModel.fetchOrderDescription()
                }, content: { item in
                    NavigationView{
-                       OrderDetail(item: item)
+                       OrderDetail(orderItem: item)
                            .environmentObject(OrderViewModel(authViewModel: self.viewModel))
                            .navigationBarBackButtonHidden()
                    }
@@ -102,8 +99,6 @@ struct OrdersList: View {
                viewModel.fetchOrderDescription()
                viewModel.fetchOrderDescriptionAsOwner()
                viewModel.fetchOrderDescriptionAsRecipient()
-               
-               viewModel.fetchOrder()
            }
        }
     }

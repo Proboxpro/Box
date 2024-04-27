@@ -111,9 +111,9 @@ class AuthViewModel: ObservableObject {
     }
     
     func fetchUser(by id: String) async -> User? {
+        guard id != "" else { return nil }
         guard let snapshot = try? await Firestore.firestore().collection("users").document(id).getDocument()
         else { return nil }
-        print(snapshot.data())
         //        guard let user = try? snapshot.data(as: User.self) else { return nil }
         let dict = snapshot.data()
         let fullname = dict?["fullname"] as? String ?? ""
@@ -598,8 +598,8 @@ class AuthViewModel: ObservableObject {
         }.value
     }
     
-    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws {
-        guard let UserId = Auth.auth().currentUser?.uid else { return }
+    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws -> OrderDescriptionItem? {
+        guard let UserId = Auth.auth().currentUser?.uid else { return nil }
         
         do {
             let url = try await getImageUrl(imageData: imageData)
@@ -637,9 +637,21 @@ class AuthViewModel: ObservableObject {
                         "isCompleted": false
                     ])
                 }
+            let order = OrderDescriptionItem(id: UserId,
+                                             announcementId: announcementId,
+                                             ownerId: ownerId,
+                                             recipientId: recipientId,
+                                             description: description,
+                                             image: url,
+                                             price: price,
+                                             isSent: false,
+                                             isInDelivery: false,
+                                             isDelivered: false,
+                                             isCompleted: false)
+            return order
         } catch {
             print("bags \(error.localizedDescription)")
-            return
+            return nil
         }
     }
     
