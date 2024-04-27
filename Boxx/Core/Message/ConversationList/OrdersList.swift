@@ -8,7 +8,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-
 @available(iOS 17.0, *)
 struct OrdersList: View {
     @EnvironmentObject var viewModel: AuthViewModel
