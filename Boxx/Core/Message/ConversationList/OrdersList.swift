@@ -26,8 +26,9 @@ struct OrdersList: View {
                    ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: "Заказ",
-                                orderDescription: order.description ?? "Описание")
+                                profileName: "В \(order.cityTo)",
+                                orderDescription: order.description ?? "Описание",
+                                date: order.creationTime)
                            .onTapGesture {
                                self.orderItem = order
                            }
@@ -41,8 +42,9 @@ struct OrdersList: View {
                    ForEach(viewModel.orderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: "Заказ",
-                                orderDescription: order.description ?? "Описание")
+                                profileName: "В \(order.cityTo)",
+                                orderDescription: order.description ?? "Описание",
+                                date: order.creationTime)
                            .onTapGesture {
                                self.orderItem = order
                            }
@@ -56,8 +58,9 @@ struct OrdersList: View {
                    ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
                        OrderRow(isCompleted: order.isCompleted,
                                 orderImageURL: order.image,
-                                profileName: "Заказ",
-                                orderDescription: order.description ?? "Описание")
+                                profileName: "В \(order.cityTo)",
+                                orderDescription: order.description ?? "Описание",
+                                date: order.creationTime)
                            .onTapGesture {
                                self.orderItem = order
                            }

@@ -245,7 +245,9 @@ struct ListingDetail: View {
                     Spacer()
                     Button {
                         Task {
-                            if let order = try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0) {
+                            if let order = try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, 
+                                                                         cityFrom: item.cityFrom, cityTo: item.cityTo, ownerName: item.ownerName,
+                                                                         imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0) {
                                 self.orderItem = order
                             }
                         }

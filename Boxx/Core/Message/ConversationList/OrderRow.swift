@@ -13,15 +13,16 @@ struct OrderRow: View {
     var orderImageURL: URL?
     var profileName: String
     var orderDescription: String
+    var date: Date
     
     var body: some View {
         HStack(alignment: .top, spacing: 15){
            
-                     Image(systemName: "shippingbox.fill")
-                         .resizable()
-                         .frame(width: 64, height: 64)
-                         .aspectRatio(contentMode: .fill)
-                         .foregroundColor(Color(.systemGray))
+             Image(systemName: "shippingbox.fill")
+                 .resizable()
+                 .frame(width: 64, height: 64)
+                 .aspectRatio(contentMode: .fill)
+                 .foregroundColor(Color(.systemGray))
                  
             
             VStack(alignment: .leading, spacing: 4){
@@ -37,14 +38,15 @@ struct OrderRow: View {
             
             Spacer()
             HStack {
-                Text(isCompleted ? "Выполнен" : "Активный")
+                Text(date.timeAgoDisplay())
                     .font(.subheadline)
-                    .foregroundColor(isCompleted ? .gray : .black)
+                    .foregroundColor(isCompleted ? .gray : .green)
                     .lineLimit(2)
                 Image(systemName: "chevron.right")
-                    .foregroundColor(isCompleted ? .gray : .black)
+                    .foregroundColor(isCompleted ? .gray : .green)
             }
         }
+        .background(.clear)
         .padding()
         .frame(height: 72)
     }
