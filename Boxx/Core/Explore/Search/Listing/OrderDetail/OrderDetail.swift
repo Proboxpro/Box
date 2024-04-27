@@ -15,7 +15,7 @@ struct OrderDetail: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var orderViewModel: OrderViewModel
-    var orderItem: OrderDescriptionItem
+    @State var orderItem: OrderDescriptionItem
     
     private var item: ListingItem? {
         let items = viewModel.orders
@@ -159,7 +159,7 @@ struct OrderDetail: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(32)
                 
-                VStack(alignment: .leading, spacing: 32) {
+                VStack(alignment: .leading, spacing: 24) {
                     ZStack{
                         HStack{
                             Spacer()
@@ -210,11 +210,69 @@ struct OrderDetail: View {
                                             .fill((orderItem.isDelivered) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
-                                Text("Доставлен")
+                                Text("Получен")
                                     .fontWeight(.medium)
                                     .foregroundStyle(.black)
                                     .multilineTextAlignment(.center)
                             }
+                        }
+                    }
+                    
+                    if (orderItem.ownerId == viewModel.currentUser?.id && !orderItem.isSent) {
+                        Button {
+                            Task{
+                                try await viewModel.updateOrderStatus(type: .isDelivered, value: true, id: orderItem.id, documentId: orderItem.documentId)
+                                orderItem.isDelivered = true
+                            }
+                        } label: {
+                            Text("Подтвердить отправление")
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24))
+                                .background {
+                                    RoundedRectangle(cornerRadius: 16, style: .circular)
+                                        .frame(maxWidth: .infinity)
+                                        .foregroundColor(.green)
+                                }
+                        }
+                    }
+                    if (orderItem.id == viewModel.currentUser?.id && !orderItem.isInDelivery) && orderItem.isSent {
+                        Button {
+                            Task{
+                                try await viewModel.updateOrderStatus(type: .isDelivered, value: true, id: orderItem.id, documentId: orderItem.documentId)
+                                orderItem.isDelivered = true
+                            }
+                        } label: {
+                            Text("Подтвердить отправление")
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24))
+                                .background {
+                                    RoundedRectangle(cornerRadius: 16, style: .circular)
+                                        .frame(maxWidth: .infinity)
+                                        .foregroundColor(.green)
+                                }
+                        }
+                    }
+                    if (orderItem.recipientId == viewModel.currentUser?.id && !orderItem.isDelivered) && orderItem.isSent && orderItem.isInDelivery {
+                        Button {
+                            Task{
+                                try await viewModel.updateOrderStatus(type: .isDelivered, value: true, id: orderItem.id, documentId: orderItem.documentId)
+                                orderItem.isDelivered = true
+                            }
+                        } label: {
+                            Text("Подтвердить получение")
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24))
+                                .background {
+                                    RoundedRectangle(cornerRadius: 16, style: .circular)
+                                        .frame(maxWidth: .infinity)
+                                        .foregroundColor(.green)
+                                }
                         }
                     }
                     
