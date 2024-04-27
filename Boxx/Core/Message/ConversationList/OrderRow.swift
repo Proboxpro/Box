@@ -16,16 +16,13 @@ struct OrderRow: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 15){
-            CachedAsyncImage(url: orderImageURL) { image in
-                     image.resizable()
-                    .frame(width: 64, height: 64)
-                    .aspectRatio(contentMode: .fill)
-                 } placeholder: {
+           
                      Image(systemName: "shippingbox.fill")
                          .resizable()
                          .frame(width: 64, height: 64)
+                         .aspectRatio(contentMode: .fill)
                          .foregroundColor(Color(.systemGray))
-                 }
+                 
             
             VStack(alignment: .leading, spacing: 4){
                 Text(profileName)
