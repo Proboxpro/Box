@@ -225,7 +225,7 @@ struct OrderDetail: View {
                                 orderItem.isDelivered = true
                             }
                         } label: {
-                            Text("Подтвердить отправление")
+                            Text("Подтвердить получение")
                                 .frame(maxWidth: .infinity)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
