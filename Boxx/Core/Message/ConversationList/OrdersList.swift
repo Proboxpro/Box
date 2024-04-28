@@ -19,7 +19,7 @@ struct OrdersList: View {
            NavigationStack {
                ScrollView {
                    if !viewModel.ownerOrderDescription.isEmpty {
-                       Text("Мои заказы")
+                       Text("Мои поездки")
                            .fontWeight(.medium)
                            .foregroundStyle(.black)
                    }
