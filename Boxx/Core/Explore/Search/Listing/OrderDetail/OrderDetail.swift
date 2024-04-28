@@ -144,17 +144,17 @@ struct OrderDetail: View {
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16))
                     
-                    Button{
-                        guard let url = URL(string: "tel://89205707541") else { return }
-                        UIApplication.shared.open(url)
-                    }  label: { Image(systemName:"phone.fill")
-                            .foregroundStyle(.white)
-                            .background{
-                                Circle()
-                                    .fill(.red)
-                                    .frame(width: 32, height: 32)
-                            }
-                    }
+                //   Button{
+                //        guard let url = URL(string: "tel://89205707541") else { return }
+                //        UIApplication.shared.open(url)
+                //    }  label: { Image(systemName:"phone.fill")
+                //           .foregroundStyle(.white)
+                //           .background{
+                //                Circle()
+                //                    .fill(.red)
+                //                    .frame(width: 32, height: 32)
+                //         }
+                //  }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(32)

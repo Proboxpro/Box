@@ -301,12 +301,20 @@ class AuthViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
-        fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+        fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId,
+                                              cityFrom, cityTo, ownerName, creationTime,
+                                              description, url, price,
+                                              isSent, isInDelivery, isDelivered,
+                                              isCompleted) in
             let order = OrderDescriptionItem(id: uid,
                                              documentId: documentId,
                                              announcementId: announcementId,
                                              ownerId: ownerId,
                                              recipientId: recipientId,
+                                             cityFrom: cityFrom,
+                                             cityTo: cityTo,
+                                             ownerName: ownerName,
+                                             creationTime: creationTime,
                                              description: description,
                                              image: url,
                                              price: price,
@@ -314,8 +322,6 @@ class AuthViewModel: ObservableObject {
                                              isInDelivery: isInDelivery,
                                              isDelivered: isDelivered,
                                              isCompleted: isCompleted)
-            print(99999)
-            print(order)
             self.orderDescription.append(order)
         }
     }
@@ -335,13 +341,21 @@ class AuthViewModel: ObservableObject {
                     let data = document.data()
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
-                    self.fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                    self.fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId,
+                                                               cityFrom, cityTo, ownerName, creationTime,
+                                                               description, url, price,
+                                                               isSent, isInDelivery, isDelivered,
+                                                               isCompleted) in
                         if ownerId == uid {
                             let order = OrderDescriptionItem(id: id,
                                                              documentId: documentId,
                                                              announcementId: announcementId,
                                                              ownerId: ownerId,
                                                              recipientId: recipientId,
+                                                             cityFrom: cityFrom,
+                                                             cityTo: cityTo,
+                                                             ownerName: ownerName,
+                                                             creationTime: creationTime,
                                                              description: description,
                                                              image: url,
                                                              price: price,
@@ -373,13 +387,21 @@ class AuthViewModel: ObservableObject {
                     let data = document.data()
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
-                    self.fetchInnerCollection(ref: infoRef) { documentId, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted in
+                    self.fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId, 
+                                                               cityFrom, cityTo, ownerName, creationTime,
+                                                               description, url, price,
+                                                               isSent, isInDelivery, isDelivered,
+                                                               isCompleted) in
                         if recipientId == uid {
                             let order = OrderDescriptionItem(id: id,
                                                              documentId: documentId,
                                                              announcementId: announcementId,
                                                              ownerId: ownerId,
                                                              recipientId: recipientId,
+                                                             cityFrom: cityFrom,
+                                                             cityTo: cityTo,
+                                                             ownerName: ownerName,
+                                                             creationTime: creationTime,
                                                              description: description,
                                                              image: url,
                                                              price: price,
@@ -395,7 +417,11 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, String, URL?, Int, Bool, Bool, Bool, Bool) -> Void)) {
+    private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, 
+                                                                                        String, String, String, Date,
+                                                                                        String, URL?, Int,
+                                                                                        Bool, Bool, Bool,
+                                                                                        Bool) -> Void)) {
         ref.getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -407,15 +433,28 @@ class AuthViewModel: ObservableObject {
                     let announcementId = data["announcementId"]as? String ?? ""
                     let ownerId = data["ownerId"]as? String ?? ""
                     let recipientId = data["recipientId"]as? String ?? ""
+                    
+                    let cityFrom = data["cityFrom"]as? String ?? ""
+                    let cityTo = data["cityTo"]as? String ?? ""
+                    let ownerName = data["ownerName"]as? String ?? ""
+                    let timestampTime = data["creationTime"]as? Timestamp ?? Timestamp()
+                    let creationTime = timestampTime.dateValue()
+                    
                     let description = data["description"]as? String ?? ""
                     let image = data["image"]as? String ?? ""
+                    let url = URL(string: image)
                     let price = data["price"]as? Int ?? 0
+                    
                     let isSent = data["isSent"]as? Bool ?? false
                     let isInDelivery = data["isInDelivery"]as? Bool ?? false
                     let isDelivered = data["isDelivered"]as? Bool ?? false
+                    
                     let isCompleted = data["isCompleted"]as? Bool ?? false
-                    let url = URL(string: image)
-                    completion(document.documentID, announcementId, ownerId, recipientId, description, url, price, isSent, isInDelivery, isDelivered, isCompleted)
+                    completion(document.documentID, announcementId, ownerId, recipientId, 
+                               cityFrom, cityTo, ownerName, creationTime,
+                               description, url, price,
+                               isSent, isInDelivery, isDelivered,
+                               isCompleted)
                 }
             }
         }
@@ -601,7 +640,9 @@ class AuthViewModel: ObservableObject {
         }.value
     }
     
-    func saveOrder(ownerId: String, recipientId: String, announcementId: String, imageData: Data, description: String, price: Int) async throws -> OrderDescriptionItem? {
+    func saveOrder(ownerId: String, recipientId: String, announcementId: String, 
+                   cityFrom: String, cityTo: String, ownerName: String,
+                   imageData: Data, description: String, price: Int) async throws -> OrderDescriptionItem? {
         guard let UserId = Auth.auth().currentUser?.uid else { return nil }
         do {
             let url = try await getImageUrl(imageData: imageData)
@@ -620,6 +661,10 @@ class AuthViewModel: ObservableObject {
                     "ownerId": ownerId,
                     "recipientId": recipientId,
                     "announcementId": announcementId,
+                    "cityFrom": cityFrom,
+                    "cityTo": cityTo,
+                    "ownerName": ownerName,
+                    "creationTime": Date(),
                     "description": description,
                     "image": url?.absoluteString ?? "",
                     "price": price,
@@ -636,6 +681,10 @@ class AuthViewModel: ObservableObject {
                         "ownerId": ownerId,
                         "recipientId": recipientId,
                         "announcementId": announcementId,
+                        "cityFrom": cityFrom,
+                        "cityTo": cityTo,
+                        "ownerName": ownerName,
+                        "creationTime": Date(),
                         "description": description,
                         "image": url?.absoluteString ?? "",
                         "price": price,
@@ -650,6 +699,10 @@ class AuthViewModel: ObservableObject {
                                              announcementId: announcementId,
                                              ownerId: ownerId,
                                              recipientId: recipientId,
+                                             cityFrom: cityFrom,
+                                             cityTo: cityTo,
+                                             ownerName: ownerName,
+                                             creationTime: Date(),
                                              description: description,
                                              image: url,
                                              price: price,

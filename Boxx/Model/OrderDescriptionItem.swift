@@ -17,6 +17,11 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let ownerId: String
     let recipientId: String
     
+    let cityFrom: String
+    let cityTo: String
+    let ownerName: String
+    let creationTime: Date
+    
     let description: String?
     let image: URL?
     let price: Int?

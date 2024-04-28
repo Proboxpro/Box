@@ -106,7 +106,7 @@ struct Profile: View {
                             Button(action: {
                                 showingRules.toggle()
                             }) {
-                                Text("Правила")}
+                                Text("Рекомендации")}
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingRules, content: {
