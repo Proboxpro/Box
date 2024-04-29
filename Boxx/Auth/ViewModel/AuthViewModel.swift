@@ -302,7 +302,7 @@ class AuthViewModel: ObservableObject {
         let ref = db.collection( "orderDescription")
         let infoRef = ref.document(uid).collection("information")
         fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId,
-                                              cityFrom, cityTo, ownerName, creationTime,
+                                              cityFrom, cityFromCoordinates, cityTo, cityToCoordinates, ownerName, creationTime,
                                               description, url, price,
                                               isSent, isInDelivery, isDelivered,
                                               isCompleted) in
@@ -311,6 +311,10 @@ class AuthViewModel: ObservableObject {
                                              announcementId: announcementId,
                                              ownerId: ownerId,
                                              recipientId: recipientId,
+                                             cityFromLat: cityFromCoordinates.coordinate.latitude,
+                                             cityFromLon: cityFromCoordinates.coordinate.longitude,
+                                             cityToLat: cityToCoordinates.coordinate.latitude,
+                                             cityToLon: cityToCoordinates.coordinate.longitude,
                                              cityFrom: cityFrom,
                                              cityTo: cityTo,
                                              ownerName: ownerName,
@@ -342,16 +346,20 @@ class AuthViewModel: ObservableObject {
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
                     self.fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId,
-                                                               cityFrom, cityTo, ownerName, creationTime,
+                                                               cityFrom, cityFromCoordinates, cityTo, cityToCoordinates, ownerName, creationTime,
                                                                description, url, price,
                                                                isSent, isInDelivery, isDelivered,
                                                                isCompleted) in
                         if ownerId == uid {
-                            let order = OrderDescriptionItem(id: id,
+                            let order = OrderDescriptionItem(id: uid,
                                                              documentId: documentId,
                                                              announcementId: announcementId,
                                                              ownerId: ownerId,
                                                              recipientId: recipientId,
+                                                             cityFromLat: cityFromCoordinates.coordinate.latitude,
+                                                             cityFromLon: cityFromCoordinates.coordinate.longitude,
+                                                             cityToLat: cityToCoordinates.coordinate.latitude,
+                                                             cityToLon: cityToCoordinates.coordinate.longitude,
                                                              cityFrom: cityFrom,
                                                              cityTo: cityTo,
                                                              ownerName: ownerName,
@@ -388,16 +396,20 @@ class AuthViewModel: ObservableObject {
                     let id = data["id"]as? String ?? ""
                     let infoRef = ref.document(id).collection("information")
                     self.fetchInnerCollection(ref: infoRef) { (documentId, announcementId, ownerId, recipientId, 
-                                                               cityFrom, cityTo, ownerName, creationTime,
+                                                               cityFrom, cityFromCoordinates, cityTo, cityToCoordinates, ownerName, creationTime,
                                                                description, url, price,
                                                                isSent, isInDelivery, isDelivered,
                                                                isCompleted) in
                         if recipientId == uid {
-                            let order = OrderDescriptionItem(id: id,
+                            let order = OrderDescriptionItem(id: uid,
                                                              documentId: documentId,
                                                              announcementId: announcementId,
                                                              ownerId: ownerId,
                                                              recipientId: recipientId,
+                                                             cityFromLat: cityFromCoordinates.coordinate.latitude,
+                                                             cityFromLon: cityFromCoordinates.coordinate.longitude,
+                                                             cityToLat: cityToCoordinates.coordinate.latitude,
+                                                             cityToLon: cityToCoordinates.coordinate.longitude,
                                                              cityFrom: cityFrom,
                                                              cityTo: cityTo,
                                                              ownerName: ownerName,
@@ -418,7 +430,7 @@ class AuthViewModel: ObservableObject {
     }
     
     private func fetchInnerCollection(ref: CollectionReference, completion: @escaping ((String, String, String, String, 
-                                                                                        String, String, String, Date,
+                                                                                        String, CLLocation, String, CLLocation, String, Date,
                                                                                         String, URL?, Int,
                                                                                         Bool, Bool, Bool,
                                                                                         Bool) -> Void)) {
@@ -435,7 +447,13 @@ class AuthViewModel: ObservableObject {
                     let recipientId = data["recipientId"]as? String ?? ""
                     
                     let cityFrom = data["cityFrom"]as? String ?? ""
+                    let cityFromLat = data["cityFromLat"]as? Double ?? 0
+                    let cityFromLon = data["cityFromLon"]as? Double ?? 0
+                    let cityFromCoordinates = CLLocation(latitude: cityFromLat, longitude: cityFromLon)
                     let cityTo = data["cityTo"]as? String ?? ""
+                    let cityToLat = data["cityToLat"]as? Double ?? 0
+                    let cityToLon = data["cityToLon"]as? Double ?? 0
+                    let cityToCoordinates = CLLocation(latitude: cityToLat, longitude: cityToLon)
                     let ownerName = data["ownerName"]as? String ?? ""
                     let timestampTime = data["creationTime"]as? Timestamp ?? Timestamp()
                     let creationTime = timestampTime.dateValue()
@@ -451,7 +469,7 @@ class AuthViewModel: ObservableObject {
                     
                     let isCompleted = data["isCompleted"]as? Bool ?? false
                     completion(document.documentID, announcementId, ownerId, recipientId, 
-                               cityFrom, cityTo, ownerName, creationTime,
+                               cityFrom, cityFromCoordinates, cityTo, cityToCoordinates, ownerName, creationTime,
                                description, url, price,
                                isSent, isInDelivery, isDelivered,
                                isCompleted)
@@ -646,7 +664,6 @@ class AuthViewModel: ObservableObject {
         guard let UserId = Auth.auth().currentUser?.uid else { return nil }
         do {
             let url = try await getImageUrl(imageData: imageData)
-            print (url)
             let doc = Firestore.firestore()
                 .collection("orderDescription")
                 .document(UserId)
@@ -656,13 +673,19 @@ class AuthViewModel: ObservableObject {
                 .document(UserId)
                 .collection("information")
                 .document()
+            let cityFromCoordinates = try await CLGeocoder().geocodeAddressString(cityFrom)
+            let cityToCoordinates = try await CLGeocoder().geocodeAddressString(cityTo)
             if document.exists {
                 try await infoDoc.setData([
                     "ownerId": ownerId,
                     "recipientId": recipientId,
                     "announcementId": announcementId,
                     "cityFrom": cityFrom,
+                    "cityFromLat": cityFromCoordinates[0].location?.coordinate.latitude,
+                    "cityFromLon": cityFromCoordinates[0].location?.coordinate.longitude,
                     "cityTo": cityTo,
+                    "cityToLat": cityToCoordinates[0].location?.coordinate.latitude,
+                    "cityToLon": cityToCoordinates[0].location?.coordinate.longitude,
                     "ownerName": ownerName,
                     "creationTime": Date(),
                     "description": description,
@@ -682,7 +705,11 @@ class AuthViewModel: ObservableObject {
                         "recipientId": recipientId,
                         "announcementId": announcementId,
                         "cityFrom": cityFrom,
+                        "cityFromLat": cityFromCoordinates[0].location?.coordinate.latitude,
+                        "cityFromLon": cityFromCoordinates[0].location?.coordinate.longitude,
                         "cityTo": cityTo,
+                        "cityToLat": cityToCoordinates[0].location?.coordinate.latitude,
+                        "cityToLon": cityToCoordinates[0].location?.coordinate.longitude,
                         "ownerName": ownerName,
                         "creationTime": Date(),
                         "description": description,
@@ -699,6 +726,10 @@ class AuthViewModel: ObservableObject {
                                              announcementId: announcementId,
                                              ownerId: ownerId,
                                              recipientId: recipientId,
+                                             cityFromLat: cityFromCoordinates[0].location?.coordinate.latitude,
+                                             cityFromLon: cityFromCoordinates[0].location?.coordinate.longitude,
+                                             cityToLat: cityToCoordinates[0].location?.coordinate.latitude,
+                                             cityToLon: cityToCoordinates[0].location?.coordinate.longitude,
                                              cityFrom: cityFrom,
                                              cityTo: cityTo,
                                              ownerName: ownerName,
