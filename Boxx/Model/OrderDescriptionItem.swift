@@ -17,6 +17,13 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let ownerId: String
     let recipientId: String
     
+//    let creationLat: Double?
+//    let creationLon: Double?
+    let cityFromLat: Double?
+    let cityFromLon: Double?
+    let cityToLat: Double?
+    let cityToLon: Double?
+    
     let cityFrom: String
     let cityTo: String
     let ownerName: String

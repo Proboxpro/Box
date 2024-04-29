@@ -23,21 +23,15 @@ struct OrderDetail: View {
         return item
     }
     
+    private var mapView: MapView {
+        MapView(coordinates: ((orderItem.cityFromLat ?? 0, orderItem.cityToLon ?? 0), (orderItem.cityToLat ?? 0, orderItem.cityToLon ?? 0)),
+                names: (orderItem.cityFrom, orderItem.cityTo))
+    }
+    
     @State private var showingProfile = false
-    @State private var value: String = ""
-    @State private var recipient: String = ""
     
     @State private var conversation: Conversation? = nil
     @State private var chatViewModel: ChatViewModel? = nil
-    
-    var filtereduser: [User] {
-        guard !recipient.isEmpty else { return viewModel.users }
-        return viewModel.users.filter{ $0.login.localizedCaseInsensitiveContains(recipient)}
-    }
-    
-    var receipentUser: User? {
-        return viewModel.users.first { $0.login.localizedCaseInsensitiveContains(recipient) }
-    }
     
     var body: some View {
         VStack{
@@ -53,6 +47,7 @@ struct OrderDetail: View {
                         }
                 }
                 .padding(32)
+                .contentShape(Rectangle())
                 Spacer()
                 Button{
                     
@@ -307,7 +302,8 @@ struct OrderDetail: View {
             viewModel.fetchOrder()
         }
         .navigationBarHidden(true)
-        .background(Rectangle()
-            .foregroundColor(.gray))
+        .background {
+            mapView
+        }
     }
 }
