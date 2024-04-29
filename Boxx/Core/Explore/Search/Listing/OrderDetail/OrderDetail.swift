@@ -22,13 +22,14 @@ struct OrderDetail: View {
         let item = items.filter{ $0.id == orderItem.announcementId }.last
         return item
     }
-    
     private var mapView: MapView {
         MapView(coordinates: ((orderItem.cityFromLat ?? 0, orderItem.cityToLon ?? 0), (orderItem.cityToLat ?? 0, orderItem.cityToLon ?? 0)),
                 names: (orderItem.cityFrom, orderItem.cityTo))
     }
     
     @State private var showingProfile = false
+    @State private var vstackYOffset: CGFloat = 0
+    @State private var whiteScreenHeight: CGFloat = 0
     
     @State private var conversation: Conversation? = nil
     @State private var chatViewModel: ChatViewModel? = nil
@@ -287,15 +288,44 @@ struct OrderDetail: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(32)
-                .background(Rectangle()
-                    .foregroundColor(.white)
-                    .cornerRadius(12))
+                .background(GeometryReader { geometry -> Color in
+                    DispatchQueue.main.async {
+                        self.whiteScreenHeight = geometry.size.height
+                    }
+                    return Color.white
+                }
+                    .cornerRadius(12)
+                )
                 
             }
             .background(Rectangle()
                 .foregroundColor(.black)
                 .cornerRadius(12))
+            .offset(y: vstackYOffset)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        // As the gesture changes, adjust the offset and opacity
+                        let verticalMovement = value.translation.height
+                        if verticalMovement > 0 { // Only allow downward movement
+                            vstackYOffset = verticalMovement
+                        }
+                    }
+                    .onEnded { value in
+                        if value.translation.height > 50 { // Check if swipe down is enough to dismiss
+                            withAnimation {
+                                vstackYOffset = whiteScreenHeight
+                            }
+                        } else {
+                            // Reset if not enough swipe down
+                            withAnimation {
+                                vstackYOffset = 0
+                            }
+                        }
+                    }
+            )
         }
+        .edgesIgnoringSafeArea(.bottom)
         .onAppear {
             orderViewModel.fetchData()
             viewModel.fetchOrderDescription()
