@@ -39,4 +39,13 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    private static var formatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return df
+    }()
+    
+    static var formatted: String {
+        return formatter.string(from: Date())
+    }
 }

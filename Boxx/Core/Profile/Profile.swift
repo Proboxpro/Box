@@ -95,11 +95,12 @@ struct Profile: View {
                             Button(action: {
                                 showingVerif.toggle()
                             }) {
-                                Text("Верефикация")}
+                                Text("Верификация")}
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingVerif, content: {
-                            ProfileView()
+//                            ProfileView()
+                            //MARK: - Sumsub View
                         })
                         HStack{
                             Image(systemName: "checkmark.seal")

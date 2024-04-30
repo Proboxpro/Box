@@ -36,9 +36,6 @@ struct MainSearch: View {
     
     @State var showingListingDetailView = false
     @State var currentItem : ListingItem?
-    //    @StateObject var searchViewModel :  DestinationSearchViewModel
-    
-    //    @State private var currentCityName: String = ""
     
     let user: User
     
@@ -62,6 +59,7 @@ struct MainSearch: View {
         ScrollView{
             LazyVStack(spacing: 5){
                 let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
+            
                 let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
                 
                 if isOrderFound && !searchBarIsEmpty {
@@ -70,7 +68,7 @@ struct MainSearch: View {
                     SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView)
                 }
                 
-                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() >= Date()})
+                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()})
                 
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()
