@@ -9,8 +9,9 @@ import Foundation
 
 class StorageUserDefaults: UserDefaults {
     
-    static var levelName: LevelName? = "basic-kyc-level"
-    
+//    static var levelName: LevelName? = "basic-kyc-level"
+    static var levelName: LevelName? = "test"
+
     enum Key: String {
         case apiUrl
         case bearerToken
