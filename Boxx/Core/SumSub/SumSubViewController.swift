@@ -33,16 +33,14 @@ class ViewController: UIViewController {
         view.addSubview(button)
 
         NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-//            button.widthAnchor.constraint(equalToConstant: 200),
-//            button.heightAnchor.constraint(equalToConstant: 50)
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
     }
     
     func addMainButton() {
         let button = UIButton(type: .system)
-        button.setTitle("Пройти авторизацию", for: .normal)
+        button.setTitle("Пройти верификацию", for: .normal)
         button.setTitleColor(.black, for: .normal) // Установка черного цвета текста
         button.backgroundColor = .white // Установка белого цвета фона
         button.layer.cornerRadius = 8 // Настройка скругления углов, если необходимо
