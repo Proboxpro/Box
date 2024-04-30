@@ -19,12 +19,37 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        view.backgroundColor = .yellow
-        
-//        startIdentify()
-        // Создаем кнопку
+        addBackButton()
+        addMainButton()
+    }
+    
+    func addBackButton() {
         let button = UIButton(type: .system)
-        button.setTitle("Нажми меня", for: .normal)
+        button.setImage(UIImage(systemName: "multiply.circle"), for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(dissmissVC), for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(button)
+
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+//            button.widthAnchor.constraint(equalToConstant: 200),
+//            button.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    func addMainButton() {
+        let button = UIButton(type: .system)
+        button.setTitle("Пройти авторизацию", for: .normal)
+        button.setTitleColor(.black, for: .normal) // Установка черного цвета текста
+        button.backgroundColor = .white // Установка белого цвета фона
+        button.layer.cornerRadius = 8 // Настройка скругления углов, если необходимо
+        button.layer.borderWidth = 1 // Установка толщины рамки
+        button.layer.borderColor = UIColor.black.cgColor // Установка черного цвета рамки
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        view.addSubview(button)
         
         // Устанавливаем размер и положение кнопки
         button.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
@@ -34,12 +59,13 @@ class ViewController: UIViewController {
         view.addSubview(button)
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        startIdentify()
-//    }
     
     @objc func buttonTapped() {
         startIdentify()
+    }
+    
+    @objc func dissmissVC() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func startIdentify() {
@@ -48,34 +74,5 @@ class ViewController: UIViewController {
             for: user,
             locale: "ru"
         )
-        delete()
-    }
-    
-    func delete() {
-        let applicantId = "663002dd9eb638554e1fda78"
-
-        let urlString = "https://api.sumsub.com/resources/applicants/\(applicantId)"
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer your_access_token", forHTTPHeaderField: "Authorization") // Замените your_access_token на ваш реальный токен аутентификации Sumsub
-
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-            
-            if let response = response as? HTTPURLResponse {
-                print("Response status code: \(response.statusCode)")
-            }
-        }
-
-        task.resume()
     }
 }

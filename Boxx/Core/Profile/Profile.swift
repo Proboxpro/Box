@@ -101,6 +101,7 @@ struct Profile: View {
                         .sheet(isPresented: $showingVerif, content: {
 //                            ProfileView()
                             //MARK: - Sumsub View
+                            SumsubView()
                         })
                         HStack{
                             Image(systemName: "checkmark.seal")
