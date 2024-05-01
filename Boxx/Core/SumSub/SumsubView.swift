@@ -11,16 +11,17 @@ import SwiftUI
 
 struct SumsubView: UIViewControllerRepresentable, View {
     @Binding var user: User?
+    @State var backend = YourBackend()
     
     func makeUIViewController(context: Context) -> ViewController {
         
-        guard let user = user else {
-            return ViewController()
-        }
-        print(user)
+//        guard let user = user else {
+//            return ViewController(backend: backend)
+//        }
+//        print(user)
         
-        let viewController = ViewController()
-        viewController.startIdentify()
+        let viewController = ViewController(backend: backend, user: user!)
+//        viewController.startIdentify()
 //        viewController.view.backgroundColor = .green
         return viewController
     }

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>IDEPreferLogStreaming</key>
+	<string>YES</string>
 	<key>API_KEY</key>
 	<string>AIzaSyC8KMoH3vYj1qx-xCeGkfmk0mp_aWAVW5c</string>
 	<key>GCM_SENDER_ID</key>

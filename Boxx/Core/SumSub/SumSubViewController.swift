@@ -10,15 +10,27 @@ import IdensicMobileSDK
 import CryptoKit
 import CommonCrypto
 
+
 class ViewController: UIViewController {
     
-    let backend = YourBackend()
-//    var user = YourUser(userId: UUID().uuidString)
-    var user = YourUser(userId: UUID().uuidString)
+    let backend : YourBackendProtocol?
+    var user : User?
+    
+    
+    init(backend: YourBackendProtocol, user: User = User.TEST_USER) {
+        self.backend = backend
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+        
+        print("VC USER: \(user.id) \(user.login)\n")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .yellow
         addBackButton()
         addMainButton()
     }
