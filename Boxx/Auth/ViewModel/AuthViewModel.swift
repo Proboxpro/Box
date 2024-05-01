@@ -44,6 +44,7 @@ class AuthViewModel: ObservableObject {
 
     
     @Published var profile: ListingItem?
+    @Published var sumSubApproved = false
     
     
     //    @Published private(set) var messages: [Message] = []

@@ -12,6 +12,7 @@ import SwiftUI
 struct SumsubView: UIViewControllerRepresentable, View {
     @Binding var user: User?
     @State var backend = YourBackend()
+    @EnvironmentObject var viewModel : AuthViewModel
     
     func makeUIViewController(context: Context) -> ViewController {
         
@@ -27,8 +28,10 @@ struct SumsubView: UIViewControllerRepresentable, View {
     }
     
     func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-        // Обновление контроллера, если это необходимо
+        print("UPDATE")
+
     }
+    
 }
 
 

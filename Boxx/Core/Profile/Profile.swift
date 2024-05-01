@@ -23,10 +23,6 @@ struct Profile: View {
     @State private var showingRules = false
     @State private var showingListing = false
 
-
-    
-
-    
     
     var body: some View {
         if let user = viewModel.currentUser{
@@ -95,13 +91,19 @@ struct Profile: View {
                             Button(action: {
                                 showingVerif.toggle()
                             }) {
-                                Text("Верификация")}
+                                Text("Верификация  \(viewModel.sumSubApproved ? "(пройдена)" : "(не пройдена)")")
+                            }
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingVerif, content: {
-//                            ProfileView()
+                            //                            ProfileView()
                             //MARK: - Sumsub View
                             SumsubView(user: $viewModel.currentUser)
+                        })
+                        .onAppear(perform: {
+                            if let status = IdentityVerification.sdk {
+                                viewModel.sumSubApproved = status.status == .approved
+                            }
                         })
                         HStack{
                             Image(systemName: "checkmark.seal")

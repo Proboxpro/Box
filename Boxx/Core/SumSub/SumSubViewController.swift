@@ -72,12 +72,15 @@ class ViewController: UIViewController {
     }
     
     @objc func dissmissVC() {
-        let isApproved = IdentityVerification.sdk.status == .approved
-        print("STATUS: \(isApproved ? "Approved" : "hz")")
+//        let isApproved = IdentityVerification.sdk.status == .approved
+//        print("STATUS: \(isApproved ? "Approved" : "hz")")
         
-        if isApproved {
-            //MARK: - Approved function here
-        }
+//        if isApproved {
+//            MARK: - Approved function here
+//        user?.login = "santa51"
+        
+//            YourBackend.isApproved = true
+//        }
         self.dismiss(animated: true, completion: nil)
     }
     

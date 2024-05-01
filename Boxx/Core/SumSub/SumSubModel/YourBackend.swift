@@ -15,6 +15,7 @@ typealias BearerToken = String
 protocol YourBackendProtocol {
     static var bearerToken: BearerToken? { get set }
     static var client: String? { get set }
+//    static var isApproved: Bool { get set }
 
     static func logIntoSumSubAccount(delay: TimeInterval, onComplete: @escaping (Error?, Bool) -> Void)
     static func checkIsAuthorized(onComplete: @escaping (Error?, Bool) -> Void)
@@ -30,6 +31,8 @@ struct ApplicantLevel: Stringable {
 }
 
 struct YourBackend : YourBackendProtocol {
+    
+//    var isApproved = false
     // Your backend is involved into the verification process as well. In particular it is responsible for the providing of "access tokens" for the applicants to be verified.
     // For the demo purposes we have implemented the corresponding routines on the client side, but please, in the real life use your backend and never store your credentials on the devices.
     
@@ -41,6 +44,7 @@ extension YourBackend {
     
     static var bearerToken: BearerToken?
     static var client: String?
+
     
     // MARK: - Authorization
     
