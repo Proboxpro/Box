@@ -13,7 +13,7 @@ import ExyteChat
 struct User: Identifiable, Codable, Hashable{
     let id: String
     let fullname: String
-    let login: String
+    var login: String
     let email: String
     let imageUrl: String?
     // вериф 10 урок странного чела

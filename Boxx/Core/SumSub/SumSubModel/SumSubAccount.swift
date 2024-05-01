@@ -19,6 +19,8 @@ struct SumSubAccount {
     //
     static var apiUrl: String = SumSubEnvironment.prod.apiUrl
     static var isSandbox: Bool = true
+    
+    //MARK: - fetch from Backend needed
     static let appToken: String? = "sbx:ztTqiWxU9mToSJuIadSufAS9.RxyY2R6lvY4fkRYWqzbfRcP2RofGNn1A"
     static let secretKey: String? = "t6HdsXMr2pC126iWhNcetskLVWdUFu49"
 }

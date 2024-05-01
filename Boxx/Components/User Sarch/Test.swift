@@ -24,7 +24,7 @@ struct Test: View {
                     }
                 }.searchable (text: $search)
             }.onAppear{
-                viewModel.users
+//                viewModel.users
             }
         }      
         .frame(width: 220, height: 200)

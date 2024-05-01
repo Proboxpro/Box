@@ -12,6 +12,17 @@ typealias LevelName = String
 typealias AccessToken = String
 typealias BearerToken = String
 
+protocol YourBackendProtocol {
+    static var bearerToken: BearerToken? { get set }
+    static var client: String? { get set }
+//    static var isApproved: Bool { get set }
+
+    static func logIntoSumSubAccount(delay: TimeInterval, onComplete: @escaping (Error?, Bool) -> Void)
+    static func checkIsAuthorized(onComplete: @escaping (Error?, Bool) -> Void)
+    static func getAccessToken(for user: User?, onComplete: @escaping (Error?, AccessToken?) -> Void)
+    static func getApplicantLevels(forNewUser: Bool, onComplete: @escaping (Error?, [ApplicantLevel]?) -> Void)
+}
+
 
 struct ApplicantLevel: Stringable {
     var name: LevelName
@@ -19,7 +30,9 @@ struct ApplicantLevel: Stringable {
     var toString: String? { return name }
 }
 
-struct YourBackend {
+struct YourBackend : YourBackendProtocol {
+    
+//    var isApproved = false
     // Your backend is involved into the verification process as well. In particular it is responsible for the providing of "access tokens" for the applicants to be verified.
     // For the demo purposes we have implemented the corresponding routines on the client side, but please, in the real life use your backend and never store your credentials on the devices.
     
@@ -31,6 +44,7 @@ extension YourBackend {
     
     static var bearerToken: BearerToken?
     static var client: String?
+
     
     // MARK: - Authorization
     
@@ -75,9 +89,9 @@ extension YourBackend {
     
     // MARK: - Required routines
     
-    static func getAccessToken(for user: YourUser?, onComplete: @escaping (Error?, AccessToken?) -> Void) {
+    static func getAccessToken(for user: User?, onComplete: @escaping (Error?, AccessToken?) -> Void) {
         
-        guard let userId = user?.userId else {
+        guard let userId = user?.id else {
             onComplete(NSError("User is not created yet"), nil)
             return
         }
@@ -87,9 +101,9 @@ extension YourBackend {
         if let levelName = StorageUserDefaults.levelName {
             path = path + "&levelName=\(levelName.urlQueryEncoded)"
         }
-        if let externalActionId = user?.externalActionId {
-            path = path + "&externalActionId=\(externalActionId.urlQueryEncoded)"
-        }
+//        if let externalActionId = user?.externalActionId {
+//            path = path + "&externalActionId=\(externalActionId.urlQueryEncoded)"
+//        }
         
         print("PATH_get access token: \(path)")
         post(path) { (error, json, statusCode) in

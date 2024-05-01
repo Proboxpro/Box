@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
+//import SDWebImageSwiftUI
+import CachedAsyncImage
 
 @available(iOS 17.0, *)
 struct MyListing: View {
@@ -72,13 +73,19 @@ struct MyListing: View {
                 {
                     VStack{
                         HStack{
-                            WebImage(url: URL(string: user.imageUrl ?? ""))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 50, height: 50)
-                                .clipped()
-                                .cornerRadius(50)
-                                .shadow(radius: 5)
+                            CachedAsyncImage(url: URL(string: user.imageUrl ?? "")) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 5)
+                                default:
+                                    Color.gray
+                                }
+                            }
                             
                             Text(user.login)
                                 .font(.title)

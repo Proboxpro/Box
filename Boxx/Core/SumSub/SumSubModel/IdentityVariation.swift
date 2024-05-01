@@ -8,12 +8,13 @@ import Foundation
 import IdensicMobileSDK
 
 struct IdentityVerification {
+    var user: User?
         
     static var sdk: SNSMobileSDK!
         
     static func launch(
         from yourVC: UIViewController,
-        for user: YourUser?,
+        for user: User?,
         accessToken: String = "",
         locale: String? = nil)
     {
@@ -25,7 +26,7 @@ struct IdentityVerification {
         //
         //    The access token is valid for a rather short period of time and when it's expired
         //    you must provide another one. In order to do so you will ask your backend and most likely the backend
-        //    will need to know the user's identifier. This is the only reason we have passed down `YourUser` here.
+        //    will need to know the user's identifier. This is the only reason we have passed down `User` here.
         //    It's used within `tokenExpirationHandler` in order to communicate to `YourBackend`.
         //
         // 2. You can either provide the `accessToken` right at the initializaton stage,

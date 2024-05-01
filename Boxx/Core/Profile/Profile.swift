@@ -23,10 +23,6 @@ struct Profile: View {
     @State private var showingRules = false
     @State private var showingListing = false
 
-
-    
-
-    
     
     var body: some View {
         if let user = viewModel.currentUser{
@@ -55,9 +51,8 @@ struct Profile: View {
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                                 if let image = UIImage(data: data) {
-                                    avatar = image
+                                    self.avatar = image
                                     viewModel.saveProfileImage(item: photosPickerItem)
-                                    self.avatar
                                 }
                             }
                         }
@@ -95,14 +90,23 @@ struct Profile: View {
                             Button(action: {
                                 showingVerif.toggle()
                             }) {
-                                Text("Верификация")}
+                                Text("Верификация \(viewModel.sumSubApproved ? "(пройдена)" : "(не пройдена)")")
+                            }
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingVerif, content: {
-//                            ProfileView()
+                            //                            ProfileView()
                             //MARK: - Sumsub View
                             SumsubView(user: $viewModel.currentUser)
+                                .onDisappear(perform: {
+                                    if let status = IdentityVerification.sdk {
+                                        withAnimation {
+                                            viewModel.sumSubApproved = status.status == .approved
+                                        }
+                                    }
+                                })
                         })
+                        
                         HStack{
                             Image(systemName: "checkmark.seal")
                             Button(action: {
