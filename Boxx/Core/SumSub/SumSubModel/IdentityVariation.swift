@@ -8,6 +8,7 @@ import Foundation
 import IdensicMobileSDK
 
 struct IdentityVerification {
+    var user: User?
         
     static var sdk: SNSMobileSDK!
         
