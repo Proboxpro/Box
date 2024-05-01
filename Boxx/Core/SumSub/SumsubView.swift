@@ -1,0 +1,33 @@
+//
+//  SumsubVC.swift
+//  sumsub test
+//
+//  Created by Nikita Evdokimov on 27.04.24.
+//
+
+import UIKit
+import IdensicMobileSDK
+import SwiftUI
+
+struct SumsubView: UIViewControllerRepresentable, View {
+    @Binding var user: User?
+    
+    func makeUIViewController(context: Context) -> ViewController {
+        
+        guard let user = user else {
+            return ViewController()
+        }
+        print(user)
+        
+        let viewController = ViewController()
+        viewController.startIdentify()
+//        viewController.view.backgroundColor = .green
+        return viewController
+    }
+    
+    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
+        // Обновление контроллера, если это необходимо
+    }
+}
+
+
