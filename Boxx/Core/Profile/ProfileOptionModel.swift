@@ -8,9 +8,9 @@
 import SwiftUI
 enum SettingOptionViewModel: Int, CaseIterable, Identifiable{
 case darkmode
-case verif
-case privacy
-case notification
+    case verif
+    case privacy
+    case notification
     var title: String{
         switch self {
         case .darkmode: return "Темная тема"

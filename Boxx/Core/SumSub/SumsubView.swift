@@ -9,8 +9,16 @@ import UIKit
 import IdensicMobileSDK
 import SwiftUI
 
-struct SumsubView: UIViewControllerRepresentable {
+struct SumsubView: UIViewControllerRepresentable, View {
+    @Binding var user: User?
+    
     func makeUIViewController(context: Context) -> ViewController {
+        
+        guard let user = user else {
+            return ViewController()
+        }
+        print(user)
+        
         let viewController = ViewController()
         viewController.startIdentify()
 //        viewController.view.backgroundColor = .green
