@@ -99,12 +99,13 @@ struct Profile: View {
                             //                            ProfileView()
                             //MARK: - Sumsub View
                             SumsubView(user: $viewModel.currentUser)
+                                .onDisappear(perform: {
+                                    if let status = IdentityVerification.sdk {
+                                        viewModel.sumSubApproved = status.status == .approved
+                                    }
+                                })
                         })
-                        .onAppear(perform: {
-                            if let status = IdentityVerification.sdk {
-                                viewModel.sumSubApproved = status.status == .approved
-                            }
-                        })
+                        
                         HStack{
                             Image(systemName: "checkmark.seal")
                             Button(action: {
