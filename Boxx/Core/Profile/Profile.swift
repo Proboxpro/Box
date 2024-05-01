@@ -51,9 +51,8 @@ struct Profile: View {
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                                 if let image = UIImage(data: data) {
-                                    avatar = image
+                                    self.avatar = image
                                     viewModel.saveProfileImage(item: photosPickerItem)
-                                    self.avatar
                                 }
                             }
                         }

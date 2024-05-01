@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CachedAsyncImage
 
 
 struct HeaderView: View {
@@ -20,7 +21,8 @@ struct HeaderView: View {
             ZStack {
                 Rectangle()
                     .fill(.black.gradient)
-                AsyncImage(url: URL(string: "https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/City%2F360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg?alt=media&token=4ec96c2f-7218-41f6-96e1-c39d58f74895")) { image in
+                
+                CachedAsyncImage(url: URL(string: "https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/City%2F360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg?alt=media&token=4ec96c2f-7218-41f6-96e1-c39d58f74895")) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -38,15 +40,15 @@ struct HeaderView: View {
                         let bottomPadding: CGFloat = 15
                         let resizedOffsetY = (midY - (minimumHeaderHeight - halfScaledHeight - bottomPadding))
                         
-                        AsyncImage(url: URL(string: user.imageUrl ?? "")) { image in
-                                  image
+                        CachedAsyncImage(url: URL(string: user.imageUrl ?? "")) { image in
+                            image
                                 .profileImageStyling(rect: rect)
                                 .scaleEffect(1 - (progress * 0.7), anchor: .leading)
                                 .offset(x: -(rect.minX - 15) * progress, y: -resizedOffsetY * progress)
-                              } placeholder: {
-                                  Color.gray
-                                      .clipShape(Circle())
-                              }
+                        } placeholder: {
+                            Color.gray
+                                .clipShape(Circle())
+                        }
                     }
                     .padding(.top, 20)
                     .frame(width: headerHeight * 0.4, height: headerHeight * 0.4)

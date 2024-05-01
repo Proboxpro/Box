@@ -9,8 +9,10 @@ import SwiftUI
 import Firebase
 import SDWebImageSwiftUI
 import PhotosUI
-@available(iOS 17.0, *)
+import CachedAsyncImage
 
+
+@available(iOS 17.0, *)
 struct OrderDetail: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
@@ -122,7 +124,7 @@ struct OrderDetail: View {
                                 NavigationView {
                                     ChatViewContainer()
                                         .environmentObject(chatViewModel)
-                                        .navigationBarItems(trailing: AsyncImage(url: URL(string: item?.imageUrl ?? ""), content: { image in
+                                        .navigationBarItems(trailing: CachedAsyncImage(url: URL(string: item?.imageUrl ?? ""), content: { image in
                                             image
                                                 .resizable()
                                                 .frame(width: 32, height: 32)
