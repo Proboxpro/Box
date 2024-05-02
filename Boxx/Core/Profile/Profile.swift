@@ -90,7 +90,7 @@ struct Profile: View {
                             Button(action: {
                                 showingVerif.toggle()
                             }) {
-                                Text("Верификация \(viewModel.sumSubApproved ? "(пройдена)" : "(не пройдена)")")
+                                Text("Верификация \(viewModel.checkIsApproved() ? "(пройдена)" : "(не пройдена)")")
                             }
                             .foregroundColor(.black)
                         }
@@ -101,7 +101,8 @@ struct Profile: View {
                                 .onDisappear(perform: {
                                     if let status = IdentityVerification.sdk {
                                         withAnimation {
-                                            viewModel.sumSubApproved = status.status == .approved
+//                                            viewModel.sumSubApproved = status.status == .approved
+                                            viewModel.sumSubApprove()
                                         }
                                     }
                                 })
