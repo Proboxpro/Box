@@ -99,7 +99,7 @@ struct Profile: View {
                             //MARK: - Sumsub View
                             SumsubView(user: $viewModel.currentUser)
                                 .onDisappear(perform: {
-                                    if let status = IdentityVerification.sdk {
+                                    if IdentityVerification.sdk != nil {
                                         withAnimation {
 //                                            viewModel.sumSubApproved = status.status == .approved
                                             viewModel.sumSubApprove()
