@@ -101,6 +101,7 @@ class AuthViewModel: ObservableObject {
             try Auth.auth().signOut() //выходбек
             self.userSession = nil
             self.currentUser = nil
+            self.sumSubResetApprove()
         } catch {
             print("bags \(error.localizedDescription)")
         }
@@ -896,16 +897,7 @@ class AuthViewModel: ObservableObject {
         UserDefaults.standard.set(true, forKey: "sumSubApproved")
     }
     
-//    func sumSubDeleteApprove() {
-//        UserDefaults.standard.set(true, forKey: "sumSubApproved")
-//
-//        // Извлечение значения из UserDefaults
-//        let sumSubApproved = UserDefaults.standard.bool(forKey: "sumSubApproved")
-//
-//        // Использование значения
-//        if isUserLoggedIn {
-//            self.sumSubApproved = sumSubApproved
-//            // Пользователь вошел в систему
-//        }
-//    }
+    func sumSubResetApprove() {
+        UserDefaults.standard.set(false, forKey: "sumSubApproved")
+    }
 }
