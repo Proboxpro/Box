@@ -135,10 +135,12 @@ struct Profile: View {
                    
                     Section{
                         Button(action: {
-                            viewModel.signOut()
+                            
+//                            viewModel.signOut()
                         }) {
                             Text("Поддержка")}
                     }
+                    
                     Section{
                         Button(action: {
                             viewModel.signOut()
