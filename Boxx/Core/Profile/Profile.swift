@@ -116,7 +116,7 @@ struct Profile: View {
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingRules, content: {
-                            ProfileView()
+                            Recomend()
                         })
                         HStack{
                             Image(systemName: "doc.questionmark")
