@@ -243,32 +243,7 @@ struct ListingDetail: View {
                             .underline()
                     }
                     Spacer()
-                    Button {
-                        Task {
-                            if let order = try await viewModel.saveOrder(ownerId: item.ownerUid, recipientId: recipientId, announcementId: item.id, 
-                                                                         cityFrom: item.cityFrom, cityTo: item.cityTo, ownerName: item.ownerName,
-                                                                         imageData: productImageData ?? Data(), description: description, price: Int(value) ?? 0) {
-                                self.orderItem = order
-                            }
-                        }
-                    } label: {
-                        Text ("Отправить")
-                            .foregroundStyle(.white)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .frame(width: 140, height: 40 )
-                            .background(.pink)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .fullScreenCover(item: $orderItem, content: { order in
-                                NavigationView{
-                                    OrderDetail(orderItem: order)
-                                        .environmentObject(OrderViewModel(authViewModel: self.viewModel))
-                                        .navigationBarBackButtonHidden()
-                                }
-                            })
-                    }
-                    .disabled(!isSendAviable)
-                    .opacity(isSendAviable ? 1.0 : 0.6)
+                    SendButtonView()
                 }
                 .padding(.horizontal, 32)
             }
@@ -279,6 +254,44 @@ struct ListingDetail: View {
         }
     }
     
+    //MARK: - Views
+    func SendButtonView()->some View {
+        let sumSubApproved = viewModel.checkIsApproved()
+        
+        return Button {
+            if sumSubApproved {
+                Task {
+                    if let order = try await viewModel.saveOrder(
+                        ownerId: item.ownerUid,
+                        recipientId: recipientId, announcementId: item.id,
+                        cityFrom: item.cityFrom,
+                        cityTo: item.cityTo,
+                        ownerName: item.ownerName,
+                        imageData: productImageData ?? Data(),
+                        description: description, price: Int(value) ?? 0) {
+                        self.orderItem = order
+                    }
+                }
+            }
+        } label: {
+            Text (sumSubApproved ? "Отправить" : "Нужна верификация")
+                .foregroundStyle(.white)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .frame(width: 140, height: 40 )
+                .background(.pink)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .fullScreenCover(item: $orderItem, content: { order in
+                    NavigationView{
+                        OrderDetail(orderItem: order)
+                            .environmentObject(OrderViewModel(authViewModel: self.viewModel))
+                            .navigationBarBackButtonHidden()
+                    }
+                })
+        }
+        .disabled(!isSendAviable)
+        .opacity(isSendAviable ? 1.0 : 0.6)
+    }
 }
 
 

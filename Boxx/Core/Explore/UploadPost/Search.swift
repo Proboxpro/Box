@@ -53,26 +53,30 @@ class getData : ObservableObject{
 struct Search: View {
     
     @ObservedObject var data = getData()
+    @EnvironmentObject var viewModel : AuthViewModel
+    
     var body: some View {
         NavigationView{
-            
             ZStack(alignment: .top){
-                GeometryReader{_ in
+                if viewModel.checkIsApproved() {
+                    GeometryReader{_ in
+                        // Home View....
+                    }
+                    .background(Color(.systemGray6)
+                        .edgesIgnoringSafeArea(.all))
                     
-                    // Home View....
-                    
+                    CustomSearchBar(data: self.$data.datas).padding(.top, 20)
                 }
-                .background(Color(.systemGray6)
-                .edgesIgnoringSafeArea(.all))
-                
-                CustomSearchBar(data: self.$data.datas).padding(.top, 20)
-                
+                else {
+                    AlertView("Нельзя создать обьявление, пройдите верификацию в разделе профиля.")
+                }
             }
             .navigationTitle("Вы уезжате?")
             .navigationBarHidden(false)
         }
     }
 }
+
 
 struct Search_Previews: PreviewProvider {
     static var previews: some View {
@@ -97,14 +101,10 @@ struct CustomSearchBar : View {
                 Image(systemName:"line.3.horizontal.decrease.circle")
                 
                 
-                if self.txt != ""{
-                    
+                if self.txt != "" {
                     Button(action: {
-                        
                         self.txt = ""
-                        
                     }) {
-                        
                         Text("Отмена")
                     }
                     .foregroundColor(.red)
@@ -138,7 +138,7 @@ struct CustomSearchBar : View {
 
 struct Detail : View {
     @EnvironmentObject var viewModel: AuthViewModel
-    @State var successViewIsShowing = false
+    @State var alertViewIsShowing = false
     
     
     var data : dataType
@@ -159,7 +159,7 @@ struct Detail : View {
     
     var body : some View{
         
-        if successViewIsShowing == false {
+        if alertViewIsShowing == false {
             VStack{
                 Text("Укажите дату и время отправления из города")
                 Text(data.name)
@@ -228,7 +228,9 @@ struct Detail : View {
             
         }
         else {
-            SuccessView()
+            if viewModel.checkIsApproved() {
+                AlertView("Обьявление создано!")
+            }
         }
     }
     
@@ -295,7 +297,7 @@ struct Detail : View {
         VStack{
             Button(action : {
                                 self.UploadPostservice(freeForm: self.id)
-                successViewIsShowing = true
+                alertViewIsShowing = true
 //                viewModel.fetchOrder()
             }) {
                 Image(systemName: "arrow.right.circle")
@@ -330,15 +332,18 @@ struct Detail : View {
     
 }
 
-struct SuccessView: View {
+struct AlertView: View {
     @Environment(\.presentationMode) var presentationMode
-    //    @State var text: String
-//    @Binding var successViewIsShowing: Bool
+    var text : String
+    
+    init(_ text: String) {
+        self.text = text
+    }
     
     var body: some View {
         VStack {
             Spacer()
-            Text("Обьявление создано!")
+            Text(text)
             Spacer()
         }
         .onAppear {

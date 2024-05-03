@@ -44,7 +44,7 @@ class AuthViewModel: ObservableObject {
 
     
     @Published var profile: ListingItem?
-    @Published var sumSubApproved = false
+//    @Published var sumSubApproved = false
     
     
     //    @Published private(set) var messages: [Message] = []
@@ -101,6 +101,7 @@ class AuthViewModel: ObservableObject {
             try Auth.auth().signOut() //выходбек
             self.userSession = nil
             self.currentUser = nil
+            self.sumSubResetApprove()
         } catch {
             print("bags \(error.localizedDescription)")
         }
@@ -883,4 +884,20 @@ class AuthViewModel: ObservableObject {
     //   currentUserRef.setData(messageData)
     //   chatPartnerRef.document(id).setData(messageData)
     //}
+    
+    
+    //MARK: - UserDefaults
+    func checkIsApproved()->Bool {
+        let sumSubApproved = UserDefaults.standard.bool(forKey: "sumSubApproved")
+        
+        return sumSubApproved ? true : false
+    }
+    
+    func sumSubApprove() {
+        UserDefaults.standard.set(true, forKey: "sumSubApproved")
+    }
+    
+    func sumSubResetApprove() {
+        UserDefaults.standard.set(false, forKey: "sumSubApproved")
+    }
 }
