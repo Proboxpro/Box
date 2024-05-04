@@ -693,8 +693,8 @@ class AuthViewModel: ObservableObject {
                     "description": description,
                     "image": url?.absoluteString ?? "",
                     "price": price,
-                    "isSent": false,
-                    "isInDelivery": false,
+                    "isSent": true,
+                    "isInDelivery": true,
                     "isDelivered": false,
                     "isCompleted": false
                 ])
