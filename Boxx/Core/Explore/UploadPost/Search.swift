@@ -296,9 +296,11 @@ struct Detail : View {
     func BlueArrowButton()->some View {
         VStack{
             Button(action : {
-                                self.UploadPostservice(freeForm: self.id)
+                self.UploadPostservice(freeForm: self.id)
                 alertViewIsShowing = true
-//                viewModel.fetchOrder()
+                Task {
+                    viewModel.fetchOrder()
+                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()

@@ -30,8 +30,8 @@
             filePath = "Boxx/Auth/ViewModel/AuthViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "fetchOrderDescriptionAsOwner()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Boxx/Auth/ViewModel/AuthViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "344"
-            endingLineNumber = "344"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
             landmarkName = "fetchOrderDescriptionAsOwner()"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Boxx/Auth/ViewModel/AuthViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "fetchOrderDescriptionAsOwner()"
             landmarkType = "7">
          </BreakpointContent>

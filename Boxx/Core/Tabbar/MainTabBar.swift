@@ -44,9 +44,9 @@ struct MainTabBar: View {
 //                    }
             }
             
-            .onChange(of: selectedTab) { newValue in
-
-            }
+//            .onChange(of: selectedTab) { newValue in
+//
+//            }
         }
         
     }
