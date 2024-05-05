@@ -38,8 +38,8 @@ struct MainSearch: View {
     @State var currentItem : ListingItem?
     
 //    @State var filteredOnParamOrder = [ListingItem]()
-    @State var ordersToShow = [ListingItem]()
-    @State var isOrderFound: Bool = false
+//    @State var ordersToShow = [ListingItem]()
+//    @State var isOrderFound: Bool = false
     
     let user: User
     
@@ -63,7 +63,19 @@ struct MainSearch: View {
         ScrollView{
             LazyVStack(spacing: 5){
                 
-                SearchBarView()
+                let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
+                
+                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()})
+            
+                let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
+                
+                if isOrderFound && !searchBarIsEmpty {
+                     SearchAndFilterWithCity(cityName: searchParameters.cityName, SearchBarIsEmpty: $searchBarIsEmpty)
+                } else {
+                    SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView)
+                }
+                
+//                SearchBarView()
                 
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()
@@ -90,7 +102,7 @@ struct MainSearch: View {
         .onAppear{
             print("APPEAR")
 //            viewModel.myOrder()
-            calculateOrdersToShow()
+//            calculateOrdersToShow()
             viewModel.myOrder()
 //            Task {
 //                await viewModel.fetchOrder()
@@ -110,20 +122,20 @@ struct MainSearch: View {
     }
     
     //MARK: - helpers:
-    func SearchBarView()->some View {
-        if self.isOrderFound && !searchBarIsEmpty {
-            return AnyView(SearchAndFilterWithCity(cityName: searchParameters.cityName, SearchBarIsEmpty: $searchBarIsEmpty))
-        }
-        return AnyView(SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView))
-    }
-    
-    func calculateOrdersToShow() {
-        let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
-        
-        self.ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()})
-    
-        self.isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
-    }
+//    func SearchBarView()->some View {
+//        if self.isOrderFound && !searchBarIsEmpty {
+//            return AnyView(SearchAndFilterWithCity(cityName: searchParameters.cityName, SearchBarIsEmpty: $searchBarIsEmpty))
+//        }
+//        return AnyView(SearchAndFilter(SearchBarIsEmpty: $searchBarIsEmpty, showDestinationSearchView: $showDestinationSearchView))
+//    }
+//    
+//    func calculateOrdersToShow() {
+//        let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
+//        
+//        self.ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()})
+//    
+//        self.isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
+//    }
 }
 
 
