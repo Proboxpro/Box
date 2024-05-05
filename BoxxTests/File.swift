@@ -231,13 +231,13 @@ struct ListingDetail: View {
                             .background(.pink)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .sheet(isPresented: $showingOrder, content: {
-                               ChatView(senderName: viewModel.currentUser?.login ?? "", senderUid: viewModel.currentUser?.id ?? "",ownerUid: item.ownerUid, ownerName: item.ownerName, description:description, value:value, cityFrom:item.cityFrom, cityTo: item.cityTo, imageUrls:item.imageUrls, recipient:recipient, ownerImageUrl:item.imageUrl)
+                                ChatView(senderName: viewModel.currentUser?.login ?? "", senderUid: viewModel.currentUser?.id ?? "",ownerUid: item.ownerUid, ownerName: item.ownerName, description:description, value:value, cityFrom:item.cityFrom, cityTo: item.cityTo, imageUrls:item.imageUrls, recipient:recipient, ownerImageUrl:item.imageUrl)
                             })
-                     }
+                    }
                 } .padding(.horizontal, 32)
             } .background(.white)
         }
-
-        }
         
-        }
+    }
+    
+}

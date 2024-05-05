@@ -58,8 +58,11 @@ class AuthViewModel: ObservableObject {
     
     
     init() {
+        
         self.userSession = Auth.auth().currentUser
-        fetchOrder()
+        Task {
+            await fetchOrder()
+        }
         usersearch()
         citysearch()
         myOrder()
@@ -213,36 +216,32 @@ class AuthViewModel: ObservableObject {
     
     
     // MARK: ЗАКАЗЫ
-    func fetchOrder(){
+    func fetchOrder() async {
         orders.removeAll()
-        let db = Firestore.firestore()
-        let ref = db.collection( "Customers")
-        ref.getDocuments { snapshot, error in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return
+        do {
+            let db = Firestore.firestore()
+            let ref = db.collection("Customers")
+            let snapshot = try await ref.getDocuments()
+            for document in snapshot.documents {
+                let data = document.data()
+                let id = data["id"] as? String ?? ""
+                let ownerUid = data["ownerUid"] as? String ?? ""
+                let ownerName = data["ownerName"] as? String ?? ""
+                let imageUrl = data["imageUrl"] as? String ?? ""
+                let pricePerKillo = data["pricePerKillo"] as? String ?? ""
+                let cityFrom = data["cityFrom"] as? String ?? ""
+                let cityTo = data["cityTo"] as? String ?? ""
+                let imageUrls = data["imageUrls"] as? String ?? ""
+                let startdate = data["startdate"] as? String ?? ""
+                let order = ListingItem(id: id, ownerUid: ownerUid, ownerName: ownerName, imageUrl: imageUrl, pricePerKillo: pricePerKillo, cityFrom: cityFrom, cityTo: cityTo, imageUrls: imageUrls, startdate: startdate)
+                orders.append(order)
             }
-            if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let data = document.data()
-                    let id = data["id"]as? String ?? ""
-                    let ownerUid = data["ownerUid"]as? String ?? ""
-                    let ownerName = data["ownerName"]as? String ?? ""
-                    let imageUrl = data["imageUrl"]as? String ?? ""
-                    let pricePerKillo = data["pricePerKillo"]as? String ?? ""
-                    let cityFrom = data["cityFrom"]as? String ?? ""
-                    let cityTo = data["cityTo"]as? String ?? ""
-                    let imageUrls = data[ "imageUrls"]as? String ?? ""
-                    let startdate = data[ "startdate"]as? String ?? ""
-                    let order = ListingItem(id: id, ownerUid: ownerUid, ownerName: ownerName, imageUrl: imageUrl, pricePerKillo: pricePerKillo,cityFrom: cityFrom, cityTo: cityTo, imageUrls: imageUrls, startdate: startdate)
-                    
-                    self.orders.append(order)
-                }
-            }
+        } catch {
+            print("Error fetching orders: \(error.localizedDescription)")
         }
     }
     
-    func deleateorder(id:String)  {
+    func deleteOrder(id:String)  {
         let db = Firestore.firestore()
         db.collection ("Customers").whereField("id", isEqualTo: id).getDocuments{(snap,
             err) in
@@ -693,8 +692,8 @@ class AuthViewModel: ObservableObject {
                     "description": description,
                     "image": url?.absoluteString ?? "",
                     "price": price,
-                    "isSent": false,
-                    "isInDelivery": false,
+                    "isSent": true,
+                    "isInDelivery": true,
                     "isDelivered": false,
                     "isCompleted": false
                 ])

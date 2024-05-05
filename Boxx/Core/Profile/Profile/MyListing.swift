@@ -66,7 +66,9 @@ struct MyListing: View {
                 .listStyle(PlainListStyle())
             }
             .onAppear{
-                viewModel.fetchOrder()
+                Task {
+                await   viewModel.fetchOrder()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading)

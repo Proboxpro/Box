@@ -293,16 +293,17 @@ struct Detail : View {
             }
     }
     
-    func BlueArrowButton()->some View {
-        VStack{
-            Button(action : {
-                                self.UploadPostservice(freeForm: self.id)
-                alertViewIsShowing = true
-//                viewModel.fetchOrder()
+    func BlueArrowButton() -> some View {
+        VStack {
+            Button(action: {
+                Task {
+                    await uploadAndFetchData()
+                    alertViewIsShowing = true
+                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
-                    .frame(width:100, height: 100 )
+                    .frame(width: 100, height: 100)
                     .scaledToFit()
                     .padding(.vertical, 40)
             }
@@ -310,10 +311,16 @@ struct Detail : View {
     }
     
     //MARK: - helpers:
+    @MainActor
+    func uploadAndFetchData() async {
+        // Выполнение загрузки данных и получение ответа
+        await UploadPostservice(freeForm: id)
+//        await viewModel.fetchOrder()
+        viewModel.myOrder()
+        print("MYORDER:", viewModel.myorder.map({$0.cityFrom + " " + $0.cityTo}))
+    }
     
-    
-    
-    func UploadPostservice(freeForm: String )
+    func UploadPostservice(freeForm: String)
     {
         guard let uid = viewModel.currentUser?.id else {return}
         let ownerUid = uid
@@ -326,8 +333,9 @@ struct Detail : View {
             if let error = error {
                 print(error.localizedDescription)
             }
-            
         }
+        
+        
     }
     
 }

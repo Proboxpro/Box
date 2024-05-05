@@ -37,18 +37,9 @@ struct MainTabBar: View {
                     .tabItem {
                         Image(systemName: "person")
                     }
-//                Test1()
-//                    .tag("4")
-//                    .tabItem {
-//                        Image(systemName: "person")
-//                    }
-            }
-            
-            .onChange(of: selectedTab) { newValue in
-
+                //                Test1()
             }
         }
-        
     }
 }
 

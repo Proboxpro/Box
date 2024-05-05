@@ -12,12 +12,13 @@ import Firebase
 @main
 struct BoxxApp: App {
     @StateObject var viewModel = AuthViewModel()
-//    @StateObject var searchViewModel : DestinationSearchViewModel
     
     init(){
         FirebaseApp.configure()
-//        searchViewModel = DestinationSearchViewModel(authViewModel: viewModel)
+//        viewModel.myOrder()
     }
+    
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
