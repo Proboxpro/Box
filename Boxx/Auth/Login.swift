@@ -65,6 +65,9 @@ struct Login: View {
                 }
                 
             }
+            .onDisappear {
+                viewModel.myOrder()
+            }
         }
     }
 }
