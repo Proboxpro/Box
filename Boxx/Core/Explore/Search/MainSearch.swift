@@ -89,8 +89,12 @@ struct MainSearch: View {
         }
         .onAppear{
             print("APPEAR")
+//            viewModel.myOrder()
             calculateOrdersToShow()
-            viewModel.fetchOrder()
+            viewModel.myOrder()
+//            Task {
+//                await viewModel.fetchOrder()
+//            }
         }
     }
     

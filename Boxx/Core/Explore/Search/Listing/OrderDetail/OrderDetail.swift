@@ -335,7 +335,9 @@ struct OrderDetail: View {
         .onAppear {
             orderViewModel.fetchData()
             viewModel.fetchOrderDescription()
-            viewModel.fetchOrder()
+            Task {
+            await    viewModel.fetchOrder()
+            }
         }
         .navigationBarHidden(true)
         .background {

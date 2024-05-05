@@ -289,8 +289,8 @@ struct ListingDetail: View {
                     }
                 })
         }
-        .disabled(!isSendAviable)
-        .opacity(isSendAviable ? 1.0 : 0.6)
+        .disabled(!isSendAviable || !sumSubApproved)
+        .opacity(isSendAviable && sumSubApproved ? 1.0 : 0.6)
     }
 }
 
