@@ -289,6 +289,12 @@ class AuthViewModel: ObservableObject {
                         myorder.isAuthorized = true
                     }
                     
+                    if let startDate = startdate.toDate()  {
+                        if startDate < Date() {
+                            myorder.dateIsExpired = true
+                        }
+                    }
+                    
                     self.myorder.append(myorder)
                 }
             }

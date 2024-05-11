@@ -19,9 +19,9 @@ struct MyListing: View {
             VStack {
                 List {
                     
-                    ForEach(viewModel.myorder) { item in
+                    ForEach(sortedOrdersByDate()) { item in
                         
-                        if item.isAuthorized && !item.dataIsExpired {
+                        if item.isAuthorized && !item.dateIsExpired {
                             
                             MyListingView(item: item) {
                                 if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
@@ -30,6 +30,8 @@ struct MyListing: View {
                                     
                                 }
                             }
+                            .padding(.vertical, 7)
+//                            .padding(.horizontal, -5)
                             .environmentObject(viewModel)
                         }
                         
@@ -45,9 +47,9 @@ struct MyListing: View {
                     }
                     
                     
-                    ForEach(viewModel.myorder) { item in
+                    ForEach(sortedOrdersByDate()) { item in
                         
-                        if item.dataIsExpired {
+                        if item.dateIsExpired {
                             
                             MyListingView(item: item) {
                                 if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
@@ -97,6 +99,10 @@ struct MyListing: View {
                 }
             }
         }
+    }
+    
+    private func sortedOrdersByDate()->[ListingItem] {
+        viewModel.myorder.sorted(by: {$0.startdate.toDate()! > $1.startdate.toDate()!})
     }
 }
 
