@@ -40,6 +40,10 @@ struct OrderDescriptionItem: Identifiable, Codable, Hashable {
     let isCompleted: Bool
 }
 
-enum OrderStatus {
+enum OrderStatus: String, CaseIterable, Identifiable {
+    var id: String {
+        return self.rawValue
+    }
+    
     case isSent, isInDelivery, isDelivered
 }

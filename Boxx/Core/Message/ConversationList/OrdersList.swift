@@ -8,6 +8,21 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
+//enum OrderStatus: String, CaseIterable, Identifiable  {
+//    var id: String {
+////        DispatchQueue.main.async {
+//            return self.rawValue
+////        }
+//    }
+//    
+//    case generated = "generated"
+//    case scanned = "scanned"
+//}
+
+
+
+
+
 @available(iOS 17.0, *)
 struct OrdersList: View {
     @EnvironmentObject var viewModel: AuthViewModel
@@ -103,6 +118,18 @@ struct OrdersList: View {
                viewModel.fetchOrderDescriptionAsRecipient()
            }
        }
+    }
+    
+    private func TypePickerView()-> some View {
+        Picker("type", selection: $viewModel.orderStatus) {
+            ForEach(OrderStatus.allCases) { type in
+                withAnimation {
+                    Text(type.rawValue).tag(type)
+                }
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding()
     }
 }
 

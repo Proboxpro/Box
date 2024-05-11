@@ -908,4 +908,7 @@ class AuthViewModel: ObservableObject {
     func sumSubResetApprove() {
         UserDefaults.standard.set(false, forKey: "sumSubApproved")
     }
+    
+    //MARK: - OrderStatus handling message screen
+    @Published var orderStatus: OrderStatus = .isSent
 }
