@@ -699,7 +699,7 @@ class AuthViewModel: ObservableObject {
                     "image": url?.absoluteString ?? "",
                     "price": price,
                     "isSent": true,
-                    "isInDelivery": true,
+                    "isInDelivery": false,
                     "isDelivered": false,
                     "isCompleted": false
                 ])
@@ -910,5 +910,5 @@ class AuthViewModel: ObservableObject {
     }
     
     //MARK: - OrderStatus handling message screen
-    @Published var orderStatus: OrderStatus = .isSent
+    @Published var orderStatus: OrderStatus = .isInDelivery
 }

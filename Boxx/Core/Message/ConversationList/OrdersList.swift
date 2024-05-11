@@ -33,55 +33,7 @@ struct OrdersList: View {
         if let user = viewModel.currentUser {
            NavigationStack {
                TypePickerView()
-               ScrollView {
-                   if !viewModel.ownerOrderDescription.isEmpty {
-                       Text("Мои поездки")
-                           .fontWeight(.medium)
-                           .foregroundStyle(.black)
-                   }
-                   ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
-                       OrderRow(isCompleted: order.isCompleted,
-                                orderImageURL: order.image,
-                                profileName: "В \(order.cityTo)",
-                                orderDescription: order.description ?? "Описание",
-                                date: order.creationTime)
-                           .onTapGesture {
-                               self.orderItem = order
-                           }
-                   }
-                   
-                   if !viewModel.orderDescription.isEmpty {
-                       Text("Заказанные товары")
-                           .fontWeight(.medium)
-                           .foregroundStyle(.black)
-                   }
-                   ForEach(viewModel.orderDescription, id: \.hashValue) { order in
-                       OrderRow(isCompleted: order.isCompleted,
-                                orderImageURL: order.image,
-                                profileName: "В \(order.cityTo)",
-                                orderDescription: order.description ?? "Описание",
-                                date: order.creationTime)
-                           .onTapGesture {
-                               self.orderItem = order
-                           }
-                   }
-                   
-                   if !viewModel.recipientOrderDescription.isEmpty {
-                       Text("Нужно получить")
-                           .fontWeight(.medium)
-                           .foregroundStyle(.black)
-                   }
-                   ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
-                       OrderRow(isCompleted: order.isCompleted,
-                                orderImageURL: order.image,
-                                profileName: "В \(order.cityTo)",
-                                orderDescription: order.description ?? "Описание",
-                                date: order.creationTime)
-                           .onTapGesture {
-                               self.orderItem = order
-                           }
-                   }
-               }
+               ScrollViewWithOrders()
                .toolbar {
                    ToolbarItem(placement: .navigationBarLeading)
                    {
@@ -121,9 +73,72 @@ struct OrdersList: View {
        }
     }
     
+    
+    private func ScrollViewWithOrders()->some View {
+        ScrollView {
+            
+            switch viewModel.orderStatus {
+            case .isSent:
+
+                
+                if !viewModel.ownerOrderDescription.isEmpty {
+                    Text("Мои поездки")
+                        .fontWeight(.medium)
+                        .foregroundStyle(.black)
+                }
+                ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
+                    OrderRow(isCompleted: order.isCompleted,
+                             orderImageURL: order.image,
+                             profileName: "В \(order.cityTo)",
+                             orderDescription: order.description ?? "Описание",
+                             date: order.creationTime)
+                    .onTapGesture {
+                        self.orderItem = order
+                    }
+                }
+                
+            case .isInDelivery:
+                
+                if !viewModel.orderDescription.isEmpty {
+                    Text("Заказанные товары")
+                        .fontWeight(.medium)
+                        .foregroundStyle(.black)
+                }
+                ForEach(viewModel.orderDescription, id: \.hashValue) { order in
+                    OrderRow(isCompleted: order.isCompleted,
+                             orderImageURL: order.image,
+                             profileName: "В \(order.cityTo)",
+                             orderDescription: order.description ?? "Описание",
+                             date: order.creationTime)
+                    .onTapGesture {
+                        self.orderItem = order
+                    }
+                }
+                
+            default:
+                
+                if !viewModel.recipientOrderDescription.isEmpty {
+                    Text("Нужно получить")
+                        .fontWeight(.medium)
+                        .foregroundStyle(.black)
+                }
+                ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
+                    OrderRow(isCompleted: order.isCompleted,
+                             orderImageURL: order.image,
+                             profileName: "В \(order.cityTo)",
+                             orderDescription: order.description ?? "Описание",
+                             date: order.creationTime)
+                    .onTapGesture {
+                        self.orderItem = order
+                    }
+                }
+            }
+        }
+    }
+    
     private func TypePickerView()-> some View {
         Picker("type", selection: $viewModel.orderStatus) {
-            ForEach(OrderStatus.allCases) { type in
+            ForEach(OrderStatus.AllCases(arrayLiteral: .isInDelivery,.isDelivered)) { type in
                 withAnimation {
                     Text(type.rawValue).tag(type)
                 }
