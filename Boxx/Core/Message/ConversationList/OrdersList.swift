@@ -32,6 +32,7 @@ struct OrdersList: View {
     var body: some View {
         if let user = viewModel.currentUser {
            NavigationStack {
+               TypePickerView()
                ScrollView {
                    if !viewModel.ownerOrderDescription.isEmpty {
                        Text("Мои поездки")

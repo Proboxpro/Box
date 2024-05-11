@@ -45,5 +45,7 @@ enum OrderStatus: String, CaseIterable, Identifiable {
         return self.rawValue
     }
     
-    case isSent, isInDelivery, isDelivered
+    case isSent = "Отправлен"
+    case isInDelivery = "В доставке"
+    case isDelivered = "Получен"
 }
