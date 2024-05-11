@@ -334,7 +334,7 @@ struct OrderDetail: View {
         .edgesIgnoringSafeArea(.bottom)
         .onAppear {
             orderViewModel.fetchData()
-            viewModel.fetchOrderDescription()
+//            viewModel.fetchOrderDescription()
             Task {
             await    viewModel.fetchOrder()
             }
