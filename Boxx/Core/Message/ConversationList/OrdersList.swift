@@ -85,16 +85,6 @@ struct OrdersList: View {
     private func ScrollViewWithOrders(isIncluded: (OrderDescriptionItem) -> Bool)->some View {
         ScrollView {
             
-//            switch viewModel.orderStatus {
-//            case .isSent:
-                
-                
-                
-                
-                
-                //                   }
-                
-                
             if !viewModel.ownerOrderDescription.filter(isIncluded).isEmpty {
                     Text("Мои поездки")
                         .fontWeight(.medium)
@@ -110,8 +100,7 @@ struct OrdersList: View {
                         self.orderItem = order
                     }
                 }
-                
-//            case .isInDelivery:
+
                 
                 if !viewModel.orderDescription.filter(isIncluded).isEmpty {
                     Text("Заказанные товары")
@@ -129,7 +118,6 @@ struct OrdersList: View {
                     }
                 }
                 
-//            default:
                 
                 if !viewModel.recipientOrderDescription.filter(isIncluded).isEmpty {
                     Text("Нужно получить")
@@ -146,7 +134,6 @@ struct OrdersList: View {
                         self.orderItem = order
                     }
                 }
-//            }
         }
     }
     
