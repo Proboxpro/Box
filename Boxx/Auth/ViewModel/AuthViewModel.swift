@@ -912,3 +912,70 @@ class AuthViewModel: ObservableObject {
     //MARK: - OrderStatus handling message screen
     @Published var orderStatus: OrderStatus = .isInDelivery
 }
+
+//private func ScrollViewWithOrders()->some View {
+//    ScrollView {
+//
+//        switch viewModel.orderStatus {
+//        case .isInDelivery:
+//
+//
+////                if !viewModel.ownerOrderDescription.isEmpty {
+////                    Text("Мои поездки")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+//            ForEach(viewModel.ownerOrderDescription.filter({!$0.isDelivered}), id: \.hashValue) { order in
+//                OrderRow(isCompleted: order.isCompleted,
+//                         orderImageURL: order.image,
+//                         profileName: "В \(order.cityTo)",
+//                         orderDescription: order.description ?? "Описание",
+//                         date: order.creationTime)
+//                .onTapGesture {
+//                    self.orderItem = order
+//                }
+//                .onAppear {
+//                    print("ORDER:", order.description! , "is sent=", order.isSent, "is indelivery=", order.isInDelivery, "isDelivered= " ,order.isDelivered)
+//                }
+//            }
+//
+//        default:
+////            case .isDelivered:
+//
+////                if !viewModel.orderDescription.isEmpty {
+////                    Text("Заказанные товары")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+//            ForEach(viewModel.orderDescription.filter({$0.isDelivered}), id: \.hashValue) { order in
+//                OrderRow(isCompleted: order.isCompleted,
+//                         orderImageURL: order.image,
+//                         profileName: "В \(order.cityTo)",
+//                         orderDescription: order.description ?? "Описание",
+//                         date: order.creationTime)
+//                .onTapGesture {
+//                    self.orderItem = order
+//                }
+//                .onAppear {
+//                    print("ORDER: is sent=", order.isSent, "is indelivery=", order.isInDelivery, "isDelivered= " ,order.isDelivered)
+//                }
+//            }
+//
+////                if !viewModel.recipientOrderDescription.isEmpty {
+////                    Text("Нужно получить")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+////                ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
+////                    OrderRow(isCompleted: order.isCompleted,
+////                             orderImageURL: order.image,
+////                             profileName: "В \(order.cityTo)",
+////                             orderDescription: order.description ?? "Описание",
+////                             date: order.creationTime)
+////                    .onTapGesture {
+////                        self.orderItem = order
+////                    }
+////                }
+//        }
+//    }
+//}

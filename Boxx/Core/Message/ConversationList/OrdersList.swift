@@ -33,7 +33,15 @@ struct OrdersList: View {
         if let user = viewModel.currentUser {
            NavigationStack {
                TypePickerView()
-               ScrollViewWithOrders()
+               
+               VStack {
+                   switch viewModel.orderStatus {
+                   case .isInDelivery:
+                       AnyView(ScrollViewWithOrders(isIncluded: {!$0.isDelivered}))
+                   default:
+                       AnyView(ScrollViewWithOrders(isIncluded: {$0.isDelivered}))
+                   }
+               }
                .toolbar {
                    ToolbarItem(placement: .navigationBarLeading)
                    {
@@ -55,7 +63,7 @@ struct OrdersList: View {
                    }
                }
                .fullScreenCover(item: $orderItem, onDismiss: {
-                   viewModel.fetchOrderDescription()
+//                   viewModel.fetchOrderDescription()
                }, content: { item in
                    NavigationView{
                        OrderDetail(orderItem: item)
@@ -74,19 +82,25 @@ struct OrdersList: View {
     }
     
     
-    private func ScrollViewWithOrders()->some View {
+    private func ScrollViewWithOrders(isIncluded: (OrderDescriptionItem) -> Bool)->some View {
         ScrollView {
             
-            switch viewModel.orderStatus {
-            case .isSent:
-
+//            switch viewModel.orderStatus {
+//            case .isSent:
                 
-                if !viewModel.ownerOrderDescription.isEmpty {
+                
+                
+                
+                
+                //                   }
+                
+                
+            if !viewModel.ownerOrderDescription.filter(isIncluded).isEmpty {
                     Text("Мои поездки")
                         .fontWeight(.medium)
                         .foregroundStyle(.black)
                 }
-                ForEach(viewModel.ownerOrderDescription, id: \.hashValue) { order in
+            ForEach(viewModel.ownerOrderDescription.filter(isIncluded), id: \.hashValue) { order in
                     OrderRow(isCompleted: order.isCompleted,
                              orderImageURL: order.image,
                              profileName: "В \(order.cityTo)",
@@ -97,14 +111,14 @@ struct OrdersList: View {
                     }
                 }
                 
-            case .isInDelivery:
+//            case .isInDelivery:
                 
-                if !viewModel.orderDescription.isEmpty {
+                if !viewModel.orderDescription.filter(isIncluded).isEmpty {
                     Text("Заказанные товары")
                         .fontWeight(.medium)
                         .foregroundStyle(.black)
                 }
-                ForEach(viewModel.orderDescription, id: \.hashValue) { order in
+            ForEach(viewModel.orderDescription.filter(isIncluded), id: \.hashValue) { order in
                     OrderRow(isCompleted: order.isCompleted,
                              orderImageURL: order.image,
                              profileName: "В \(order.cityTo)",
@@ -115,14 +129,14 @@ struct OrdersList: View {
                     }
                 }
                 
-            default:
+//            default:
                 
-                if !viewModel.recipientOrderDescription.isEmpty {
+                if !viewModel.recipientOrderDescription.filter(isIncluded).isEmpty {
                     Text("Нужно получить")
                         .fontWeight(.medium)
                         .foregroundStyle(.black)
                 }
-                ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
+                ForEach(viewModel.recipientOrderDescription.filter(isIncluded), id: \.hashValue) { order in
                     OrderRow(isCompleted: order.isCompleted,
                              orderImageURL: order.image,
                              profileName: "В \(order.cityTo)",
@@ -132,7 +146,7 @@ struct OrdersList: View {
                         self.orderItem = order
                     }
                 }
-            }
+//            }
         }
     }
     
