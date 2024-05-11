@@ -895,7 +895,10 @@ class AuthViewModel: ObservableObject {
     func checkIsApproved()->Bool {
         let sumSubApproved = UserDefaults.standard.bool(forKey: "sumSubApproved")
         
-        return sumSubApproved ? true : false
+        //MARK: RELEASE
+//        return sumSubApproved ? true : false
+        //MARK: DEBUG
+        return true
     }
     
     func sumSubApprove() {

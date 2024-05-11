@@ -115,7 +115,7 @@ struct CustomSearchBar : View {
             
             if self.txt != ""{
                 
-                if  self.data.filter({$0.name.lowercased().contains(self.txt.lowercased())}).count == 0{
+                if  self.data.filter({$0.name.lowercased().contains(self.txt.lowercased())}).count == 0 {
                     
                     Text("No Results Found").foregroundColor(Color.black.opacity(0.5)).padding()
                 }

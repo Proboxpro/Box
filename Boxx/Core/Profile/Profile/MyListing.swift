@@ -21,7 +21,7 @@ struct MyListing: View {
                     
                     ForEach(sortedOrdersByDate()) { item in
                         
-                        if item.isAuthorized && !item.dateIsExpired {
+                        if !item.dateIsExpired {
                             
                             MyListingView(item: item) {
                                 if let index = viewModel.myorder.firstIndex(where: { $0.id == item.id }) {
@@ -102,7 +102,7 @@ struct MyListing: View {
     }
     
     private func sortedOrdersByDate()->[ListingItem] {
-        viewModel.myorder.sorted(by: {$0.startdate.toDate()! > $1.startdate.toDate()!})
+        viewModel.myorder.sorted(by: {$0.startdate.toDate()! > $1.startdate.toDate()!}).filter({$0.isAuthorized})
     }
 }
 
