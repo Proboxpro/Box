@@ -256,7 +256,7 @@ struct Detail : View {
                         .foregroundStyle(Color(.systemGray4))
                 }
                 if self.cityTo != ""{
-                    if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
+                    if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0 {
                         VStack(alignment: .leading){
                             Text("Не найден")
                         }
@@ -265,7 +265,7 @@ struct Detail : View {
                     }
                     else{
                         VStack(alignment: .leading){
-                            ForEach(filtereduser.prefix(1)) { item in
+                            ForEach(filtereduser.prefix(1).filter({$0.name != data.name})) { item in
                                 CityView(city: item)
                                     .onTapGesture {
                                         cityTo = item.name
@@ -298,8 +298,11 @@ struct Detail : View {
             Button(action: {
                 Task {
                     await uploadAndFetchData()
-                    alertViewIsShowing = true
                 }
+//                Task {
+                    
+                    alertViewIsShowing = true
+//                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
@@ -315,6 +318,7 @@ struct Detail : View {
     func uploadAndFetchData() async {
         // Выполнение загрузки данных и получение ответа
         await UploadPostservice(freeForm: id)
+//        await alertViewIsShowing = true
 //        await viewModel.fetchOrder()
         viewModel.myOrder()
         print("MYORDER:", viewModel.myorder.map({$0.cityFrom + " " + $0.cityTo}))
@@ -366,7 +370,7 @@ struct AlertView: View {
     
     func backToHomeView() {
         withAnimation(.smooth) {
-            presentationMode.wrappedValue.dismiss()
+//            presentationMode.wrappedValue.dismiss()
         }
     }
 }
