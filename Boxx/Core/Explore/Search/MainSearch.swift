@@ -80,7 +80,7 @@ struct MainSearch: View {
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()
                 } else {
-                    ForEach(ordersToShow) {item in 
+                    ForEach(ordersToShow.sorted(by: {$0.startdate.toDate()! < $1.startdate.toDate()!})) {item in 
                         Button {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.25)) {
                                 self.currentItem = item

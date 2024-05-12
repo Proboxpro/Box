@@ -261,7 +261,6 @@ struct Detail : View {
                             Text("Не найден")
                         }
                         
-                        
                     }
                     else{
                         VStack(alignment: .leading){
@@ -298,11 +297,8 @@ struct Detail : View {
             Button(action: {
                 Task {
                     await uploadAndFetchData()
-                }
-//                Task {
-                    
                     alertViewIsShowing = true
-//                }
+                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
@@ -317,14 +313,14 @@ struct Detail : View {
     @MainActor
     func uploadAndFetchData() async {
         // Выполнение загрузки данных и получение ответа
-        await UploadPostservice(freeForm: id)
+        uploadPostservice(freeForm: id)
 //        await alertViewIsShowing = true
 //        await viewModel.fetchOrder()
         viewModel.myOrder()
         print("MYORDER:", viewModel.myorder.map({$0.cityFrom + " " + $0.cityTo}))
     }
     
-    func UploadPostservice(freeForm: String)
+    func uploadPostservice(freeForm: String)
     {
         guard let uid = viewModel.currentUser?.id else {return}
         let ownerUid = uid
@@ -359,7 +355,7 @@ struct AlertView: View {
             Spacer()
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 withAnimation {
 //                    successViewIsShowing = false
                     backToHomeView()
