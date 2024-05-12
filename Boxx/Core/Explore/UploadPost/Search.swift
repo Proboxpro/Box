@@ -115,17 +115,17 @@ struct CustomSearchBar : View {
             
             if self.txt != ""{
                 
-                if  self.data.filter({$0.name.lowercased().contains(self.txt.lowercased())}).count == 0{
+                if  self.data.filter({$0.name.lowercased().contains(self.txt.lowercased())}).count == 0 {
                     
                     Text("No Results Found").foregroundColor(Color.black.opacity(0.5)).padding()
                 }
                 else{
                     
-                    List(self.data.filter{$0.name.lowercased().contains(self.txt.lowercased())}){i in
+                    List(self.data.filter{$0.name.lowercased().contains(self.txt.lowercased())}){cityFrom in
                         
-                        NavigationLink(destination: Detail(data: i)) {
+                        NavigationLink(destination: Detail(data: cityFrom)) {
                             
-                            Text(i.name)
+                            Text(cityFrom.name)
                         }
                     }.frame(height: UIScreen.main.bounds.height / 2)
                 }
@@ -256,16 +256,15 @@ struct Detail : View {
                         .foregroundStyle(Color(.systemGray4))
                 }
                 if self.cityTo != ""{
-                    if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0{
+                    if  self.viewModel.city.filter({$0.name.lowercased().contains(self.cityTo.lowercased())}).count == 0 {
                         VStack(alignment: .leading){
                             Text("Не найден")
                         }
                         
-                        
                     }
                     else{
                         VStack(alignment: .leading){
-                            ForEach(filtereduser.prefix(1)) { item in
+                            ForEach(filtereduser.prefix(1).filter({$0.name != data.name})) { item in
                                 CityView(city: item)
                                     .onTapGesture {
                                         cityTo = item.name
@@ -293,13 +292,18 @@ struct Detail : View {
             }
     }
     
+    
     func BlueArrowButton() -> some View {
         VStack {
             Button(action: {
-                Task {
-                    await uploadAndFetchData()
-                    alertViewIsShowing = true
-                }
+                //                Task {
+                uploadAndFetchData()
+//                
+//                DispatchQueue.main.async {
+//                    alertViewIsShowing = true
+//                }
+                
+//                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
@@ -312,15 +316,25 @@ struct Detail : View {
     
     //MARK: - helpers:
     @MainActor
-    func uploadAndFetchData() async {
+    func uploadAndFetchData() {
         // Выполнение загрузки данных и получение ответа
-        await UploadPostservice(freeForm: id)
+        Task {
+            await uploadPostservice(freeForm: id)
+        }
+        alertViewIsShowing = true
 //        await viewModel.fetchOrder()
-        viewModel.myOrder()
+        
+        
+        
+//        DispatchQueue.global().async {
+//            viewModel.myOrder()
+//        }
+        
+        
         print("MYORDER:", viewModel.myorder.map({$0.cityFrom + " " + $0.cityTo}))
     }
     
-    func UploadPostservice(freeForm: String)
+    func uploadPostservice(freeForm: String) async
     {
         guard let uid = viewModel.currentUser?.id else {return}
         let ownerUid = uid
@@ -355,7 +369,7 @@ struct AlertView: View {
             Spacer()
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation {
 //                    successViewIsShowing = false
                     backToHomeView()
@@ -366,6 +380,7 @@ struct AlertView: View {
     
     func backToHomeView() {
         withAnimation(.smooth) {
+//            viewModel.myOrder()
             presentationMode.wrappedValue.dismiss()
         }
     }

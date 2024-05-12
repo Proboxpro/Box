@@ -289,6 +289,12 @@ class AuthViewModel: ObservableObject {
                         myorder.isAuthorized = true
                     }
                     
+                    if let startDate = startdate.toDate()  {
+                        if startDate < Date() {
+                            myorder.dateIsExpired = true
+                        }
+                    }
+                    
                     self.myorder.append(myorder)
                 }
             }
@@ -693,7 +699,7 @@ class AuthViewModel: ObservableObject {
                     "image": url?.absoluteString ?? "",
                     "price": price,
                     "isSent": true,
-                    "isInDelivery": true,
+                    "isInDelivery": false,
                     "isDelivered": false,
                     "isCompleted": false
                 ])
@@ -889,7 +895,10 @@ class AuthViewModel: ObservableObject {
     func checkIsApproved()->Bool {
         let sumSubApproved = UserDefaults.standard.bool(forKey: "sumSubApproved")
         
-        return sumSubApproved ? true : false
+        //MARK: RELEASE
+//        return sumSubApproved ? true : false
+        //MARK: DEBUG
+        return true
     }
     
     func sumSubApprove() {
@@ -899,4 +908,74 @@ class AuthViewModel: ObservableObject {
     func sumSubResetApprove() {
         UserDefaults.standard.set(false, forKey: "sumSubApproved")
     }
+    
+    //MARK: - OrderStatus handling message screen
+    @Published var orderStatus: OrderStatus = .isInDelivery
 }
+
+//private func ScrollViewWithOrders()->some View {
+//    ScrollView {
+//
+//        switch viewModel.orderStatus {
+//        case .isInDelivery:
+//
+//
+////                if !viewModel.ownerOrderDescription.isEmpty {
+////                    Text("Мои поездки")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+//            ForEach(viewModel.ownerOrderDescription.filter({!$0.isDelivered}), id: \.hashValue) { order in
+//                OrderRow(isCompleted: order.isCompleted,
+//                         orderImageURL: order.image,
+//                         profileName: "В \(order.cityTo)",
+//                         orderDescription: order.description ?? "Описание",
+//                         date: order.creationTime)
+//                .onTapGesture {
+//                    self.orderItem = order
+//                }
+//                .onAppear {
+//                    print("ORDER:", order.description! , "is sent=", order.isSent, "is indelivery=", order.isInDelivery, "isDelivered= " ,order.isDelivered)
+//                }
+//            }
+//
+//        default:
+////            case .isDelivered:
+//
+////                if !viewModel.orderDescription.isEmpty {
+////                    Text("Заказанные товары")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+//            ForEach(viewModel.orderDescription.filter({$0.isDelivered}), id: \.hashValue) { order in
+//                OrderRow(isCompleted: order.isCompleted,
+//                         orderImageURL: order.image,
+//                         profileName: "В \(order.cityTo)",
+//                         orderDescription: order.description ?? "Описание",
+//                         date: order.creationTime)
+//                .onTapGesture {
+//                    self.orderItem = order
+//                }
+//                .onAppear {
+//                    print("ORDER: is sent=", order.isSent, "is indelivery=", order.isInDelivery, "isDelivered= " ,order.isDelivered)
+//                }
+//            }
+//
+////                if !viewModel.recipientOrderDescription.isEmpty {
+////                    Text("Нужно получить")
+////                        .fontWeight(.medium)
+////                        .foregroundStyle(.black)
+////                }
+////                ForEach(viewModel.recipientOrderDescription, id: \.hashValue) { order in
+////                    OrderRow(isCompleted: order.isCompleted,
+////                             orderImageURL: order.image,
+////                             profileName: "В \(order.cityTo)",
+////                             orderDescription: order.description ?? "Описание",
+////                             date: order.creationTime)
+////                    .onTapGesture {
+////                        self.orderItem = order
+////                    }
+////                }
+//        }
+//    }
+//}
