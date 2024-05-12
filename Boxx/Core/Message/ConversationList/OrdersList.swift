@@ -102,21 +102,21 @@ struct OrdersList: View {
                 }
 
                 
-                if !viewModel.orderDescription.filter(isIncluded).isEmpty {
-                    Text("Заказанные товары")
-                        .fontWeight(.medium)
-                        .foregroundStyle(.black)
-                }
-            ForEach(viewModel.orderDescription.filter(isIncluded), id: \.hashValue) { order in
-                    OrderRow(isCompleted: order.isCompleted,
-                             orderImageURL: order.image,
-                             profileName: "В \(order.cityTo)",
-                             orderDescription: order.description ?? "Описание",
-                             date: order.creationTime)
-                    .onTapGesture {
-                        self.orderItem = order
-                    }
-                }
+              ///  if !viewModel.orderDescription.filter(isIncluded).isEmpty {
+              ///      Text("Заказанные товары")
+              ///          .fontWeight(.medium)
+              ///          .foregroundStyle(.black)
+              ///  }
+            ///ForEach(viewModel.orderDescription.filter(isIncluded), id: \.hashValue) { order in
+               ///     OrderRow(isCompleted: order.isCompleted,
+                  ///           orderImageURL: order.image,
+                     ///        profileName: "В \(order.cityTo)",
+                       ///      orderDescription: order.description ?? "Описание",
+                          ///   date: order.creationTime)
+                   /// .onTapGesture {
+                   ///     self.orderItem = order
+                  ///  }
+               /// }
                 
                 
                 if !viewModel.recipientOrderDescription.filter(isIncluded).isEmpty {
