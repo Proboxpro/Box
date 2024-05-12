@@ -121,11 +121,11 @@ struct CustomSearchBar : View {
                 }
                 else{
                     
-                    List(self.data.filter{$0.name.lowercased().contains(self.txt.lowercased())}){i in
+                    List(self.data.filter{$0.name.lowercased().contains(self.txt.lowercased())}){cityFrom in
                         
-                        NavigationLink(destination: Detail(data: i)) {
+                        NavigationLink(destination: Detail(data: cityFrom)) {
                             
-                            Text(i.name)
+                            Text(cityFrom.name)
                         }
                     }.frame(height: UIScreen.main.bounds.height / 2)
                 }
@@ -292,13 +292,18 @@ struct Detail : View {
             }
     }
     
+    
     func BlueArrowButton() -> some View {
         VStack {
             Button(action: {
-                Task {
-                    await uploadAndFetchData()
-                    alertViewIsShowing = true
-                }
+                //                Task {
+                uploadAndFetchData()
+//                
+//                DispatchQueue.main.async {
+//                    alertViewIsShowing = true
+//                }
+                
+//                }
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
@@ -311,16 +316,25 @@ struct Detail : View {
     
     //MARK: - helpers:
     @MainActor
-    func uploadAndFetchData() async {
+    func uploadAndFetchData() {
         // Выполнение загрузки данных и получение ответа
-        uploadPostservice(freeForm: id)
-//        await alertViewIsShowing = true
+        Task {
+            await uploadPostservice(freeForm: id)
+        }
+        alertViewIsShowing = true
 //        await viewModel.fetchOrder()
-        viewModel.myOrder()
+        
+        
+        
+//        DispatchQueue.global().async {
+//            viewModel.myOrder()
+//        }
+        
+        
         print("MYORDER:", viewModel.myorder.map({$0.cityFrom + " " + $0.cityTo}))
     }
     
-    func uploadPostservice(freeForm: String)
+    func uploadPostservice(freeForm: String) async
     {
         guard let uid = viewModel.currentUser?.id else {return}
         let ownerUid = uid
@@ -355,7 +369,7 @@ struct AlertView: View {
             Spacer()
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation {
 //                    successViewIsShowing = false
                     backToHomeView()
@@ -366,7 +380,8 @@ struct AlertView: View {
     
     func backToHomeView() {
         withAnimation(.smooth) {
-//            presentationMode.wrappedValue.dismiss()
+//            viewModel.myOrder()
+            presentationMode.wrappedValue.dismiss()
         }
     }
 }
