@@ -73,16 +73,16 @@ struct Profile: View {
                     Section{
                         VStack{
                             HStack{
-                                Image(systemName: "person.circle.fill")
-                                Button(action: {
-                                    showingProfile.toggle()
-                                }) {
-                                    Text("Профиль")}
-                                .foregroundColor(.black)
-                            }
-                            .sheet(isPresented: $showingProfile, content: {
-                                ProfileView()
-                            })
+                         ///       Image(systemName: "person.circle.fill")
+                         ///       Button(action: {
+                         ///           showingProfile.toggle()
+                         ///       }) {
+                         ///           Text("Профиль")}
+                         ///       .foregroundColor(.black)
+                         ///   }
+                         ///   .sheet(isPresented: $showingProfile, content: {
+                         ///       ProfileView()
+                         ///   })
                             
                         }
                         HStack{
@@ -115,7 +115,7 @@ struct Profile: View {
                             Button(action: {
                                 showingRules.toggle()
                             }) {
-                                Text("Рекомендации")}
+                                Text("Правила")}
                             .foregroundColor(.black)
                         }
                         .sheet(isPresented: $showingRules, content: {
