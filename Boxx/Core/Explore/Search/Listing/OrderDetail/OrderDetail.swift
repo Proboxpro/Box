@@ -195,7 +195,7 @@ struct OrderDetail: View {
                                     .background(
                                         Circle()
                                         //MARK: - orderItem.isInDelivery
-                                            .fill((true) ? .green : .gray)
+                                            .fill((false) ? .green : .gray)
                                             .frame(width: 32, height: 32)
                                     )
                                 Text("В доставке")
