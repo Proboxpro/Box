@@ -65,7 +65,7 @@ struct MainSearch: View {
                 
                 let filteredOnParamOrder = searchParameters.cityName == "" ? viewModel.myorder : viewModel.filteredOnParam(searchParameters, searchBarIsEmpty: searchBarIsEmpty)
                 
-                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()})
+                let ordersToShow = filteredOnParamOrder.filter({$0.startdate.toDate() ?? Date() > Date()}).filter({$0.ownerUid != viewModel.currentUser!.id})
             
                 let isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
                 
