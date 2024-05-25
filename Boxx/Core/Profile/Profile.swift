@@ -22,12 +22,13 @@ struct Profile: View {
     @State private var showingVerif = false
     @State private var showingRules = false
     @State private var showingListing = false
+    @State private var showingSupport = false
 
     
     var body: some View {
         if let user = viewModel.currentUser{
             
-            VStack{
+            NavigationStack{
                 //header
                 VStack{
                     PhotosPicker(selection: $photosPickerItem){
@@ -132,15 +133,19 @@ struct Profile: View {
                         .sheet(isPresented: $showingListing, content: {
                             MyListing()
                         })
+//                        .sheet(isPresented: $showingSupport, content: {
+//                            SupportView()
+//                        })
                     }
                 
                    
                     Section{
-                        Button(action: {
-                            
-//                            viewModel.signOut()
-                        }) {
-                            Text("Поддержка")}
+                        NavigationLink {
+                            SupportView()
+                        } label: {
+                            Text("Поддержка")
+                        }
+                        .foregroundStyle(Color(.blue))
                     }
                     
                     Section{
