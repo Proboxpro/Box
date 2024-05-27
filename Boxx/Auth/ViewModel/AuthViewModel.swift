@@ -519,6 +519,13 @@ class AuthViewModel: ObservableObject {
     
     func saveImage (data: Data, UserId: String) async throws -> (name:String, path: String){
         let meta = StorageMetadata()
+        
+//        guard let resizedImage = image.resize(to: targetSize),
+//                  let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
+//                completion(.failure(NSError(domain: "Image resizing failed", code: 0, userInfo: nil)))
+//                return
+//            }
+        
         meta.contentType = "image/jpeg"
         let path = "\(UUID().uuidString).jpeg"
         let returnedMetaData = try await userReference(UserId:UserId).child(path).putDataAsync(data, metadata: meta)

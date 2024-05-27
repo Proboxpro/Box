@@ -22,15 +22,16 @@ struct HeaderView: View {
                 Rectangle()
                     .fill(.black.gradient)
                 
-                CachedAsyncImage(url: URL(string: "https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/City%2F360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg?alt=media&token=4ec96c2f-7218-41f6-96e1-c39d58f74895")) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Color.gray
-                }
-                .frame(width: UIScreen.main.bounds.width)
-                .opacity(1 - progress)
+                //MARK: - image profile
+//                CachedAsyncImage(url: URL(string: "https://firebasestorage.googleapis.com/v0/b/newboc-ae213.appspot.com/o/City%2F360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg?alt=media&token=4ec96c2f-7218-41f6-96e1-c39d58f74895")) { image in
+//                    image
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                } placeholder: {
+//                    Color.gray
+//                }
+//                .frame(width: UIScreen.main.bounds.width)
+//                .opacity(1 - progress)
                 
                 VStack(spacing: 15) {
                     GeometryReader {
@@ -40,7 +41,8 @@ struct HeaderView: View {
                         let bottomPadding: CGFloat = 15
                         let resizedOffsetY = (midY - (minimumHeaderHeight - halfScaledHeight - bottomPadding))
                         
-                        CachedAsyncImage(url: URL(string: user.imageUrl ?? "")) { image in
+                        AsyncImage(url: URL(string: user.imageUrl ?? "")) { image in
+                        
                             image
                                 .profileImageStyling(rect: rect)
                                 .scaleEffect(1 - (progress * 0.7), anchor: .leading)
@@ -50,6 +52,10 @@ struct HeaderView: View {
                                 .clipShape(Circle())
                         }
                     }
+                    .onAppear(perform: {
+                        print(user.imageUrl!)
+                    })
+                    
                     .padding(.top, 20)
                     .frame(width: headerHeight * 0.4, height: headerHeight * 0.4)
                     

@@ -47,13 +47,14 @@ struct OrdersList: View {
                    {
                        VStack{
                            HStack{
-                               WebImage(url: URL(string: user.imageUrl ?? ""))
-                                   .resizable()
-                                   .scaledToFill()
-                                   .frame(width: 50, height: 50)
-                                   .clipped()
-                                   .cornerRadius(50)
-                                   .shadow(radius: 5)
+                               //MARK: - image profile
+//                               WebImage(url: URL(string: user.imageUrl ?? ""))
+//                                   .resizable()
+//                                   .scaledToFill()
+//                                   .frame(width: 50, height: 50)
+//                                   .clipped()
+//                                   .cornerRadius(50)
+//                                   .shadow(radius: 5)
                                
                                Text(user.login)
                                    .font(.title)
@@ -75,8 +76,13 @@ struct OrdersList: View {
            }
            .onAppear {
                viewModel.fetchOrderDescription()
-               viewModel.fetchOrderDescriptionAsOwner()
-               viewModel.fetchOrderDescriptionAsRecipient()
+//               viewModel.fetchOrderDescriptionAsOwner()
+//               viewModel.fetchOrderDescriptionAsRecipient()
+           }
+           .onDisappear {
+//               viewModel = nil
+//               orderItem = nil
+//               viewModel.orderDescription.removeAll()
            }
        }
     }
@@ -90,7 +96,8 @@ struct OrdersList: View {
                         .fontWeight(.medium)
                         .foregroundStyle(.black)
                 }
-            ForEach(viewModel.ownerOrderDescription.filter(isIncluded), id: \.hashValue) { order in
+//            ForEach(viewModel.ownerOrderDescription.filter(isIncluded), id: \.hashValue) { order in
+                ForEach(viewModel.orderDescription.filter(isIncluded), id: \.hashValue) { order in
                     OrderRow(isCompleted: order.isCompleted,
                              orderImageURL: order.image,
                              profileName: "В \(order.cityTo)",
