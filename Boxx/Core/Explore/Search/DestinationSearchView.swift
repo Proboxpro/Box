@@ -190,8 +190,7 @@ struct DestinationSearchView: View {
         Button {
             //MARK: - handle action
             Task {
-                print("All city's \(viewModel.city.compactMap({$0.name}))")
-                print("CITY's: \(filtereduser.compactMap({$0.name}))" )
+//                print("All city's \(viewModel.city.compactMap({$0.name}))")
 //                print("CITY's: \(filtereduser.compactMap({$0.name}))" )
                 
                 if filtereduser.compactMap({$0.name}).filter({$0 == search}).isEmpty {

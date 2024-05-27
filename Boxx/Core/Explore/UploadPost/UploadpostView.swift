@@ -11,16 +11,17 @@ struct UploadpostView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
-        NavigationStack{
-            HStack{
-                VStack{
-                    Text("Добавьте свою поездку уже сегодня")
-                    Divider()
+//        VStack{
+//            HStack{
+                VStack {
+//                    Text("Добавьте свою поездку уже сегодня")
+//                    Divider()
+//            Spacer()
                     SearchButton()
                 } 
-                .navigationTitle("Вы уезжате?")
-            }
-        }
+                .navigationTitle("Вы уезжаете?")
+//            }
+//        }
 //        .onDisappear {
 //            viewModel.myOrder()
 //        }

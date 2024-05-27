@@ -24,7 +24,6 @@ struct OrderRow: View {
                  .aspectRatio(contentMode: .fill)
                  .foregroundColor(Color(.systemGray))
                  
-            
             VStack(alignment: .leading, spacing: 4){
                 Text(profileName)
                     .font(.subheadline)

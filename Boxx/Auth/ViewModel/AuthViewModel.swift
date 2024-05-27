@@ -728,26 +728,27 @@ class AuthViewModel: ObservableObject {
                         "isCompleted": false
                     ])
                 }
-            let order = OrderDescriptionItem(id: UserId,
-                                             documentId: infoDoc.documentID,
-                                             announcementId: announcementId,
-                                             ownerId: ownerId,
-                                             recipientId: recipientId,
-                                             cityFromLat: cityFromCoordinates[0].location?.coordinate.latitude,
-                                             cityFromLon: cityFromCoordinates[0].location?.coordinate.longitude,
-                                             cityToLat: cityToCoordinates[0].location?.coordinate.latitude,
-                                             cityToLon: cityToCoordinates[0].location?.coordinate.longitude,
-                                             cityFrom: cityFrom,
-                                             cityTo: cityTo,
-                                             ownerName: ownerName,
-                                             creationTime: Date(),
-                                             description: description,
-                                             image: url,
-                                             price: price,
-                                             isSent: false,
-                                             isInDelivery: false,
-                                             isDelivered: false,
-                                             isCompleted: false)
+            let order = OrderDescriptionItem(
+                id: UserId,
+                documentId: infoDoc.documentID,
+                announcementId: announcementId,
+                ownerId: ownerId,
+                recipientId: recipientId,
+                cityFromLat: cityFromCoordinates[0].location?.coordinate.latitude,
+                cityFromLon: cityFromCoordinates[0].location?.coordinate.longitude,
+                cityToLat: cityToCoordinates[0].location?.coordinate.latitude,
+                cityToLon: cityToCoordinates[0].location?.coordinate.longitude,
+                cityFrom: cityFrom,
+                cityTo: cityTo,
+                ownerName: ownerName,
+                creationTime: Date(),
+                description: description,
+                image: url,
+                price: price,
+                isSent: false,
+                isInDelivery: false,
+                isDelivered: false,
+                isCompleted: false)
             return order
         } catch {
             print("bags \(error.localizedDescription)")

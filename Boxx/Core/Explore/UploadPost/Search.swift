@@ -57,6 +57,7 @@ struct Search: View {
     
     var body: some View {
         NavigationView{
+//            Spacer()
             ZStack(alignment: .top){
                 if viewModel.checkIsApproved() {
                     GeometryReader{_ in
@@ -71,7 +72,7 @@ struct Search: View {
                     AlertView("Нельзя создать обьявление, пройдите верификацию в разделе профиля.")
                 }
             }
-            .navigationTitle("Вы уезжате?")
+            .navigationTitle("Вы уезжаете?")
             .navigationBarHidden(false)
         }
     }
@@ -127,7 +128,8 @@ struct CustomSearchBar : View {
                             
                             Text(cityFrom.name)
                         }
-                    }.frame(height: UIScreen.main.bounds.height / 2)
+                    }
+//                    .frame(height: UIScreen.main.bounds.height / 2)
                 }
             }
         }.background(Color.white)

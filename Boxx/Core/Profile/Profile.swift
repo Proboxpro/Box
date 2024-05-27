@@ -22,12 +22,13 @@ struct Profile: View {
     @State private var showingVerif = false
     @State private var showingRules = false
     @State private var showingListing = false
+    @State private var showingSupport = false
 
     
     var body: some View {
         if let user = viewModel.currentUser{
             
-            VStack{
+            NavigationStack{
                 //header
                 VStack{
                     PhotosPicker(selection: $photosPickerItem){
@@ -69,20 +70,21 @@ struct Profile: View {
                         . accentColor(.gray)
                 }
                 
+                
                 List{
                     Section{
                         VStack{
                             HStack{
-                         ///       Image(systemName: "person.circle.fill")
-                         ///       Button(action: {
-                         ///           showingProfile.toggle()
-                         ///       }) {
-                         ///           Text("Профиль")}
-                         ///       .foregroundColor(.black)
-                         ///   }
-                         ///   .sheet(isPresented: $showingProfile, content: {
-                         ///       ProfileView()
-                         ///   })
+                                Image(systemName: "person.circle.fill")
+                               Button(action: {
+                                    showingProfile.toggle()
+                                }) {
+                                    Text("Профиль")}
+                                .foregroundColor(.black)
+                            }
+                            .sheet(isPresented: $showingProfile, content: {
+                                ProfileView()
+                            })
                             
                         }
                         HStack{
@@ -102,7 +104,6 @@ struct Profile: View {
                                     if IdentityVerification.sdk != nil {
                                         if IdentityVerification.sdk.status == .approved {
                                             withAnimation {
-                                                //                                            viewModel.sumSubApproved = status.status == .approved
                                                 viewModel.sumSubApprove()
                                             }
                                         }
@@ -132,15 +133,19 @@ struct Profile: View {
                         .sheet(isPresented: $showingListing, content: {
                             MyListing()
                         })
+//                        .sheet(isPresented: $showingSupport, content: {
+//                            SupportView()
+//                        })
                     }
                 
                    
                     Section{
-                        Button(action: {
-                            
-//                            viewModel.signOut()
-                        }) {
-                            Text("Поддержка")}
+                        NavigationLink {
+                            SupportView()
+                        } label: {
+                            Text("Поддержка")
+                        }
+                        .foregroundStyle(Color(.blue))
                     }
                     
                     Section{
@@ -158,9 +163,11 @@ struct Profile: View {
 }
 
 
-@available(iOS 17.0, *)
-struct Profile_Previews: PreviewProvider {
-    static var previews: some View {
-        Profile()
-    }
-}
+//@available(iOS 17.0, *)
+//struct Profile_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Profile()
+//    }
+//}
+//
+//
