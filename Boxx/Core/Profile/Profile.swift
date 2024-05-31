@@ -173,5 +173,3 @@ struct Profile: View {
         }
     }
 }
-
-

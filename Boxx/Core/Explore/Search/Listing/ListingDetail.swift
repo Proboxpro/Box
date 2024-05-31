@@ -108,11 +108,14 @@ struct ListingDetail: View {
                 Button{
                     showingProfile.toggle()
                 } label: {
-                    WebImage(url: URL(string: item.imageUrl))
+                    Image(systemName: "person.circle.fill")
+//                    WebImage(url: URL(string: item.imageUrl))
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 64, height: 64)
-                        .clipShape(Circle())
+                        .scaledToFill()
+                        .frame(width: 34, height: 34)
+                        .foregroundStyle(.gray)
+//                        .clipShape(Circle())
+//                        .background(.gray)
                 }.sheet(isPresented: $showingProfile, content: {
                     ProfileView(ownerUid: item.ownerUid)
                 })
@@ -211,7 +214,9 @@ struct ListingDetail: View {
                         Task{
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
-                                productImageData = data
+                                let newImage = UIImage(data: data)?.compressed(to: 0.2)
+                                let newData = newImage?.jpegData(compressionQuality: 1)
+                                productImageData = newData
                             }
                         }
                     }
