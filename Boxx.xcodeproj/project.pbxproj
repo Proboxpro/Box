@@ -13,7 +13,6 @@
 		21F3E5642BD0315900019E75 /* OrderDescriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F3E5632BD0315900019E75 /* OrderDescriptionItem.swift */; };
 		881540262BA5F22C00D8AD2C /* UIImage+MergeBySide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */; };
 		882C20662B9DF101002CE6FE /* Date+TimeAgoFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882C20652B9DF101002CE6FE /* Date+TimeAgoFormat.swift */; };
-		8842B6132BA7241D003AF2B8 /* UIImage+Downloaded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8842B6122BA7241D003AF2B8 /* UIImage+Downloaded.swift */; };
 		8842B6152BA7EDFA003AF2B8 /* Message+Make.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8842B6142BA7EDFA003AF2B8 /* Message+Make.swift */; };
 		8850C6DE2B8EEAD700DC7A70 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = 8850C6DD2B8EEAD700DC7A70 /* ExyteChat */; };
 		8850C6E02B8EEBC200DC7A70 /* ChatViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8850C6DF2B8EEBC200DC7A70 /* ChatViewContainer.swift */; };
@@ -131,7 +130,6 @@
 		8814B3602BA5D4B0004A57F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+MergeBySide.swift"; sourceTree = "<group>"; };
 		882C20652B9DF101002CE6FE /* Date+TimeAgoFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeAgoFormat.swift"; sourceTree = "<group>"; };
-		8842B6122BA7241D003AF2B8 /* UIImage+Downloaded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Downloaded.swift"; sourceTree = "<group>"; };
 		8842B6142BA7EDFA003AF2B8 /* Message+Make.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Make.swift"; sourceTree = "<group>"; };
 		8850C6DF2B8EEBC200DC7A70 /* ChatViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewContainer.swift; sourceTree = "<group>"; };
 		8850C6E12B8EEC7F00DC7A70 /* Converstation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Converstation.swift; sourceTree = "<group>"; };
@@ -279,7 +277,6 @@
 				FAB3394C2BE0E56600144C14 /* UIVC+EXT.swift */,
 				882C20652B9DF101002CE6FE /* Date+TimeAgoFormat.swift */,
 				881540252BA5F22C00D8AD2C /* UIImage+MergeBySide.swift */,
-				8842B6122BA7241D003AF2B8 /* UIImage+Downloaded.swift */,
 				8842B6142BA7EDFA003AF2B8 /* Message+Make.swift */,
 				FA62333D2BC86309008CBD84 /* Bindings.swift */,
 				FA6233482BC99D3A008CBD84 /* String+Extension.swift */,
@@ -796,7 +793,6 @@
 				F7F7EE362B06674D00817353 /* MainTabBar.swift in Sources */,
 				881540262BA5F22C00D8AD2C /* UIImage+MergeBySide.swift in Sources */,
 				FAB3395E2BE0E5DF00144C14 /* SumSubViewController.swift in Sources */,
-				8842B6132BA7241D003AF2B8 /* UIImage+Downloaded.swift in Sources */,
 				F7F7EE312B06324800817353 /* AuthViewModel.swift in Sources */,
 				8850C6E22B8EEC7F00DC7A70 /* Converstation.swift in Sources */,
 				F7E9B8992B403A01001169BE /* Test.swift in Sources */,
