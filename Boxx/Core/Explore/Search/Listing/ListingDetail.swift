@@ -214,7 +214,7 @@ struct ListingDetail: View {
                         Task{
                             if let photosPickerItem,
                                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
-                                let newImage = UIImage(data: data)?.compressed(to: 0.2)
+                                let newImage = UIImage(data: data)?.compressed(to: 0.1)
                                 let newData = newImage?.jpegData(compressionQuality: 1)
                                 productImageData = newData
                             }
