@@ -74,8 +74,8 @@ struct OrderDetail: View {
                             Button{
                                 showingProfile.toggle()
                             } label: {
-//                                WebImage(url: URL(string: image))
-                                Image(systemName: "person")
+                                WebImage(url: URL(string: image))
+//                                Image(systemName: "person")
                                     .resizable()
                                     .foregroundColor(.blue)
                                     .scaledToFit()
@@ -92,6 +92,7 @@ struct OrderDetail: View {
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.white)
                             HStack(spacing: 8){
+                                
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .frame(width: 16, height: 16)
