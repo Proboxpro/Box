@@ -560,11 +560,11 @@ class AuthViewModel: ObservableObject {
         }.value
     }
     
-    func saveProfileImage(item: PhotosPickerItem) {
+    func saveProfileImage(item: Data) {
         guard let UserId = Auth.auth().currentUser?.uid else {return}
         Task {
-            guard let data = try await item.loadTransferable(type: Data.self) else {return}
-            let (path,name) = try await AuthViewModel.shared.saveImage (data: data, UserId: UserId)
+//            guard let data = try await item.loadTransferable(type: Data.self) else {return}
+            let (path,name) = try await AuthViewModel.shared.saveImage (data: item, UserId: UserId)
             print ("SUCCESS!")
             print (path)
             print (name)

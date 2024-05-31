@@ -24,81 +24,68 @@ struct Profile: View {
     @State private var showingListing = false
     @State private var showingSupport = false
 
-//    @State private var imageURL = ""
     
     var body: some View {
-//        if let user = viewModel.currentUser{
         NavigationStack {
             AvatarProfileView()
-            
             ListElemView()
         }
     }
     
-//    func getImage()->UIImage {
-//        if viewModel.currentUser?.imageUrl != nil {
-//            WebImage(url: URL(string: user.imageUrl ?? ""))
-//        }
-//    }
     
     private func AvatarProfileView()->some View {
 //        NavigationStack{
             //header
             VStack{
-                PhotosPicker(selection: $photosPickerItem){
-                    if avatar == nil {
-                        WebImage(url: URL(string: viewModel.currentUser!.imageUrl ?? ""))
-                        //                            Image(systemName: "person")
-                        //                                .foregroundColor(.blue)
-                            .resizable()
-                            .foregroundColor(.gray)
-                            .frame(width: 220, height: 220)
-                            .aspectRatio(contentMode:.fill)
-                            .clipShape(Circle())
-                            .font(.system(size: 80))
-                    } else {
-                        Image (uiImage: avatar ?? UIImage (resource: .person ))
-                            .resizable()
-                            .frame(width: 220, height: 220)
-                            .aspectRatio(contentMode:.fill)
-                            .clipShape(Circle())
-                            .font(.system(size: 80))
-                    }
-                }
-                //                    .onAppear {
-                //                        print("Diss")
-                //                        viewModel.currentUser?.imageUrl = ""
-                //                        avatar =
-                //                        avatar = nil
-                //                    }
-                .onChange(of: photosPickerItem) { _, _ in
-                    Task{
-                        if let photosPickerItem,
-                           let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
-                            if let image = UIImage(data: data) {
-                                self.avatar = image
-                                viewModel.saveProfileImage(item: photosPickerItem)
+                VStack {
+                    PhotosPicker(selection: $photosPickerItem) {
+                        if avatar == nil {
+                            WebImage(url: URL(string: viewModel.currentUser?.imageUrl ?? ""))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 220, height: 220)
+                                .clipShape(Circle())
+                        } else {
+                            Image(uiImage: avatar ?? UIImage(systemName: "person")!)
+                                    .resizable()
+                                    .frame(width: 220, height: 220)
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
                             }
                         }
+                        .onChange(of: photosPickerItem) { newItem in
+                            Task {
+                                if let newItem,
+                                   let data = try? await newItem.loadTransferable(type: Data.self) {
+                                    if let image = UIImage(data: data) {
+                                        // Resize the image if needed
+                                        let resizedImage = image.resize(to: CGSize(width: 220, height: 220))
+                                        // Compress the image to reduce quality
+                                        let compressionQuality: CGFloat = 0.1 // Уровень сжатия
+                                        if let compressedImage = resizedImage?.compressed(to: compressionQuality) {
+                                            avatar = compressedImage
+                                            if let compressedData = compressedImage.jpegData(compressionQuality: compressionQuality) {
+                                                viewModel.saveProfileImage(item: compressedData)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Text(viewModel.currentUser?.login ?? "")
+                            .font(.title)
+                            .fontWeight(.semibold)
+
+                        Text(viewModel.currentUser?.fullname ?? "")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Text(viewModel.currentUser?.email ?? "")
+                            .font(.footnote)
+                            .accentColor(.gray)
                     }
-                    
                 }
-                Text (viewModel.currentUser!.login)
-                    .font(.title)
-                    .fontWeight(.semibold)
-                
-                Text (viewModel.currentUser!.fullname)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Text(viewModel.currentUser!.email)
-                    . font (.footnote)
-                    . accentColor(.gray)
             }
-            
-            
-//        }
-//    }
-    }
     
     private func ListElemView()->some View {
         List{
@@ -163,9 +150,6 @@ struct Profile: View {
                 .sheet(isPresented: $showingListing, content: {
                     MyListing()
                 })
-                //                        .sheet(isPresented: $showingSupport, content: {
-                //                            SupportView()
-                //                        })
             }
             
             
@@ -190,13 +174,18 @@ struct Profile: View {
     }
 }
 
+extension UIImage {
+    func compressed(to quality: CGFloat) -> UIImage? {
+        guard let data = self.jpegData(compressionQuality: quality) else { return nil }
+        return UIImage(data: data)
+    }
+}
 
-
-//@available(iOS 17.0, *)
-//struct Profile_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Profile()
-//    }
-//}
-//
-//
+extension UIImage {
+    func resize(to size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        self.draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}
