@@ -108,13 +108,14 @@ struct ListingDetail: View {
                 Button{
                     showingProfile.toggle()
                 } label: {
-                    Image(systemName: "person.circle.fill")
-//                    WebImage(url: URL(string: item.imageUrl))
+//                    Image(systemName: "person.circle.fill")
+                    WebImage(url: URL(string: item.imageUrl))
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 34, height: 34)
+//                        .frame(width: 34, height: 34)
+                        .frame(width: 54, height: 54)
                         .foregroundStyle(.gray)
-//                        .clipShape(Circle())
+                        .clipShape(Circle())
 //                        .background(.gray)
                 }.sheet(isPresented: $showingProfile, content: {
                     ProfileView(ownerUid: item.ownerUid)
