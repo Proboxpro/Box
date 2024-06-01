@@ -34,58 +34,58 @@ struct Profile: View {
     
     
     private func AvatarProfileView()->some View {
-//        NavigationStack{
-            //header
-            VStack{
-                VStack {
-                    PhotosPicker(selection: $photosPickerItem) {
-                        if avatar == nil {
-                            WebImage(url: URL(string: viewModel.currentUser?.imageUrl ?? ""))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 220, height: 220)
-                                .clipShape(Circle())
-                        } else {
-                            Image(uiImage: avatar ?? UIImage(systemName: "person")!)
-                                    .resizable()
-                                    .frame(width: 220, height: 220)
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            }
-                        }
-                        .onChange(of: photosPickerItem) { newItem in
-                            Task {
-                                if let newItem,
-                                   let data = try? await newItem.loadTransferable(type: Data.self) {
-                                    if let image = UIImage(data: data) {
-                                        // Resize the image if needed
-                                        let resizedImage = image.resize(to: CGSize(width: 220, height: 220))
-                                        // Compress the image to reduce quality
-                                        let compressionQuality: CGFloat = 0.1 // Уровень сжатия
-                                        if let compressedImage = resizedImage?.compressed(to: compressionQuality) {
-                                            avatar = compressedImage
-                                            if let compressedData = compressedImage.jpegData(compressionQuality: compressionQuality) {
-                                                viewModel.saveProfileImage(item: compressedData)
-                                            }
-                                        }
+        //        NavigationStack{
+        //header
+        VStack{
+            VStack {
+                PhotosPicker(selection: $photosPickerItem) {
+                    if avatar == nil {
+                        WebImage(url: URL(string: viewModel.currentUser?.imageUrl ?? ""))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 220, height: 220)
+                            .clipShape(Circle())
+                    } else {
+                        Image(uiImage: avatar ?? UIImage(systemName: "person")!)
+                            .resizable()
+                            .frame(width: 220, height: 220)
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                    }
+                }
+                .onChange(of: photosPickerItem) { newItem in
+                    Task {
+                        if let newItem,
+                           let data = try? await newItem.loadTransferable(type: Data.self) {
+                            if let image = UIImage(data: data) {
+                                // Resize the image if needed
+                                let resizedImage = image.resize(to: CGSize(width: 220, height: 220))
+                                // Compress the image to reduce quality
+                                let compressionQuality: CGFloat = 0.1 // Уровень сжатия
+                                if let compressedImage = resizedImage?.compressed(to: compressionQuality) {
+                                    avatar = compressedImage
+                                    if let compressedData = compressedImage.jpegData(compressionQuality: compressionQuality) {
+                                        viewModel.saveProfileImage(item: compressedData)
                                     }
                                 }
                             }
                         }
-                        Text(viewModel.currentUser?.login ?? "")
-                            .font(.title)
-                            .fontWeight(.semibold)
-
-                        Text(viewModel.currentUser?.fullname ?? "")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-
-                        Text(viewModel.currentUser?.email ?? "")
-                            .font(.footnote)
-                            .accentColor(.gray)
                     }
                 }
+                Text(viewModel.currentUser?.login ?? "")
+                    .font(.title)
+                    .fontWeight(.semibold)
+                
+                Text(viewModel.currentUser?.fullname ?? "")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                
+                Text(viewModel.currentUser?.email ?? "")
+                    .font(.footnote)
+                    .accentColor(.gray)
             }
+        }
+    }
     
     private func ListElemView()->some View {
         List{
