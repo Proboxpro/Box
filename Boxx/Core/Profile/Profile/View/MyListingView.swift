@@ -18,9 +18,7 @@ struct MyListingView: View {
      init(item: ListingItem, onDelete: (() -> Void)? = nil) {
 
          self.item = item
-
          self.onDelete = onDelete
-
      }
     
     var body: some View {

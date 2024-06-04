@@ -54,7 +54,7 @@ struct ListingitemView: View {
                 }
                 .padding( )
                 //Images
-            }.background(  WebImage(url: URL(string: item.imageUrls)))
+            }.background(WebImage(url: URL(string: item.imageUrls)))
                 .frame(height: 150)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             //CityTO
@@ -70,7 +70,7 @@ struct ListingitemView: View {
                         .shadow(color: .black.opacity(3), radius: 2)
                     Text("\(item.cityTo)")
                 }
-                }
+            }
         }
     }
     

@@ -110,8 +110,8 @@
             filePath = "Boxx/Core/Message/ConversationList/OrdersList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
             landmarkName = "ScrollViewWithOrders(isIncluded:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -119,17 +119,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E91615D5-2065-4722-91D8-3E4DF39B2236"
+            uuid = "02F2DE25-CC04-4783-9AF2-907037CAD7F0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boxx/Core/Profile/Profile.swift"
+            filePath = "Boxx/Core/Explore/Search/Listing/ListingDetail.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "SendButtonView()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -77,7 +77,7 @@ struct MyListing: View {
                 {
                     VStack{
                         HStack{
-                            CachedAsyncImage(url: URL(string: user.imageUrl ?? "")) { phase in
+                            AsyncImage(url: URL(string: user.imageUrl ?? "")) { phase in
                                 switch phase {
                                 case .success(let image):
                                     image

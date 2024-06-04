@@ -44,22 +44,27 @@ struct MainSearch: View {
     let user: User
     
     var body: some View {
-        VStack {
-            if showingListingDetailView {
-                ListingDetail(item: currentItem!, showingListingDetailView: $showingListingDetailView)
-            } else {
-                if showDestinationSearchView{
-                    DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
+        if viewModel.currentUser != nil {
+            VStack {
+                if showingListingDetailView {
+                    ListingDetail(item: currentItem!, showingListingDetailView: $showingListingDetailView)
                 } else {
-                    MainScrollView()
+                    if showDestinationSearchView{
+                        DestinationSearchView(show: $showDestinationSearchView, parameters: $searchParameters)
+                    } else {
+                        MainScrollView()
+                    }
                 }
+                
             }
+//            Text("jer")
         }
     }
     
     
     //MARK: - Views
     func MainScrollView()->some View {
+       
         ScrollView{
             LazyVStack(spacing: 5){
                 
@@ -80,7 +85,7 @@ struct MainSearch: View {
                 if ordersToShow.isEmpty {
                     OrdersNotFoundView()
                 } else {
-                    ForEach(ordersToShow.sorted(by: {$0.startdate.toDate()! < $1.startdate.toDate()!})) {item in 
+                    ForEach(ordersToShow.sorted(by: {$0.startdate.toDate()! < $1.startdate.toDate()!})) {item in
                         Button {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.25)) {
                                 self.currentItem = item

@@ -69,12 +69,15 @@ struct OrderDetail: View {
             VStack{
                 HStack(spacing: 8){
                     HStack{
+                        //MARK: - profile image
                         if let image = item?.imageUrl {
                             Button{
                                 showingProfile.toggle()
                             } label: {
                                 WebImage(url: URL(string: image))
+//                                Image(systemName: "person")
                                     .resizable()
+                                    .foregroundColor(.blue)
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
                                     .clipShape(Circle())
@@ -82,11 +85,14 @@ struct OrderDetail: View {
                                 ProfileView()
                             })
                         }
+//                        Image(systemName: "person")
+                        
                         VStack(alignment: .leading, spacing: 0){
                             Text(item?.ownerName ?? "")
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.white)
                             HStack(spacing: 8){
+                                
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .frame(width: 16, height: 16)
@@ -125,7 +131,7 @@ struct OrderDetail: View {
                                 NavigationView {
                                     ChatViewContainer()
                                         .environmentObject(chatViewModel)
-                                        .navigationBarItems(trailing: CachedAsyncImage(url: URL(string: item?.imageUrl ?? ""), content: { image in
+                                        .navigationBarItems(trailing: AsyncImage(url: URL(string: item?.imageUrl ?? ""), content: { image in
                                             image
                                                 .resizable()
                                                 .frame(width: 32, height: 32)
@@ -281,6 +287,7 @@ struct OrderDetail: View {
                     HStack(spacing: 16){
                         if let url = orderItem.image {
                             WebImage(url: url)
+//                            Image(systemName; "doc")
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
@@ -345,3 +352,30 @@ struct OrderDetail: View {
         }
     }
 }
+
+
+//extension UIImage {
+//    func resize(to targetSize: CGSize) -> UIImage? {
+//        let size = self.size
+//
+//        let widthRatio  = targetSize.width  / size.width
+//        let heightRatio = targetSize.height / size.height
+//
+//        // Определяем новое размерное соотношение
+//        var newSize: CGSize
+//        if widthRatio > heightRatio {
+//            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+//        } else {
+//            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+//        }
+//
+//        // Начинаем рисование нового изображения
+//        let rect = CGRect(origin: .zero, size: newSize)
+//        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+//        self.draw(in: rect)
+//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//
+//        return newImage
+//    }
+//}
