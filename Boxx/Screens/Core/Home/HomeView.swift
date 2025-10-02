@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct HomeView: View {
-    private let trips: [TripItem] = [
-        .init(id: UUID().uuidString, imageName: "Background", title: "Мурманск - Санкт-Петербург", price: "6000 ₽", author: "Alexander"),
-        .init(id: UUID().uuidString, imageName: "Image", title: "Мурманск - Торжок", price: "3500 ₽", author: " ")
+    @EnvironmentObject var viewModel: AuthViewModel
+    
+    private let trips: [ListingItem] = [
+        .init(id: UUID().uuidString, ownerUid: "u1", ownerName: "Alexander", imageUrl: "", pricePerKillo: "6000 ₽", cityFrom: "Мурманск", cityTo: "Санкт-Петербург", imageUrls: "https://picsum.photos/seed/1/600/400", startdate: "2025-10-02"),
+        .init(id: UUID().uuidString, ownerUid: "u2", ownerName: " ", imageUrl: "", pricePerKillo: "3500 ₽", cityFrom: "Мурманск", cityTo: "Торжок", imageUrls: "https://picsum.photos/seed/2/600/400", startdate: "2025-10-03")
     ]
     
     private let deals: [DealItem] = [
@@ -32,10 +34,12 @@ struct HomeView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
-                        ForEach(trips, id: \.id) { item in
+//                        ForEach(trips, id: \.id) { item in
+                        ForEach(viewModel.myorder) { item in
                             TripCardView(item: item)
                         }
                     }
+                    .frame(height: 180)
                     .padding(.horizontal, 16)
                 }
                 
@@ -57,13 +61,7 @@ struct HomeView: View {
     }
 }
 
-struct TripItem: Hashable {
-    var id: String
-    var imageName: String
-    var title: String
-    var price: String
-    var author: String
-}
+// TripItem removed in favor of using ListingItem
 
 struct DealItem: Hashable {
     var id: String

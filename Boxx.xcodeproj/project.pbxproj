@@ -31,6 +31,10 @@
 		CF478BE32E8E9B0D004DA93F /* DealRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDF2E8E9B0D004DA93F /* DealRowView.swift */; };
 		CF478BE42E8E9B0D004DA93F /* TripCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BE12E8E9B0D004DA93F /* TripCardView.swift */; };
 		CF478BE52E8E9B0D004DA93F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BE02E8E9B0D004DA93F /* HomeView.swift */; };
+		CF4980B22E8EA4080067D62C /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = CF4980B12E8EA4080067D62C /* Nuke */; };
+		CF4980B42E8EA4080067D62C /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = CF4980B32E8EA4080067D62C /* NukeExtensions */; };
+		CF4980B62E8EA4080067D62C /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CF4980B52E8EA4080067D62C /* NukeUI */; };
+		CF4980B82E8EA4080067D62C /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = CF4980B72E8EA4080067D62C /* NukeVideo */; };
 		F7A533802B1F50670073C221 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F7A5337F2B1F50670073C221 /* SDWebImageSwiftUI */; };
 		F7A533822B1F70D70073C221 /* ListingDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A533812B1F70D70073C221 /* ListingDetail.swift */; };
 		F7A533862B21C8D00073C221 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F7A533852B21C8D00073C221 /* FirebaseStorage */; };
@@ -235,12 +239,16 @@
 				FAB339652BE0E73300144C14 /* IdensicMobileSDK in Frameworks */,
 				FA752FEE2BE28E3F00AD8CFC /* CachedAsyncImage in Frameworks */,
 				F7A533862B21C8D00073C221 /* FirebaseStorage in Frameworks */,
+				CF4980B22E8EA4080067D62C /* Nuke in Frameworks */,
 				F7F7EE262B06316300817353 /* FirebaseFirestoreSwift in Frameworks */,
 				F7F7EE202B06316300817353 /* FirebaseDatabase in Frameworks */,
 				F7F7EE1A2B06316300817353 /* FirebaseAnalytics in Frameworks */,
 				8850C6DE2B8EEAD700DC7A70 /* ExyteChat in Frameworks */,
 				F7A533802B1F50670073C221 /* SDWebImageSwiftUI in Frameworks */,
+				CF4980B62E8EA4080067D62C /* NukeUI in Frameworks */,
+				CF4980B82E8EA4080067D62C /* NukeVideo in Frameworks */,
 				F7F7EE2A2B06316300817353 /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
+				CF4980B42E8EA4080067D62C /* NukeExtensions in Frameworks */,
 				FAB339692BE0E73300144C14 /* IdensicMobileSDK_VideoIdent in Frameworks */,
 				F7F7EE242B06316300817353 /* FirebaseFirestore in Frameworks */,
 			);
@@ -657,6 +665,10 @@
 				FAB339662BE0E73300144C14 /* IdensicMobileSDK_MRTDReader */,
 				FAB339682BE0E73300144C14 /* IdensicMobileSDK_VideoIdent */,
 				FA752FED2BE28E3F00AD8CFC /* CachedAsyncImage */,
+				CF4980B12E8EA4080067D62C /* Nuke */,
+				CF4980B32E8EA4080067D62C /* NukeExtensions */,
+				CF4980B52E8EA4080067D62C /* NukeUI */,
+				CF4980B72E8EA4080067D62C /* NukeVideo */,
 			);
 			productName = Boxx;
 			productReference = F7F7EDCE2B06049300817353 /* Boxx.app */;
@@ -736,6 +748,7 @@
 				8850C6DC2B8EEAD700DC7A70 /* XCRemoteSwiftPackageReference "Chat" */,
 				FAB339622BE0E71A00144C14 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
 				FA752FEC2BE28C9E00AD8CFC /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = F7F7EDCF2B06049300817353 /* Products */;
 			projectDirPath = "";
@@ -1199,6 +1212,14 @@
 				minimumVersion = 1.3.5;
 			};
 		};
+		CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
 		F7A5337E2B1F50670073C221 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
@@ -1238,6 +1259,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8850C6DC2B8EEAD700DC7A70 /* XCRemoteSwiftPackageReference "Chat" */;
 			productName = ExyteChat;
+		};
+		CF4980B12E8EA4080067D62C /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		CF4980B32E8EA4080067D62C /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		CF4980B52E8EA4080067D62C /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+		CF4980B72E8EA4080067D62C /* NukeVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF4980B02E8EA4080067D62C /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeVideo;
 		};
 		F7A5337F2B1F50670073C221 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

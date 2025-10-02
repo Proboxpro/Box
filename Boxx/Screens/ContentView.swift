@@ -16,6 +16,7 @@ struct ContentView: View {
             //DEBUG: _
             if viewModel.userSession != nil {
                 MainTabBar()
+                    .environmentObject(viewModel)
 //            Text("jher")
                 //            TestView()
             } else {

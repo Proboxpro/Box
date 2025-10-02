@@ -23,9 +23,11 @@ struct MainTabBar: View {
 //        if let user = viewModel.currentUser{
             if true {
             TabView{
+//                Color.gray
 //                MainSearch(user: user)
 //                MainSearch(user: User(id: "123", fullname: "vsy", login: "sa", email: "santa51@amil.ru"))
                 HomeView()
+//                    .environmentObject(viewModel)
 //                TestView()
                     .tag("1")
                     .tabItem {
@@ -52,6 +54,8 @@ struct MainTabBar: View {
                     }
                 //                Test1()
             }
+//            .tint(Color.gray.opacity(0.7))
+//            .background(Color.gray.opacity(0.7))
         }
     }
 }
