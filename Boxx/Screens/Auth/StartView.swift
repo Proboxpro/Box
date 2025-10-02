@@ -35,33 +35,16 @@ struct StartView: View {
                 
                 Spacer()
                 
-                NavigationLink {
-                    Login()
-                } label: {
-                    Text("Войти")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, minHeight: 56)
-                        .foregroundColor(.white)
+                NavigationLink(destination: AuthContainerView().navigationBarBackButtonHidden(true)) {
+                    AuthButtonLabel(title: "Войти", style: .filled)
+                        .padding(.horizontal, 24)
                 }
-                .background(Color("Peach").opacity(0.9))
-                .cornerRadius(14)
-                .padding(.horizontal, 24)
                 
-                NavigationLink {
-                    Registration()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Text("Зарегистрироваться")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, minHeight: 56)
-                        .foregroundColor(Color("Peach"))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(Color("Peach").opacity(0.9), lineWidth: 1)
-                        )
+                NavigationLink(destination: AuthContainerView(initialTab: .register).navigationBarBackButtonHidden(true)) {
+                    AuthButtonLabel(title: "Зарегистрироваться", style: .outline)
+                        .padding(.horizontal, 24)
+                        .padding(.top, 12)
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 12)
                 
                 Spacer(minLength: 32)
             }

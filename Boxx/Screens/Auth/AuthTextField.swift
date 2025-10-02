@@ -31,7 +31,7 @@ struct AuthTextField: View {
         .frame(height: 48)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.gray.opacity(0.25), lineWidth: 1)
+                .stroke(Color.baseMint.opacity(0.2), lineWidth: 1)
                 .background(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(Color(.systemBackground))

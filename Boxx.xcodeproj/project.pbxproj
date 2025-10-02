@@ -25,6 +25,9 @@
 		CF478BD52E8E897D004DA93F /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BD42E8E897D004DA93F /* ImagePicker.swift */; };
 		CF478BD62E8E897D004DA93F /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BD32E8E897D004DA93F /* AuthTextField.swift */; };
 		CF478BD82E8E8C87004DA93F /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BD72E8E8C87004DA93F /* StartView.swift */; };
+		CF478BDB2E8E8F7B004DA93F /* AuthContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDA2E8E8F7B004DA93F /* AuthContainerView.swift */; };
+		CF478BDC2E8E8F7B004DA93F /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BD92E8E8F7B004DA93F /* AuthButton.swift */; };
+		CF478BDE2E8E9078004DA93F /* AuthButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDD2E8E9078004DA93F /* AuthButtonLabel.swift */; };
 		F7A533802B1F50670073C221 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F7A5337F2B1F50670073C221 /* SDWebImageSwiftUI */; };
 		F7A533822B1F70D70073C221 /* ListingDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A533812B1F70D70073C221 /* ListingDetail.swift */; };
 		F7A533862B21C8D00073C221 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F7A533852B21C8D00073C221 /* FirebaseStorage */; };
@@ -141,6 +144,9 @@
 		CF478BD32E8E897D004DA93F /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		CF478BD42E8E897D004DA93F /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		CF478BD72E8E8C87004DA93F /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		CF478BD92E8E8F7B004DA93F /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
+		CF478BDA2E8E8F7B004DA93F /* AuthContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthContainerView.swift; sourceTree = "<group>"; };
+		CF478BDD2E8E9078004DA93F /* AuthButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButtonLabel.swift; sourceTree = "<group>"; };
 		F7A533812B1F70D70073C221 /* ListingDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetail.swift; sourceTree = "<group>"; };
 		F7BA70BF2BAAB02A00DC1856 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		F7BA70C12BAAB03D00DC1856 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
@@ -431,6 +437,9 @@
 		F7F7EDFD2B06050B00817353 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				CF478BDD2E8E9078004DA93F /* AuthButtonLabel.swift */,
+				CF478BD92E8E8F7B004DA93F /* AuthButton.swift */,
+				CF478BDA2E8E8F7B004DA93F /* AuthContainerView.swift */,
 				CF478BD72E8E8C87004DA93F /* StartView.swift */,
 				CF478BD32E8E897D004DA93F /* AuthTextField.swift */,
 				CF478BD42E8E897D004DA93F /* ImagePicker.swift */,
@@ -792,6 +801,7 @@
 				F7E9B8412B319E03001169BE /* Feedback.swift in Sources */,
 				F7F7EE392B066A2F00817353 /* ListingitemView.swift in Sources */,
 				F7E9B81A2B2DF15E001169BE /* ListingItem.swift in Sources */,
+				CF478BDE2E8E9078004DA93F /* AuthButtonLabel.swift in Sources */,
 				F7FB2A4C2BAAF5CB00A0B30D /* FilterviewState.swift in Sources */,
 				F7E9B82D2B30E970001169BE /* ProfileView.swift in Sources */,
 				F7F7EE082B0609F500817353 /* InputView.swift in Sources */,
@@ -829,6 +839,8 @@
 				F7E9B83F2B319DBC001169BE /* FeedbackView.swift in Sources */,
 				F7BA70C02BAAB02A00DC1856 /* City.swift in Sources */,
 				F7E9B8772B386D8E001169BE /* NewOrder.swift in Sources */,
+				CF478BDB2E8E8F7B004DA93F /* AuthContainerView.swift in Sources */,
+				CF478BDC2E8E8F7B004DA93F /* AuthButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

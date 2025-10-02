@@ -22,76 +22,69 @@ struct Registration: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     var body: some View {
-        VStack(spacing: 0){
-            HStack(spacing: 12) {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.primary)
+        ZStack {
+            VStack(spacing: 0){
+                HStack(spacing: 12) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.primary)
+                    }
+                    Spacer()
+                    Text("Регистрация")
+                        .font(.system(size: 28, weight: .bold))
+                    Spacer()
+                    Color.clear.frame(width: 24, height: 24)
                 }
-                Spacer()
-                Text("Регистрация")
-                    .font(.system(size: 28, weight: .bold))
-                Spacer()
-                Color.clear.frame(width: 24, height: 24)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-            
-            Text("Зарабатывай честно")
-                .font(.system(size: 14))
-                .foregroundColor(.secondary)
-                .padding(.top, 4)
-            
-            VStack(spacing: 14){
-                AuthTextField(text: $login, placeholder: "Логин")
-                AuthTextField(text: $password, placeholder: "Пароль", isSecure: true)
-                AuthTextField(text: $confirmPassword, placeholder: "Повторите пароль", isSecure: true)
-                AuthTextField(text: $email, placeholder: "Почта", keyboard: .emailAddress)
-                AuthTextField(text: $backgroundPicture, placeholder: "Номер телефона", keyboard: .phonePad)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 24)
-            
-            Button(action: {}) {
-                Text("Подтвердить личность")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity, minHeight: 52)
-                    .foregroundColor(.white)
-            }
-            .background(Color("Peach").opacity(0.9))
-            .cornerRadius(14)
-            .padding(.horizontal, 16)
-            .padding(.top, 20)
-            
-            Button(action: {}) {
-                Text("Создать аккаунт")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity, minHeight: 52)
-                    .foregroundColor(.primary)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color.primary.opacity(0.15), lineWidth: 1)
-                    )
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            
-            Button(action: { dismiss() }) {
-                Text("Уже есть аккаунт?")
-                    .foregroundColor(Color("Peach"))
-                    .font(.system(size: 14, weight: .semibold))
-            }
-            .padding(.top, 16)
-            
-            Button(action: {}) {
-                Text("Войти с помощью сервиса SumSub")
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                
+                Text("Зарабатывай честно")
+                    .font(.system(size: 14))
                     .foregroundColor(.secondary)
-                    .font(.system(size: 13))
+                    .padding(.top, 4)
+                
+                VStack(spacing: 14){
+                    AuthTextField(text: $login, placeholder: "Логин")
+                    AuthTextField(text: $password, placeholder: "Пароль", isSecure: true)
+                    AuthTextField(text: $confirmPassword, placeholder: "Повторите пароль", isSecure: true)
+                    AuthTextField(text: $email, placeholder: "Почта", keyboard: .emailAddress)
+                    AuthTextField(text: $backgroundPicture, placeholder: "Номер телефона", keyboard: .phonePad)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 34)
+                
+                
+                
+                Spacer()
             }
-            .padding(.top, 6)
             
-            Spacer()
+            VStack(spacing: 15) {
+                Spacer()
+                AuthButton(title: "Подтвердить личность", style: .filled) {}
+                    .padding(.horizontal, 16)
+//                    .padding(.top, 20)
+                
+                AuthButton(title: "Создать аккаунт", style: .outline) {}
+                    .padding(.horizontal, 16)
+//                    .padding(.top, 12)
+                
+                Button(action: { dismiss() }) {
+                    Text("Уже есть аккаунт?")
+                        .foregroundColor(.baseMint)
+                        .font(.system(size: 14, weight: .semibold))
+                }
+//                .padding(.top, 16)
+                
+                Button(action: {}) {
+                    Text("Войти с помощью сервиса SumSub")
+                        .foregroundColor(.secondary)
+                        .font(.system(size: 13))
+                }
+//                .padding(.top, 6)
+            }
+            .offset(y: -30)
         }
+        .padding(.horizontal, 10)
         
     }
 }

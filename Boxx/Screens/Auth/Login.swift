@@ -15,35 +15,24 @@ struct Login: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Image ("logo")
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .padding(.vertical, 80)
+                Text("PYPA")
+                    .font(.system(size: 52, weight: .heavy))
+                    .foregroundColor(.baseMint)
+                    .padding(.vertical, 40)
                 
                 VStack(spacing: 24){
-                    InputView(text: $email,
-                              title: "Email ",
-                              placeholder: "name@mail.ru")
-                    .autocapitalization(.none)
+                    AuthTextField(text: $email, placeholder: "Email", keyboard: .emailAddress)
+                    AuthTextField(text: $password, placeholder: "Пароль", isSecure: true)
                     
-                    InputView(text: $password, title:"Пароль", placeholder:"Введите пароль",  isSecureField: true)
-                    
-                }.padding(.horizontal)
-                    .padding(.top, 20)
-                
-                Button { } label: {
-                        HStack{
-                            Text ("SIGN IN")
-                                .fontWeight (.semibold)
-                            Image (systemName: "arrow.right")
-                            
-                        }
-                        . foregroundColor (.white)
-                        .frame(width:UIScreen.main.bounds.width-32, height: 48)
+                    AuthButton(title: "Войти", style: .filled) {
+                        Task.init(operation: {
+                            try await viewModel.signIn(withEmail: email, password: password)
+                        })
                     }
-                    .background (Color (.systemBlue))
-                    .cornerRadius (10)
-                    .padding(.top,25)
+                }
+                .padding(30)
+                .offset(y: 30)
+                
                 
                 Spacer()
                 
@@ -55,7 +44,8 @@ struct Login: View {
                         Text ("Регистрация")
                             .fontWeight(.bold)
                     }  .font (.system(size: 14))
-                    
+                    .foregroundColor(.baseMint)
+
                 }
                 
             }
