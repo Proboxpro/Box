@@ -8,24 +8,12 @@
 import SwiftUI
 
 struct SearchParameters  {
-//    enum SelectedParameters {
-//        case dateAndCity
-//        case date
-//        case city
-//        case none
-//    }
-//    
     var cityName: String = ""
     var startDate = Date()
     var endDate = Date()
     var datesIsSelected = false
 }
 
-//enum MainScrollViewStatus {
-//    case location
-//    case dates
-//    case killo
-//}
 
 @available(iOS 17.0, *)
 struct MainSearch: View {
@@ -142,5 +130,4 @@ struct MainSearch: View {
 //        self.isOrderFound = !filteredOnParamOrder.isEmpty && searchParameters.cityName != ""
 //    }
 }
-
 

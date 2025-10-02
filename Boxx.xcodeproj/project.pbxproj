@@ -28,6 +28,9 @@
 		CF478BDB2E8E8F7B004DA93F /* AuthContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDA2E8E8F7B004DA93F /* AuthContainerView.swift */; };
 		CF478BDC2E8E8F7B004DA93F /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BD92E8E8F7B004DA93F /* AuthButton.swift */; };
 		CF478BDE2E8E9078004DA93F /* AuthButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDD2E8E9078004DA93F /* AuthButtonLabel.swift */; };
+		CF478BE32E8E9B0D004DA93F /* DealRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BDF2E8E9B0D004DA93F /* DealRowView.swift */; };
+		CF478BE42E8E9B0D004DA93F /* TripCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BE12E8E9B0D004DA93F /* TripCardView.swift */; };
+		CF478BE52E8E9B0D004DA93F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF478BE02E8E9B0D004DA93F /* HomeView.swift */; };
 		F7A533802B1F50670073C221 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F7A5337F2B1F50670073C221 /* SDWebImageSwiftUI */; };
 		F7A533822B1F70D70073C221 /* ListingDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A533812B1F70D70073C221 /* ListingDetail.swift */; };
 		F7A533862B21C8D00073C221 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F7A533852B21C8D00073C221 /* FirebaseStorage */; };
@@ -147,6 +150,9 @@
 		CF478BD92E8E8F7B004DA93F /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 		CF478BDA2E8E8F7B004DA93F /* AuthContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthContainerView.swift; sourceTree = "<group>"; };
 		CF478BDD2E8E9078004DA93F /* AuthButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButtonLabel.swift; sourceTree = "<group>"; };
+		CF478BDF2E8E9B0D004DA93F /* DealRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealRowView.swift; sourceTree = "<group>"; };
+		CF478BE02E8E9B0D004DA93F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		CF478BE12E8E9B0D004DA93F /* TripCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCardView.swift; sourceTree = "<group>"; };
 		F7A533812B1F70D70073C221 /* ListingDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetail.swift; sourceTree = "<group>"; };
 		F7BA70BF2BAAB02A00DC1856 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		F7BA70C12BAAB03D00DC1856 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
@@ -319,6 +325,16 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
+		CF478BE22E8E9B0D004DA93F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				CF478BDF2E8E9B0D004DA93F /* DealRowView.swift */,
+				CF478BE02E8E9B0D004DA93F /* HomeView.swift */,
+				CF478BE12E8E9B0D004DA93F /* TripCardView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		F7BA70BE2BAAB00500DC1856 /* City Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -453,6 +469,7 @@
 		F7F7EDFE2B06050E00817353 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				CF478BE22E8E9B0D004DA93F /* Home */,
 				FAB339612BE0E6C300144C14 /* SumSub */,
 				F7F7EE502B07202700817353 /* Message */,
 				F7F7EE032B06065D00817353 /* Profile */,
@@ -787,6 +804,9 @@
 				F7E9B8302B30E9AB001169BE /* TabBarView.swift in Sources */,
 				FA62333E2BC86309008CBD84 /* Bindings.swift in Sources */,
 				F7F7EE142B061A2600817353 /* ProfileOption.swift in Sources */,
+				CF478BE32E8E9B0D004DA93F /* DealRowView.swift in Sources */,
+				CF478BE42E8E9B0D004DA93F /* TripCardView.swift in Sources */,
+				CF478BE52E8E9B0D004DA93F /* HomeView.swift in Sources */,
 				FAB3394E2BE0E56600144C14 /* UIVC+EXT.swift in Sources */,
 				FAB339582BE0E5B900144C14 /* Language.swift in Sources */,
 				FAB339602BE0E6B000144C14 /* SumsubView.swift in Sources */,

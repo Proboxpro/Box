@@ -14,7 +14,7 @@ struct TestView: View {
     }
 }
 
-@available(iOS 17.0, *)
+//@available(iOS 17.0, *)
 struct MainTabBar: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State var selectedTab: Int = 0
@@ -24,7 +24,8 @@ struct MainTabBar: View {
             if true {
             TabView{
 //                MainSearch(user: user)
-                MainSearch(user: User(id: "123", fullname: "vsy", login: "sa", email: "santa51@amil.ru"))
+//                MainSearch(user: User(id: "123", fullname: "vsy", login: "sa", email: "santa51@amil.ru"))
+                HomeView()
 //                TestView()
                     .tag("1")
                     .tabItem {
@@ -56,3 +57,6 @@ struct MainTabBar: View {
 }
 
 
+#Preview {
+    MainTabBar().environmentObject(AuthViewModel())
+}

@@ -16,7 +16,7 @@ struct StartView: View {
                 Spacer(minLength: 24)
                 
                 Text("PYPA")
-                    .font(.system(size: 72, weight: .heavy))
+                    .font(.system(size: 120, weight: .bold))
                     .foregroundColor(Color.baseMint)
                     .padding(.top, 24)
                 
@@ -30,7 +30,9 @@ struct StartView: View {
                         .font(.system(size: 15))
                         .foregroundColor(.black.opacity(0.8))
                 }
-                .padding(.top, 8)
+                .offset(y: 20)
+//                .padding()
+//                .padding(.top, 1)
                 
                 Spacer()
                 
@@ -39,7 +41,6 @@ struct StartView: View {
                 }
                 
                 NavigationLink(destination: AuthContainerView(initialTab: .register).navigationBarBackButtonHidden(true)) {
-//                    AuthButtonLabel(title: "Зарегистрироваться", style: .outline)
                     Text("Зарегестрироваться")
                         .foregroundStyle(Color.baseMint)
                         .padding(.horizontal, 30)
