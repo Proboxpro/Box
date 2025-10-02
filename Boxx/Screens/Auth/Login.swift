@@ -47,7 +47,8 @@ struct Login: View {
                     .foregroundColor(.baseMint)
 
                 }
-                
+                .ignoresSafeArea(.keyboard)
+
             }
         }
     }

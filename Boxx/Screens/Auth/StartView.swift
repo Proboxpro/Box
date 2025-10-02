@@ -17,7 +17,7 @@ struct StartView: View {
                 
                 Text("PYPA")
                     .font(.system(size: 72, weight: .heavy))
-                    .foregroundColor(Color("Peach"))
+                    .foregroundColor(Color.baseMint)
                     .padding(.top, 24)
                 
                 VStack(spacing: 8) {
@@ -27,27 +27,29 @@ struct StartView: View {
                         .foregroundColor(.primary)
                     Text("Мы совершаем сделки безопасно и\nпомогаем зарабатывать путешественникам")
                         .multilineTextAlignment(.center)
-                        .font(.system(size: 14))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 15))
+                        .foregroundColor(.black.opacity(0.8))
                 }
-                .padding(.horizontal, 24)
                 .padding(.top, 8)
                 
                 Spacer()
                 
                 NavigationLink(destination: AuthContainerView().navigationBarBackButtonHidden(true)) {
                     AuthButtonLabel(title: "Войти", style: .filled)
-                        .padding(.horizontal, 24)
                 }
                 
                 NavigationLink(destination: AuthContainerView(initialTab: .register).navigationBarBackButtonHidden(true)) {
-                    AuthButtonLabel(title: "Зарегистрироваться", style: .outline)
-                        .padding(.horizontal, 24)
+//                    AuthButtonLabel(title: "Зарегистрироваться", style: .outline)
+                    Text("Зарегестрироваться")
+                        .foregroundStyle(Color.baseMint)
+                        .padding(.horizontal, 30)
                         .padding(.top, 12)
                 }
                 
                 Spacer(minLength: 32)
             }
+            .padding(.horizontal, 30)
+            
         }
     }
 }

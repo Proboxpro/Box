@@ -82,6 +82,7 @@ struct Registration: View {
                 }
 //                .padding(.top, 6)
             }
+            .ignoresSafeArea(.keyboard)
             .offset(y: -30)
         }
         .padding(.horizontal, 10)
