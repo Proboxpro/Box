@@ -19,6 +19,17 @@ struct MainTabBar: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State var selectedTab: Int = 0
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.gray.withAlphaComponent(0.1)  // фон таббара
+
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
     var body: some View {
 //        if let user = viewModel.currentUser{
             if true {
@@ -31,7 +42,7 @@ struct MainTabBar: View {
 //                TestView()
                     .tag("1")
                     .tabItem {
-                        Image(systemName: "magnifyingglass")
+                        Image(systemName: "house.fill")
                     }
                 Search()
 //                TestView()
@@ -41,21 +52,16 @@ struct MainTabBar: View {
                     }
                 
                 OrdersList()
-//                TestView()
                     .tag("3")
                     .tabItem {
                         Image(systemName: "message")
                     }
                 Profile()
-//                TestView()
                     .tag("4")
                     .tabItem {
                         Image(systemName: "person")
                     }
-                //                Test1()
             }
-//            .tint(Color.gray.opacity(0.7))
-//            .background(Color.gray.opacity(0.7))
         }
     }
 }

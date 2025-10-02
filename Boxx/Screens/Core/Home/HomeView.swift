@@ -58,6 +58,9 @@ struct HomeView: View {
             }
             .padding(.vertical)
             .padding(.horizontal, 10)
+            .onAppear {
+                viewModel.orderDescription.forEach({print($0)})
+            }
     }
 }
 

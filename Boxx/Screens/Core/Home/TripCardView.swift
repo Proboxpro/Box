@@ -13,33 +13,10 @@ struct TripCardView: View {
     var item: ListingItem
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-//            backgroundImage
-//                .frame(width: 240, height: 170)
-//                .clipped()
-//                .cornerRadius(12)
-            let urlString = item.imageUrl.isEmpty ? item.imageUrls : item.imageUrl
-
-
-            LazyImage(request: ImageRequest(
-                url: URL(string: urlString),
-                processors: [
-                    ImageProcessors.Resize(
-                        size: CGSize(width: 240, height: 170),
-                        contentMode: .aspectFill
-                    )
-                ]
-            )) { state in
-                if let image = state.image {
-                    image.resizable().scaledToFill()
-                } else if state.error != nil {
-                    Color.gray.opacity(0.3)
-                } else {
-                    Color.gray.opacity(0.2)
-                }
-            }
-            .frame(width: 240, height: 170)
-            .cornerRadius(12)
-            .clipped()
+            backgroundImage
+                .frame(width: 240, height: 170)
+                .clipped()
+                .cornerRadius(12)
             
             LinearGradient(colors: [.black.opacity(0.0), .black.opacity(0.6)], startPoint: .top, endPoint: .bottom)
                 .cornerRadius(12)
@@ -66,36 +43,34 @@ struct TripCardView: View {
         .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 3)
     }
     
-
-private var backgroundImage: some View {
+    
+    private var backgroundImage: some View {
         let urlString = item.imageUrl.isEmpty ? item.imageUrls : item.imageUrl
-        if let url = URL(string: urlString), !urlString.isEmpty {
-            return AnyView(
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        Color.gray.opacity(0.2)
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure(_):
-                        Color.gray.opacity(0.3)
-                    @unknown default:
-                        Color.gray.opacity(0.3)
-                    }
-                }
-            )
-        } else {
-            return AnyView(
+        
+        return LazyImage(request: ImageRequest(
+            url: URL(string: urlString),
+            processors: [
+                ImageProcessors.Resize(
+                    size: CGSize(width: 240, height: 170),
+                    contentMode: .aspectFill
+                )
+            ]
+        )) { state in
+            if let image = state.image {
+                image.resizable().scaledToFill()
+            } else if state.error != nil {
+                Color.gray.opacity(0.3)
+            } else {
                 Color.gray.opacity(0.2)
-            )
+            }
         }
     }
-}
-
-struct TripCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        TripCardView(item: ListingItem(id: "1", ownerUid: "u1", ownerName: "Alexander", imageUrl: "", pricePerKillo: "6000 ₽", cityFrom: "Мурманск", cityTo: "Санкт-Петербург", imageUrls: "", startdate: ""))
+    
+    struct TripCardView_Previews: PreviewProvider {
+        static var previews: some View {
+            TripCardView(item: ListingItem(id: "1", ownerUid: "u1", ownerName: "Alexander", imageUrl: "", pricePerKillo: "6000 ₽", cityFrom: "Мурманск", cityTo: "Санкт-Петербург", imageUrls: "", startdate: ""))
+        }
     }
+    
+    
 }
-
-
