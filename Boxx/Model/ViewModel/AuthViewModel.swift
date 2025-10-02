@@ -56,6 +56,34 @@ class AuthViewModel: ObservableObject {
     let db = Firestore.firestore()
     let messagesCollection = Firestore.firestore().collection("order")
     
+    // MARK: - Alert state
+    struct AuthAlert: Identifiable, Equatable {
+        enum Kind { case info, success, warning, error }
+        let id = UUID()
+        var kind: Kind
+        var title: String
+        var message: String
+    }
+    @Published var activeAlert: AuthAlert?
+    @Published var isAlertPresented: Bool = false
+
+    func presentAlert(kind: AuthAlert.Kind = .info, title: String? = nil, message: String) {
+        let defaultTitle: String
+        switch kind {
+        case .info: defaultTitle = "Сообщение"
+        case .success: defaultTitle = "Успех"
+        case .warning: defaultTitle = "Внимание"
+        case .error: defaultTitle = "Ошибка"
+        }
+        activeAlert = AuthAlert(kind: kind, title: title ?? defaultTitle, message: message)
+        isAlertPresented = true
+    }
+
+    func dismissAlert() {
+        isAlertPresented = false
+        activeAlert = nil
+    }
+
     
     init() {
         
@@ -79,7 +107,7 @@ class AuthViewModel: ObservableObject {
             await fetchUser()
             
         } catch {
-            print("БАГ, ошибка логина \(error.localizedDescription)")
+            self.presentAlert(kind: .error, title: "Ошибка", message: error.localizedDescription)
             
         }
     }
@@ -95,7 +123,7 @@ class AuthViewModel: ObservableObject {
             
             
         } catch {
-            print("БАГ, ошибка \(error.localizedDescription)")
+            self.presentAlert(kind: .error, title: "Ошибка", message: error.localizedDescription)
         }
         
     }
@@ -106,7 +134,8 @@ class AuthViewModel: ObservableObject {
             self.currentUser = nil
             self.sumSubResetApprove()
         } catch {
-            print("bags \(error.localizedDescription)")
+            self.presentAlert(kind: .error, title: "Ошибка", message: error.localizedDescription)
+//            print("bags \(error.localizedDescription)")
         }
     }
     func fetchUser () async {
@@ -237,7 +266,8 @@ class AuthViewModel: ObservableObject {
                 orders.append(order)
             }
         } catch {
-            print("Error fetching orders: \(error.localizedDescription)")
+            self.presentAlert(kind: .error, title: "Error fetching orders", message: error.localizedDescription)
+//            print("Error fetching orders: \(error.localizedDescription)")
         }
     }
     
@@ -807,7 +837,7 @@ class AuthViewModel: ObservableObject {
             try await Firestore.firestore().collection("order").document(uid).setData(encodedUser)
             await fetchP2Porder()
         } catch {
-            print("БАГ, ошибка \(error.localizedDescription)")
+            self.presentAlert(title: "Ошибка", message: error.localizedDescription)
         }
     }
     

@@ -17,9 +17,14 @@ struct ContentView: View {
             if viewModel.userSession != nil {
                 MainTabBar()
 //            Text("jher")
-//            TestView()
+                //            TestView()
             } else {
                 StartView()
+                    .alert(viewModel.activeAlert?.title ?? "Сообщение", isPresented: $viewModel.isAlertPresented) {
+                        Button("OK") { viewModel.dismissAlert() }
+                    } message: {
+                        Text(viewModel.activeAlert?.message ?? "")
+                    }
             }
         }
     }

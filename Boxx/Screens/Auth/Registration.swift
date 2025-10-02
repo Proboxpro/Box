@@ -64,9 +64,13 @@ struct Registration: View {
                     .padding(.horizontal, 16)
 //                    .padding(.top, 20)
                 
-                AuthButton(title: "Создать аккаунт", style: .outline) {}
-                    .padding(.horizontal, 16)
-//                    .padding(.top, 12)
+                AuthButton(title: "Создать аккаунт", style: .outline) {
+                    Task{
+                        try await viewModel.createUser(withEmail: email, password: password,fullname: fullName, login: login, imageUrl: imageUrl)
+                    }
+                }
+                .padding(.horizontal, 16)
+                //                    .padding(.top, 12)
                 
                 Button(action: { dismiss() }) {
                     Text("Уже есть аккаунт?")
