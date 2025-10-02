@@ -13,10 +13,13 @@ struct ContentView: View {
 
     var body: some View {
         Group{
+            //DEBUG: _
             if viewModel.userSession != nil {
                 MainTabBar()
+//            Text("jher")
+//            TestView()
             } else {
-                Login()
+                StartView()
             }
         }
     }
@@ -25,6 +28,6 @@ struct ContentView: View {
 @available(iOS 17.0, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(AuthViewModel())
     }
 }

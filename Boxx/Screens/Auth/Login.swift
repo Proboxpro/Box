@@ -15,7 +15,6 @@ struct Login: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // image
                 Image ("logo")
                     .resizable()
                     .frame(width: 100, height: 100)
@@ -32,10 +31,7 @@ struct Login: View {
                 }.padding(.horizontal)
                     .padding(.top, 20)
                 
-                Button { Task{
-                    try await viewModel.signIn(withEmail: email, password: password)
-                }
-                } label: {
+                Button { } label: {
                         HStack{
                             Text ("SIGN IN")
                                 .fontWeight (.semibold)
@@ -44,12 +40,10 @@ struct Login: View {
                         }
                         . foregroundColor (.white)
                         .frame(width:UIScreen.main.bounds.width-32, height: 48)
-                        .disabled(formIsValid)
-                        .opacity(formIsValid ?  1.0 : 0.5)
-                    }   .background (Color (.systemBlue))
-                        .cornerRadius (10)
-                        .padding(.top,25)
-                
+                    }
+                    .background (Color (.systemBlue))
+                    .cornerRadius (10)
+                    .padding(.top,25)
                 
                 Spacer()
                 
@@ -65,12 +59,10 @@ struct Login: View {
                 }
                 
             }
-            .onDisappear {
-                viewModel.myOrder()
-            }
         }
     }
 }
+
 extension Login : AuthenticationFormProtocol{
     var formIsValid: Bool{
         return !email.isEmpty
